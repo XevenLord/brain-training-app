@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "691537332877",
+    "project_id": "neurofit-brain-training-app",
+    "storage_bucket": "neurofit-brain-training-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691537332877:android:632064f0fd2222fe0b30c4",
+        "android_client_info": {
+          "package_name": "com.example.brain_training_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691537332877-eo4g2anq31vdvo80bj7vgh048gnncerv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM_UnVXOa3tgRbGHb6a5KF_aYK_ucqqc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691537332877-eo4g2anq31vdvo80bj7vgh048gnncerv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

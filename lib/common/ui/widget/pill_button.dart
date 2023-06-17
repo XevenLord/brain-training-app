@@ -1,3 +1,5 @@
+import 'package:brain_training_app/utils/app_text_style.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -6,8 +8,8 @@ class PillButton extends StatefulWidget {
   String text;
   EdgeInsets padding;
   EdgeInsets? margin;
-  Function()? onTap;
-
+  bool isSelected;
+  Function? onTap;
 
   PillButton({
     super.key,
@@ -15,6 +17,7 @@ class PillButton extends StatefulWidget {
     this.padding = const EdgeInsets.all(8),
     this.margin,
     this.onTap,
+    this.isSelected = false,
   });
 
   @override
@@ -25,10 +28,17 @@ class _PillButtonState extends State<PillButton> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.onTap,
+      onTap: () {
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+          if (widget.onTap != null) {
+            widget.onTap!();
+          }
+        });
+      },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: widget.isSelected ? AppColors.brandBlue : AppColors.white,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           boxShadow: [
             BoxShadow(
@@ -40,7 +50,14 @@ class _PillButtonState extends State<PillButton> {
         ),
         padding: widget.padding,
         margin: widget.margin,
-        child: Text(widget.text),
+        child: Text(
+          widget.text,
+          style: AppTextStyle.c2.merge(
+            widget.isSelected
+                ? AppTextStyle.whiteTextStyle.merge(AppTextStyle.h4)
+                : AppTextStyle.blackTextStyle,
+          ),
+        ),
       ),
     );
   }

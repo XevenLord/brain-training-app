@@ -1,20 +1,18 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/common/ui/widget/icon_box.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
+import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_calendar_page.dart';
+import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class AppointmentBookingPage extends StatefulWidget {
-  String imgUrl;
-  String practitionerName;
-
   AppointmentBookingPage({
     super.key,
-    required this.imgUrl,
-    required this.practitionerName,
   });
 
   @override
@@ -22,7 +20,15 @@ class AppointmentBookingPage extends StatefulWidget {
 }
 
 class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
-  double leftOffset = 0;
+  late AppointmentViewModel _appointmentViewModel;
+  late Physiotherapist physiotherapist;
+
+  @override
+  void initState() {
+    super.initState();
+    _appointmentViewModel = Get.find<AppointmentViewModel>();
+    physiotherapist = _appointmentViewModel.chosenPhysiotherapist!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,19 +58,19 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                     CircleAvatar(
                       radius: 70.r,
                       backgroundImage: NetworkImage(
-                        widget.imgUrl,
+                        physiotherapist.imgUrl!,
                       ),
                     ),
                     SizedBox(height: 16.h),
                     Text(
-                      'Joanne Lau',
+                      physiotherapist.name!,
                       style: AppTextStyle.h2.merge(AppTextStyle.whiteTextStyle),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      'Physiotherapist',
+                      physiotherapist.speciality!,
                       style: AppTextStyle.c1.merge(AppTextStyle.whiteTextStyle),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -117,12 +123,12 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "About Doctor",
+                  "About Physiotherapist",
                   style: AppTextStyle.h3,
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Dr. Bellamy Nicholas is a top specialist at London Bridge Hospital at London. He has achieved several awards and recognition for is contribution and service in his own field. He is available for private consultation. ",
+                  physiotherapist.about!,
                   style: AppTextStyle.c2,
                 ),
                 SizedBox(height: 24.h),

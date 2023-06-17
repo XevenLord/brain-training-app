@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -20,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController controller;
+  bool resourceLoaded = false;
 
   @override
   void initState() {
@@ -28,10 +31,32 @@ class _SplashScreenState extends State<SplashScreen>
         AnimationController(vsync: this, duration: Duration(seconds: 2))
           ..forward();
     animation = CurvedAnimation(parent: controller, curve: Curves.linear);
-    Timer(
-      const Duration(seconds: 3),
-      () => Get.offNamed(RouteHelper.getPatientHome()),
-    );
+    Future.delayed(const Duration(seconds: 2), () {
+      loaded();
+    });
+    // FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    //   Timer(
+    //     const Duration(seconds: 3),
+    //     () {
+    //       if (user == null) {
+    //         Get.offNamed(RouteHelper.getSignIn());
+    //       } else {
+    //         Get.offNamed(RouteHelper.getPatientHome());
+    //       }
+    //     },
+    //   );
+    // });
+  }
+
+  Future<void> loaded() async {
+    resourceLoaded = await AppConstant.loadResources();
+    if (resourceLoaded && FirebaseAuth.instance.currentUser != null) {
+      Get.offAllNamed(
+        RouteHelper.getPatientHome(),
+      );
+    } else {
+      Get.offNamed(RouteHelper.getSignIn());
+    }
   }
 
   @override

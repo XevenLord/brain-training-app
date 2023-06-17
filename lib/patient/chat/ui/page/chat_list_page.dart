@@ -49,25 +49,21 @@ class _ChatListPageState extends State<ChatListPage> {
       children: [
         SizedBox(height: 10.h),
         ...List.generate(chats.length, (index) {
-          return Column(
-            children: [
-              ChatTile(
-                imgUrl: chats[index]["imgUrl"],
-                username: chats[index]["username"],
-                lastMessage: chats[index]["lastMessage"],
-                lastMessageDate: chats[index]["lastMessageDate"],
-                lastMessageTime: chats[index]["lastMessageTime"],
-                hasDivider: index != chats.length - 1,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(),
-                    ),
-                  );
-                },
-              ),
-            ],
+          return ChatTile(
+            imgUrl: chats[index]["imgUrl"],
+            username: chats[index]["username"],
+            lastMessage: chats[index]["lastMessage"],
+            lastMessageDate: chats[index]["lastMessageDate"],
+            lastMessageTime: chats[index]["lastMessageTime"],
+            hasDivider: index != chats.length - 1,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatPage(),
+                ),
+              );
+            },
           );
         })
       ],

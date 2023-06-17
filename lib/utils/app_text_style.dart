@@ -20,6 +20,12 @@ class AppTextStyle {
     height: 1.4,
     fontFamily: 'Montserrat',
   );
+  static TextStyle h4 = TextStyle(
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    fontFamily: 'Montserrat',
+  );
   static TextStyle c1 = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.normal,
@@ -53,5 +59,8 @@ class AppTextStyle {
       const TextStyle(color: AppColors.brandBlue);
   static TextStyle lightGreyTextStyle = const TextStyle(
     color: Color(0xFF6B779A),
+  );
+  static TextStyle underlineTextStyle = const TextStyle(
+    decoration: TextDecoration.underline,
   );
 }
