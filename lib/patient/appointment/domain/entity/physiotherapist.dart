@@ -22,8 +22,8 @@ class Physiotherapist {
     email = json['email'];
     phone = json['phone'];
     speciality = json['speciality'];
-    imgUrl = json['imgUrl'];
-    about = json['about'];
+    imgUrl = json['imgUrl'] ?? "";
+    about = json['about'] ?? "";
   }
 
   Map<String, dynamic> toJson() {

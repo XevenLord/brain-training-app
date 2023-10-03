@@ -10,14 +10,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class ChatRoomPage extends StatefulWidget {
+  const ChatRoomPage({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatRoomPageState extends State<ChatRoomPage> {
   List<Map> chatInfo = [
     {
       "isSender": false,
@@ -196,10 +196,10 @@ class _ChatPageState extends State<ChatPage> {
         Obx(() {
           // GestureDetector(
           //     onLongPress: () {
-          //       debugPrint("Start Recording");
+          //       debugModePrint("Start Recording");
           //     },
           //     onLongPressUp: () {
-          //       debugPrint("End Recording");
+          //       debugModePrint("End Recording");
           //     },
           //     child: Container(
           //         decoration: BoxDecoration(

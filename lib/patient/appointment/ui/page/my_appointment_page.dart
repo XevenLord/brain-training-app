@@ -1,8 +1,17 @@
+import 'package:brain_training_app/common/ui/widget/empty_box.dart';
+import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
+import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/appointment/ui/widget/appointment_tile.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class MyAppointmentPage extends StatefulWidget {
   const MyAppointmentPage({super.key});
@@ -12,64 +21,49 @@ class MyAppointmentPage extends StatefulWidget {
 }
 
 class _MyAppointmentPageState extends State<MyAppointmentPage> {
-  List<Map> appointmentList = [
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "11/12/2021",
-      "time": "10:00 AM",
-      "type": AppointmentTileType.past,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "12/12/2021",
-      "time": "10:00 AM",
-      "type": AppointmentTileType.current,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "12/12/2021",
-      "time": "11:00 AM",
-      "type": AppointmentTileType.current,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "12/12/2021",
-      "time": "10:00 AM",
-      "type": AppointmentTileType.current,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "12/12/2021",
-      "time": "12:00 PM",
-      "type": AppointmentTileType.current,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "13/12/2021",
-      "time": "10:00 AM",
-      "type": AppointmentTileType.upcoming,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "14/12/2021",
-      "time": "10:00 AM",
-      "type": AppointmentTileType.upcoming,
-    },
-    {
-      "name": "Dr. John Doe",
-      "doctorName": "Cardiologist",
-      "date": "12/12/2021",
-      "time": "11:00 AM",
-      "type": AppointmentTileType.upcoming,
-    },
-  ];
+  late AppointmentViewModel appointmentViewModel;
+  List<Appointment>? appointments;
+
+  @override
+  void initState() {
+    super.initState();
+    appointmentViewModel = Get.find<AppointmentViewModel>();
+    callDataInit();
+  }
+
+  Future getAppointmentList() async {
+    List<Appointment> appts = await appointmentViewModel.getAppointmentList();
+    return appts;
+  }
+
+  callDataInit() async {
+    await Future.delayed(Duration(seconds: 3));
+    getAppointmentList().then(
+      (value) => {
+        setState(() {
+          appointments = value;
+        })
+      },
+    );
+  }
+
+  AppointmentTileType checkAppointmentTileType(DateTime date) {
+    if (date.isBefore(DateTime.now().toLocal().getDateOnly())) {
+      return AppointmentTileType.past;
+    } else if (date.isAfter(DateTime.now().toLocal().getDateOnly())) {
+      return AppointmentTileType.upcoming;
+    } else {
+      return AppointmentTileType.current;
+    }
+  }
+
+  String todayText(String datetime) {
+    bool same = isSameDay(
+        DateTime.parse(
+            DateFormat("yyyy-MM-dd").format(DateTime.now().toLocal())),
+        DateTime.parse(datetime));
+    return same ? ("Today, " + datetime) : datetime;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,33 +71,127 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      Get.offAllNamed(RouteHelper.getPatientHome(), arguments: 2);
-                    },
-                    icon: Icon(Icons.arrow_back_ios),
-                  ),
-                ),
-                ...List.generate(
-                  appointmentList.length,
-                  (index) => AppointmentTile(
-                    time: appointmentList[index]['time'],
-                    doctorName: appointmentList[index]['doctorName'],
-                    type: appointmentList[index]['type'],
-                  ),
-                )
-              ],
-            ),
-          ),
+          child: appointments == null
+              ? displayLoadingData()
+              : appointments!.isEmpty
+                  ? displayEmptyDataLoaded("No appointment found")
+                  : SingleChildScrollView(
+                      // check Future.delayed is useful for me or not
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: IconButton(
+                                  onPressed: () {
+                                    Get.offAllNamed(
+                                        RouteHelper.getPatientHome(),
+                                        arguments: 2);
+                                  },
+                                  icon: Icon(Icons.arrow_back_ios),
+                                ),
+                              ),
+                              Text("My Appointments", style: AppTextStyle.h1),
+                            ],
+                          ),
+                          SizedBox(height: 16.h),
+                          // EmptyBox(
+                          //     decoration: BoxDecoration(
+                          //         color: AppColors.brandYellow.withOpacity(0.1),
+                          //         borderRadius: BorderRadius.circular(10.r)),
+                          //     child: Text("Below are your appointment dates!",
+                          //         style: AppTextStyle.blackTextStyle)),
+                          // ...List.generate(
+                          //   appointmentList.length,
+                          //   (index) => Align(
+                          //     alignment: Alignment.centerRight,
+                          //     child: AppointmentTile(
+                          //       time: appointmentList[index]['time'],
+                          //       doctorName: appointmentList[index]['doctorName'],
+                          //       type: appointmentList[index]['type'],
+                          //     ),
+                          //   ),
+                          // ),
+                          ...List.generate(
+                            appointments?.length ?? 0,
+                            (index) => appointments == null
+                                ? Container()
+                                : Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        //         style: AppTextStyle.blackTextStyle)),
+                                        if (index - 1 != -1 &&
+                                            appointments![index - 1].date ==
+                                                appointments![index].date)
+                                          SizedBox()
+                                        else
+                                          Text(
+                                              todayText(
+                                                  appointments![index].date!),
+                                              style: AppTextStyle.h2),
+                                        AppointmentTile(
+                                            time: appointments![index].time!,
+                                            doctorName: appointments![index]
+                                                .physiotherapistInCharge!
+                                                .name!,
+                                            type: checkAppointmentTileType(
+                                                DateTime.parse(
+                                                    appointments![index]
+                                                        .date!)),
+                                            img: appointments![index]
+                                                .physiotherapistInCharge!
+                                                .imgUrl!,
+                                            onTap: () => showDialog(
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: Text(
+                                                        "Appointment Date ${appointments![index].date!} ${appointments![index].time!} with ${appointments![index].physiotherapistInCharge!.name!}",
+                                                        style: AppTextStyle.h3),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          print(
+                                                              "you choose no");
+                                                          Get.back();
+                                                        },
+                                                        child: Text('Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Get.back();
+                                                          Get.toNamed(
+                                                              RouteHelper
+                                                                  .getAppointmentEditPage(),
+                                                              arguments:
+                                                                  appointments![
+                                                                      index]);
+                                                        },
+                                                        child: Text('Edit'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )),
+                                      ],
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
         ),
       ),
     );
   }
 }
 
-
+extension DateTimeExtension on DateTime {
+  DateTime getDateOnly() {
+    return DateTime(this.year, this.month, this.day);
+  }
+}

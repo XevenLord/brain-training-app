@@ -51,36 +51,43 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                 Text("Select a practitioner", style: AppTextStyle.h3),
                 SizedBox(height: 16.h),
                 GridView.count(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.75,
-                  crossAxisSpacing: 16.w,
-                  shrinkWrap: true, // Add this line
-                  // physics: NeverScrollableScrollPhysics(), // Add this line
-                  children: List.generate(
-                    physiotherapists.length,
-                    (index) => DoctorCard(
-                      doctorName: physiotherapists[index].name!,
-                      position: physiotherapists[index].speciality!,
-                      imgUrl: physiotherapists[index].imgUrl!,
-                      rating: 5.0,
-                      onTap: () {
-                        appointmentViewModel.setChosenPhysiotherapist(
-                          physiotherapist: physiotherapists[index],
-                        );
-                        Get.toNamed(RouteHelper.getAppointmentBookingPage());
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AppointmentBookingPage(
-                        //       practitionerName: physiotherapists[index].name!,
-                        //       imgUrl: physiotherapists[index].imgUrl!,
-                        //     ),
-                        //   ),
-                        // );
-                      },
-                    ),
-                  ),
-                ),
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: 16.w,
+                    shrinkWrap: true, // Add this line
+                    // physics: NeverScrollableScrollPhysics(), // Add this line
+                    children: [
+                      ...List.generate(
+                        physiotherapists.length,
+                        (index) => DoctorCard(
+                          doctorName: physiotherapists[index].name!,
+                          position: physiotherapists[index].speciality!,
+                          imgUrl: physiotherapists[index].imgUrl!,
+                          rating: 5.0,
+                          onTap: () {
+                            appointmentViewModel.setChosenPhysiotherapist(
+                              physiotherapist: physiotherapists[index],
+                            );
+                            Get.toNamed(RouteHelper.getAppointmentBookingPage());
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => AppointmentBookingPage(
+                            //       practitionerName: physiotherapists[index].name!,
+                            //       imgUrl: physiotherapists[index].imgUrl!,
+                            //     ),
+                            //   ),
+                            // );
+                          },
+                        ),
+                      ),
+                    ]),
+                SizedBox(height: 32.h),
+                ElevatedButton(
+                  onPressed: () =>
+                      Get.toNamed(RouteHelper.getMyAppointmentPage()),
+                  child: Text("My Appointment"),
+                )
               ],
             ),
           );

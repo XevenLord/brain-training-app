@@ -26,7 +26,7 @@ class Appointment {
     time = json['time'];
     reason = json['reason'];
     physiotherapistInCharge = json['physiotherapistInCharge'] != null
-        ? new Physiotherapist.fromJson(json['physiotherapist'])
+        ? new Physiotherapist.fromJson(json['physiotherapistInCharge'])
         : null;
   }
 
@@ -42,5 +42,13 @@ class Appointment {
       data['physiotherapistInCharge'] = this.physiotherapistInCharge!.toJson();
     }
     return data;
+  }
+
+  static List<Appointment> fromJsonList(List<dynamic> json) {
+    List<Appointment> appointments = [];
+    for(var element in json) {
+      appointments.add(Appointment.fromJson(element));
+    }
+    return appointments;
   }
 }

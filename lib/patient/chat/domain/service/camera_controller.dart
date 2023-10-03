@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,13 +43,13 @@ class UserCameraController extends GetxService with WidgetsBindingObserver {
     var status = await Permission.camera.status;
 
     if (status.isGranted) {
-      debugPrint('Camera Permission: GRANTED');
+      debugModePrint('Camera Permission: GRANTED');
       isCameraPermissionGranted.value = true;
       // Set and initialize the new camera
       onNewCameraSelected(cameras[0]);
       refreshAlreadyCapturedImages();
     } else {
-      debugPrint('Camera Permission: DENIED');
+      debugModePrint('Camera Permission: DENIED');
     }
   }
 
@@ -111,7 +112,7 @@ class UserCameraController extends GetxService with WidgetsBindingObserver {
     resetCameraValues();
 
     // if (mounted) {
-      cameraC = cameraController;
+    cameraC = cameraController;
     // }
 
     // Update UI if cameraC updated
@@ -143,7 +144,7 @@ class UserCameraController extends GetxService with WidgetsBindingObserver {
     }
 
     // if (mounted) {
-      isCameraInitialized.value = cameraC!.value.isInitialized;
+    isCameraInitialized.value = cameraC!.value.isInitialized;
     // }
   }
 

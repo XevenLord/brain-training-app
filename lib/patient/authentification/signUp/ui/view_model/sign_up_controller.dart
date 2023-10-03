@@ -19,20 +19,24 @@ class SignUpController {
   }
 
   void signUpWithData(Map<String, dynamic> data) async {
+    debugModePrint("signup checking password: ${data['password']}");
     UserCredential signUpRes =
         await FirebaseAuthRepository.signUpWithEmailAndPassword(
       email: _userDetails['email'],
       password: data['password'],
     );
 
-    debugPrint("1. sign up result: ${signUpRes}");
+    debugModePrint("1. sign up result: ${signUpRes}");
 
     User newUser = signUpRes.user!;
 
-    bool initRes = await Get.find<FirebaseAuthRepository>()
-        .initUserDataWithUID(newUser.uid, _userDetails);
+    debugModePrint("1 (a) ${newUser.uid}");
+    debugModePrint("1 (b) ${_userDetails}");
 
-    debugPrint("2. firebase write result: ${initRes}");
+    bool initRes = await Get.find<FirebaseAuthRepository>().initUserDataWithUID(
+        newUser.uid, _userDetails);
+
+    debugModePrint("2. firebase write result: ${initRes}");
 
     if (!initRes) {
       killDialog();
@@ -47,10 +51,5 @@ class SignUpController {
     }
     killDialog();
     Get.toNamed(RouteHelper.getSignUpDonePage());
-    // await newUser.sendEmailVerification();
-    // Get.toNamed(RouteHelper.getVerifyEmailPage(),
-    //       parameters: {"email": email});
-
-    //   return;
   }
 }

@@ -1,4 +1,5 @@
-import 'package:brain_training_app/patient/chat/ui/page/chat_page.dart';
+import 'package:brain_training_app/patient/chat/ui/page/chat_home_page_unilah.dart';
+import 'package:brain_training_app/patient/chat/ui/page/chat_room_page.dart';
 import 'package:brain_training_app/patient/chat/ui/widget/chat_tile.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -60,7 +61,7 @@ class _ChatListPageState extends State<ChatListPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChatPage(),
+                  builder: (context) => ChatHomePage(),
                 ),
               );
             },

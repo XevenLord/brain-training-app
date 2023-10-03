@@ -30,6 +30,7 @@ class _AppointmentTileState extends State<AppointmentTile> {
   @override
   Widget build(BuildContext context) {
     return EmptyBox(
+      width: MediaQuery.of(context).size.width - 100.w,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -48,7 +49,7 @@ class _AppointmentTileState extends State<AppointmentTile> {
             CircleAvatar(
               radius: 45.r,
               backgroundImage: NetworkImage(
-                "https://img.freepik.com/free-photo/pleased-young-female-doctor-wearing-medical-robe-stethoscope-around-neck-standing-with-closed-posture_409827-254.jpg",
+                widget.img!,
               ),
             ),
             SizedBox(width: 10.w),

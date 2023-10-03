@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -65,8 +66,8 @@ class AudioController extends GetxController {
 
   void onPressedPlayButton(int id, var content) async {
     _currentId.value = id;
-    debugPrint("currentValue${_currentId.value}");
-    debugPrint("currentValue${id}");
+    debugModePrint("currentValue${_currentId.value}");
+    debugModePrint("currentValue${id}");
     if (isRecordPlaying) {
       await _pauseRecord();
     } else {
@@ -75,7 +76,7 @@ class AudioController extends GetxController {
     }
   }
 
-  void stopAudio(){
+  void stopAudio() {
     _audioPlayerService.dispose();
   }
 

@@ -1,4 +1,5 @@
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -45,6 +46,10 @@ class _SignInPageState extends State<SignInPage> {
     try {
       await FirebaseAuthRepository.signInWithEmailAndPassword(
           email: _emailInput.text, password: _passwordInput.text);
+      debugModePrint("null check getCurrentUser " +
+          (FirebaseAuthRepository.getCurrentUser() == null).toString());
+      debugModePrint("null check get find uid " +
+          (Get.find<AppUser>().uid == null).toString());
       Get.offAllNamed(RouteHelper.getPatientHome());
     } on FirebaseAuthException catch (e) {
       Get.back();

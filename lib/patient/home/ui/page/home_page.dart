@@ -1,6 +1,7 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/page/chat_list_page.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/widget/game_card.dart';
@@ -22,7 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late HomeViewModel homeVModel;
+  HomeViewModel homeVModel = Get.find<HomeViewModel>();
   int _selectedIndex = 0;
 
   List<String> categories = [
@@ -34,15 +35,6 @@ class _HomePageState extends State<HomePage> {
   ];
 
   List<Map> games = [
-    {
-      "name": "Sudoku",
-      "description": "This is sudoku",
-      "img":
-          "https://sudoku-puzzles.net/wp-content/puzzles/asterisk-sudoku/easy/1.png",
-      "onTap": () {
-        Get.toNamed(RouteHelper.getTicTacToe());
-      }
-    },
     {
       "name": "Tic Tac Toe",
       "description": "This is tic tac toe",
@@ -59,12 +51,21 @@ class _HomePageState extends State<HomePage> {
           "https://image.shutterstock.com/image-illustration/mathematics-horizontal-banner-presentation-website-260nw-1798855321.jpg",
       "onTap": () {}
     },
+    {
+      "name": "Sudoku",
+      "description": "This is sudoku",
+      "img":
+          "https://sudoku-puzzles.net/wp-content/puzzles/asterisk-sudoku/easy/1.png",
+      "onTap": () {
+        Get.toNamed(RouteHelper.getTicTacToe());
+      }
+    },
   ];
 
   @override
   void initState() {
     super.initState();
-    homeVModel = Get.find<HomeViewModel>();
+    final appUser = Get.find<AppUser>();
     onTapNav(widget.pageIndex ?? 0);
   }
 
