@@ -18,13 +18,10 @@ class AppointmentViewModel extends GetxController implements GetxService {
   bool isAppointmentSet = false;
 
   Future<List<Appointment>> getAppointmentList() async {
-    print("entering getAppointmentList");
     appointments = await AppointmentService.getAppointmentList();
-    print("appointment list: ${appointments}");
     sortAppointmentByDate();
-    print("sorted appointment list: ${appointments}");
     update();
-    return appointments;
+    return appointments.reversed.toList();
   }
 
   @override
@@ -107,8 +104,8 @@ class AppointmentViewModel extends GetxController implements GetxService {
       ),
     });
 
-    isAppointmentSet = await AppointmentService.onSubmitAppointmentDetails(
-        appointment, appointmentSlots);
+    isAppointmentSet =
+        await AppointmentService.onSubmitAppointmentDetails(appointment);
     update();
   }
 
@@ -117,8 +114,12 @@ class AppointmentViewModel extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> updateAppointment({required Appointment appointment, required String date, required String time, required String reason}) {
-    String oldDate  = appointment.date!;
+  Future<void> updateAppointment(
+      {required Appointment appointment,
+      required String date,
+      required String time,
+      required String reason}) {
+    String oldDate = appointment.date!;
     appointment.date = date;
     appointment.time = time;
     appointment.reason = reason;

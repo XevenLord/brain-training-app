@@ -7,59 +7,61 @@ import 'package:brain_training_app/patient/authentification/signUp/domain/servic
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentService {
   static Future<bool> onSubmitAppointmentDetails(
-      Appointment appointment, AppointmentSlots appointmentSlots) async {
+      Appointment appointment) async {
     final appUser = Get.find<AppUser>();
     try {
       await Future.wait([
-        FirebaseFirestore.instance
-            .collection("users")
-            .doc(appUser.uid)
-            .get()
-            .then((docSnapshot) {
-          if (docSnapshot.exists) {
-            var data = docSnapshot.data();
-            List<dynamic> appointments = data?['appointments'] ?? [];
+        // FirebaseFirestore.instance
+        //     .collection("users")
+        //     .doc(appUser.uid)
+        //     .get()
+        //     .then((docSnapshot) {
+        //   if (docSnapshot.exists) {
+        //     var data = docSnapshot.data();
+        //     List<dynamic> appointments = data?['appointments'] ?? [];
 
-            // Check if an appointment with the same ID exists in the appointments list
-            int index = appointments.indexWhere(
-                (appt) => appt['appointmentID'] == appointment.appointmentID);
+        //     // Check if an appointment with the same ID exists in the appointments list
+        //     int index = appointments.indexWhere(
+        //         (appt) =>
 
-            print("found index : " + index.toString());
-            if (index != -1) {
-              // Update the existing appointment
-              appointments[index] = appointment.toJson();
-            } else {
-              // Append the appointment to the appointments list
-              appointments.add(appointment.toJson());
-            }
+        //         ['appointmentID'] == appointment.appointmentID);
 
-            // Update the 'appointments' field in Firestore
-            FirebaseFirestore.instance
-                .collection("users")
-                .doc(appUser.uid)
-                .update({
-              "appointments": appointments,
-            }).then((_) {
-              print("Appointment added/updated successfully.");
-            }).catchError((error) {
-              print("Failed to add/update appointment: $error");
-            });
-          } else {
-            print("User document does not exist.");
-          }
-        }).catchError((error) {
-          print("Failed to retrieve user document: $error");
-        }),
-        // double check on this : create date map, and inside with time map stores bool value and appointment id
-        FirebaseFirestore.instance
-            .collection("physiotherapists")
-            .doc(appointment.physiotherapistInCharge?.id)
-            .collection("appointmentSlots")
-            .doc(appointment.date)
-            .set(appointmentSlots.toJson(), SetOptions(merge: true)),
+        //     print("found index : " + index.toString());
+        //     if (index != -1) {
+        //       // Update the existing appointment
+        //       appointments[index] = appointment.toJson();
+        //     } else {
+        //       // Append the appointment to the appointments list
+        //       appointments.add(appointment.toJson());
+        //     }
+
+        //     // Update the 'appointments' field in Firestore
+        //     FirebaseFirestore.instance
+        //         .collection("users")
+        //         .doc(appUser.uid)
+        //         .update({
+        //       "appointments": appointments,
+        //     }).then((_) {
+        //       print("Appointment added/updated successfully.");
+        //     }).catchError((error) {
+        //       print("Failed to add/update appointment: $error");
+        //     });
+        //   } else {
+        //     print("User document does not exist.");
+        //   }
+        // }).catchError((error) {
+        //   print("Failed to retrieve user document: $error");
+        // }),
+        // FirebaseFirestore.instance
+        //     .collection("physiotherapists")
+        //     .doc(appointment.physiotherapistInCharge?.id)
+        //     .collection("appointmentSlots")
+        //     .doc(appointment.date)
+        //     .set(appointmentSlots.toJson(), SetOptions(merge: true)),
 
         FirebaseFirestore.instance
             .collection("appointments")
@@ -86,15 +88,36 @@ class AppointmentService {
   static Future<List<Appointment>> getAppointmentList() async {
     final appUser = Get.find<AppUser>();
     return FirebaseFirestore.instance
-        .collection("users")
-        .doc(appUser.uid)
+        .collection("appointments")
+        .where("patientID", isEqualTo: appUser.uid)
         .get()
         .then(
-          (value) => value.data()?["appointments"]?.toList() != null
-              ? (value.data()?["appointments"].toList() as List)
-                  .map((e) => Appointment.fromJson(e))
-                  .toList()
-              : [],
+          (value) =>
+              value.docs.map((e) => Appointment.fromJson(e.data())).toList(),
+        )
+        .then((appointments) {
+      // Sort the appointments based on time
+      appointments.sort((a, b) {
+        print("entering the checking sorting time slots");
+        // Convert time strings to DateTime objects for comparison
+        DateTime timeA = DateFormat.jm().parse(a.time!);
+        DateTime timeB = DateFormat.jm().parse(b.time!);
+        return timeA.compareTo(timeB); // for descending order
+      });
+      return appointments;
+    });
+  }
+
+  static Future<List<Appointment>> getAppointmentListByPhysiotherapist(
+      String physiotherapistID) async {
+    final appUser = Get.find<AppUser>();
+    return FirebaseFirestore.instance
+        .collection("appointments")
+        .where("physiotherapistID", isEqualTo: physiotherapistID)
+        .get()
+        .then(
+          (value) =>
+              value.docs.map((e) => Appointment.fromJson(e.data())).toList(),
         );
   }
 
@@ -139,16 +162,10 @@ class AppointmentService {
         }).catchError((error) {
           print("Failed to retrieve user document: $error");
         }),
-        // double check on this : create date map, and inside with time map stores bool value and appointment id
-        FirebaseFirestore.instance
-            .collection("physiotherapists")
-            .doc(appointment.physiotherapistInCharge?.id)
-            .collection("appointmentSlots")
-            .doc(appointment.date)
-            .set({
-          appointment.time!: appointment.appointmentID,
-        }, SetOptions(merge: true)),
 
+        //4/10/2023 - comment useless codes
+
+        // condition: (1) date same (2) date different
         if (oldDate == appointment.date)
           FirebaseFirestore.instance
               .collection("physiotherapists")
@@ -186,9 +203,9 @@ class AppointmentService {
                     .update({
                   "timeSlots": timeslots,
                 }).then((_) {
-                  print("Appointment updated successfully.");
+                  print("Appointment updated successfully. (old date)");
                 }).catchError((error) {
-                  print("Failed to update appointment: $error");
+                  print("Failed to upda te appointment: $error");
                 });
               } else {
                 print("appointment date document does not exist.");
@@ -226,7 +243,7 @@ class AppointmentService {
                     .update({
                   "timeSlots": timeslots,
                 }).then((_) {
-                  print("Appointment updated successfully.");
+                  print("Appointment updated successfully. (new date)");
                 }).catchError((error) {
                   print("Failed to update appointment: $error");
                 });
@@ -241,12 +258,29 @@ class AppointmentService {
                   },
                 );
 
+                print("Check appointment slots: ");
+                print(appointmentSlots.toJson());
+
+                //TODO : check if this works
+                // FirebaseFirestore.instance
+                //     .collection("physiotherapists")
+                //     .doc(appointment.physiotherapistInCharge?.id)
+                //     .collection("appointmentSlots")
+                //     .doc(appointment.date)
+                //     .set(appointmentSlots.toJson(), SetOptions(merge: true));
                 FirebaseFirestore.instance
                     .collection("physiotherapists")
                     .doc(appointment.physiotherapistInCharge?.id)
                     .collection("appointmentSlots")
                     .doc(appointment.date)
-                    .set(appointmentSlots.toJson(), SetOptions(merge: true));
+                    .update({
+                  "timeSlots": {
+                    appointment.time!: {
+                      "appointmentID": appointment.appointmentID,
+                      "patientID": appointment.patientID,
+                    }
+                  }
+                });
               } else {
                 print("appointment date document does not exist.");
               }
@@ -280,17 +314,13 @@ class AppointmentService {
             var data = docSnapshot.data();
             List<dynamic> appointments = data?['appointments'] ?? [];
 
-            // Check if an appointment with the same ID exists in the appointments list
             int index = appointments.indexWhere(
                 (appt) => appt['appointmentID'] == appointment.appointmentID);
 
-            print("found index : " + index.toString());
             if (index != -1) {
-              // Update the existing appointment
               appointments.removeAt(index);
             }
 
-            // Update the 'appointments' field in Firestore
             FirebaseFirestore.instance
                 .collection("users")
                 .doc(appUser.uid)
@@ -323,8 +353,6 @@ class AppointmentService {
             .delete(),
       ]);
       await FirebaseAuthRepository.getUserDetails(appUser.uid!);
-      print("See appointmentssssssssssssss");
-      // print(Get.find<AppUser>().appointments.toString());
       return true;
     } on FirebaseException catch (e) {
       return false;

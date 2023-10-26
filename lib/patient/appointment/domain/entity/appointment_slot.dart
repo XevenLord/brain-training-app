@@ -24,8 +24,7 @@ class AppointmentSlots {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['date'] = this.date!.toIso8601String();
     if (this.timeSlots != null) {
-      data['timeSlots'] =
-          this.timeSlots!.map((key, value) => MapEntry(key, value.toJson()));
+      data['timeSlots'] = this.timeSlots;
     }
     return data;
   }

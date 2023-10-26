@@ -127,6 +127,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                         textEditingController: dateController,
                         label: "DD/MM/YYYY",
                         keyboardType: TextInputType.datetime,
+                        textAlign: TextAlign.center,
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
                               context: context,

@@ -20,6 +20,7 @@ class InputTextFormField extends StatefulWidget {
   int? maxLines;
   bool readOnly;
   String? Function(String?)? validator;
+  TextAlign? textAlign;
 
   // for dropdown
   bool isDropdown;
@@ -43,6 +44,7 @@ class InputTextFormField extends StatefulWidget {
     this.maxLines = 1,
     this.validator,
     this.readOnly = false,
+    this.textAlign,
     // for dropdown
     this.isDropdown = false,
     this.onChanged,
@@ -118,11 +120,12 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
                 maxLines: widget.maxLines,
                 obscureText: widget.obscureText,
                 controller: widget.textEditingController,
+                textAlign: widget.textAlign ?? TextAlign.start,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Color(0xFFD9D9D9).withOpacity(0.3),
                   label: widget.label != null
-                      ? Text(widget.label!, style: AppTextStyle.h4)
+                      ? Text(widget.label!, style: AppTextStyle.h4,)
                       : null,
                   labelStyle:
                       AppTextStyle.c2.merge(AppTextStyle.lightGreyTextStyle),

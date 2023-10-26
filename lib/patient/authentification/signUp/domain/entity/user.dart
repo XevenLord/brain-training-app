@@ -1,9 +1,7 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class AppUser extends GetxController {
+class AppUser {
   String? uid;
   String? name;
   String? icNumber;

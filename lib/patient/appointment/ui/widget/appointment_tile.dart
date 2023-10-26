@@ -9,6 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Red tile: Past time
 class AppointmentTile extends StatefulWidget {
   Function()? onTap;
+  Function()? onEdit;
+  Function()? onDelete;
   AppointmentTileType type;
   String? img;
   String time;
@@ -17,6 +19,8 @@ class AppointmentTile extends StatefulWidget {
   AppointmentTile(
       {super.key,
       this.onTap,
+      this.onEdit,
+      this.onDelete,
       this.img,
       required this.time,
       required this.doctorName,
@@ -80,6 +84,18 @@ class _AppointmentTileState extends State<AppointmentTile> {
                 ),
               ],
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                    onTap: widget.onEdit,
+                    child:
+                        Icon(Icons.edit, size: 20.sp, color: AppColors.grey)),
+                InkWell(
+                    onTap: widget.onDelete,
+                    child: Icon(Icons.delete, size: 20.sp, color: Colors.red)),
+              ],
+            )
           ],
         ),
       ),

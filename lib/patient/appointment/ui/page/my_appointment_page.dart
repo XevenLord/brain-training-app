@@ -37,8 +37,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   }
 
   callDataInit() async {
-    await Future.delayed(Duration(seconds: 3));
-    getAppointmentList().then(
+    await getAppointmentList().then(
       (value) => {
         setState(() {
           appointments = value;
@@ -146,7 +145,12 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                             img: appointments![index]
                                                 .physiotherapistInCharge!
                                                 .imgUrl!,
-                                            onTap: () => showDialog(
+                                            onEdit: () => Get.toNamed(
+                                                RouteHelper
+                                                    .getAppointmentEditPage(),
+                                                arguments:
+                                                    appointments![index]),
+                                            onDelete: () => showDialog(
                                                   context: context,
                                                   builder: (context) =>
                                                       AlertDialog(
@@ -156,23 +160,23 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () {
-                                                          print(
-                                                              "you choose no");
                                                           Get.back();
                                                         },
                                                         child: Text('Cancel'),
                                                       ),
                                                       TextButton(
-                                                        onPressed: () {
+                                                        onPressed: () async {
                                                           Get.back();
-                                                          Get.toNamed(
-                                                              RouteHelper
-                                                                  .getAppointmentEditPage(),
-                                                              arguments:
-                                                                  appointments![
-                                                                      index]);
+                                                          await appointmentViewModel
+                                                              .cancelAppointment(
+                                                                  appointment:
+                                                                      appointments![
+                                                                          index])
+                                                              .then((value) =>
+                                                                  callDataInit());
+                                                          setState(() {});
                                                         },
-                                                        child: Text('Edit'),
+                                                        child: Text('Delete'),
                                                       ),
                                                     ],
                                                   ),

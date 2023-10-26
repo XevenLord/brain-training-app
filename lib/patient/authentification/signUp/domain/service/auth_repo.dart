@@ -69,7 +69,6 @@ class FirebaseAuthRepository extends GetxController{
       UserCredential res = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      // 13-7-2023 Issue results the account couldn't login
       debugModePrint("entering storeCredentials");
       await storeCredentials(email, password);
       debugModePrint("entering getUserDetails");
@@ -92,10 +91,8 @@ class FirebaseAuthRepository extends GetxController{
           password: password,
         );
         print('User reauthenticated successfully');
-        // Continue with your application flow after reauthentication
       } catch (e) {
         print('Error reauthenticating user: $e');
-        // Handle the error, e.g., prompt the user to log in again
       }
     } else {
       print('Stored credentials not found');

@@ -51,6 +51,12 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
     "05:00 PM",
   ];
 
+  bool checkTimeSlot(String timeSlot) {
+    return _appointmentViewModel.appointments
+        .where((element) => element.time == timeSlot)
+        .isEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
