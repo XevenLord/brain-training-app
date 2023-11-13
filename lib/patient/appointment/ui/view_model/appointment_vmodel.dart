@@ -24,6 +24,13 @@ class AppointmentViewModel extends GetxController implements GetxService {
     return appointments.reversed.toList();
   }
 
+  Future<List<Appointment>> getAppointmentsByPhysiotherapistID() async {
+    appointments = await AppointmentService.getAppointmentListByPhysiotherapist(
+        chosenPhysiotherapist!.id!);
+    update();
+    return appointments;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -85,16 +92,16 @@ class AppointmentViewModel extends GetxController implements GetxService {
       date: DateFormat("yyyy-MM-dd").format(date.toLocal()),
       time: time,
       reason: reason,
-      physiotherapistInCharge: Physiotherapist(
-        name: chosenPhysiotherapist!.name,
-        id: chosenPhysiotherapist!.id,
-        email: chosenPhysiotherapist!.email,
-        phone: chosenPhysiotherapist!.phone,
-        speciality: chosenPhysiotherapist!.speciality,
-        imgUrl: chosenPhysiotherapist!.imgUrl,
-      ),
+      physiotherapistID: chosenPhysiotherapist!.id,
+      // physiotherapistInCharge: Physiotherapist(
+      //   name: chosenPhysiotherapist!.name,
+      //   id: chosenPhysiotherapist!.id,
+      //   email: chosenPhysiotherapist!.email,
+      //   phone: chosenPhysiotherapist!.phone,
+      //   speciality: chosenPhysiotherapist!.speciality,
+      //   imgUrl: chosenPhysiotherapist!.imgUrl,
+      // ),
     );
-    print("entering appointment service");
 
     AppointmentSlots appointmentSlots =
         AppointmentSlots(date: date, timeSlots: {

@@ -1,5 +1,6 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
+import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/appointment/ui/widget/appointment_tile.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -135,27 +136,32 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                               style: AppTextStyle.h2),
                                         AppointmentTile(
                                             time: appointments![index].time!,
-                                            doctorName: appointments![index]
-                                                .physiotherapistInCharge!
+                                            doctorName: appointmentViewModel
+                                                .physiotherapistList
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    appointments![index]
+                                                        .physiotherapistID!)
                                                 .name!,
                                             type: checkAppointmentTileType(
-                                                DateTime.parse(
+                                                DateTime.parse(appointments![index]
+                                                    .date!)),
+                                            img: appointmentViewModel
+                                                .physiotherapistList
+                                                .firstWhere((element) =>
+                                                    element.id ==
                                                     appointments![index]
-                                                        .date!)),
-                                            img: appointments![index]
-                                                .physiotherapistInCharge!
+                                                        .physiotherapistID!)
                                                 .imgUrl!,
                                             onEdit: () => Get.toNamed(
-                                                RouteHelper
-                                                    .getAppointmentEditPage(),
-                                                arguments:
-                                                    appointments![index]),
+                                                RouteHelper.getAppointmentEditPage(),
+                                                arguments: appointments![index]),
                                             onDelete: () => showDialog(
                                                   context: context,
                                                   builder: (context) =>
                                                       AlertDialog(
                                                     title: Text(
-                                                        "Appointment Date ${appointments![index].date!} ${appointments![index].time!} with ${appointments![index].physiotherapistInCharge!.name!}",
+                                                        "Appointment Date ${appointments![index].date!} ${appointments![index].time!} with ${appointmentViewModel.physiotherapistList.firstWhere((element) => element.id == appointments![index].physiotherapistID!).name!}",
                                                         style: AppTextStyle.h3),
                                                     actions: <Widget>[
                                                       TextButton(

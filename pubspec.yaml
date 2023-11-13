@@ -54,7 +54,7 @@ dependencies:
   firebase_auth: ^4.6.3
   form_builder_validators: ^8.6.1
   image_picker: ^0.8.9
-  firebase_storage: ^11.2.3
+  firebase_storage: ^11.5.0
   record_mp3: ^3.0.0
   flutter_native_image: ^0.0.6+1
   auto_size_text_field: ^2.2.1
@@ -64,6 +64,7 @@ dependencies:
   fuzzywuzzy: ^1.1.2
   video_player: ^2.7.0
   flutter_secure_storage: ^8.0.0
+  flutter_chat_bubble: ^2.0.2
   
 flutter_icons:
   android: true
@@ -94,8 +95,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/
     - assets/images/
-    - assets/images/done-booking-appointment.png
 
   fonts:
     - family: Montserrat

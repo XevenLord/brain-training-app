@@ -1,4 +1,5 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
+import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentCalendarPage extends StatefulWidget {
@@ -23,12 +25,21 @@ class AppointmentCalendarPage extends StatefulWidget {
 
 class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
   late AppointmentViewModel _appointmentViewModel;
+  List<Appointment> appts = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      timeSlots = timeSlotsTemplate;
+    });
     _appointmentViewModel = Get.find<AppointmentViewModel>();
+    _appointmentViewModel.getAppointmentsByPhysiotherapistID().then((value) {
+      setState(() {
+        appts = value;
+      });
+    });
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -39,7 +50,9 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
 
   TextEditingController _commentController = TextEditingController();
 
-  List timeSlots = [
+  List timeSlots = [];
+
+  List timeSlotsTemplate = [
     "09:00 AM",
     "10:00 AM",
     "11:00 AM",
@@ -51,11 +64,21 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
     "05:00 PM",
   ];
 
-  bool checkTimeSlot(String timeSlot) {
-    return _appointmentViewModel.appointments
-        .where((element) => element.time == timeSlot)
-        .isEmpty;
+  void updateTimeSlots() {
+    timeSlots = List.from(timeSlotsTemplate);
+
+    for (int i = 0; i < appts.length; i++) {
+      if (appts[i].date != null &&
+          appts[i].date! == DateFormat('yyyy-MM-dd').format(_selectedDay)) {
+        timeSlots.remove(appts[i].time);
+      }
+    }
+    setState(() {});
   }
+
+  // bool checkTimeSlot(String timeSlot) {
+
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +109,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                   },
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
+                      timeSlots = timeSlotsTemplate;
                       if (selectedDay.compareTo(DateTime.now()
                               .subtract(const Duration(days: 1))) <
                           0) return;
@@ -93,6 +117,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                       _focusedDay =
                           focusedDay; // update `_focusedDay` here as well
                     });
+                    updateTimeSlots();
                   },
                   // weekNumbersVisible: false,
                   calendarFormat: _calendarFormat,

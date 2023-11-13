@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
+import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/profile/ui/view_model/profile_vmodel.dart';
@@ -30,6 +31,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late AppointmentViewModel appointmentVModel;
   String? time;
+  late Physiotherapist physiotherapist;
 
   List<String> timeSlots = [
     "09:00 AM",
@@ -52,6 +54,8 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
   void initState() {
     super.initState();
     appointmentVModel = Get.find<AppointmentViewModel>();
+    physiotherapist = appointmentVModel.physiotherapistList.firstWhere(
+        (element) => element.id == widget.appointment.physiotherapistID);
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason!;
     time = widget.appointment.time!;
@@ -96,22 +100,19 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                               CircleAvatar(
                                 radius: 70.r,
                                 backgroundImage: NetworkImage(
-                                  widget.appointment.physiotherapistInCharge!
-                                      .imgUrl!,
+                                  physiotherapist.imgUrl!,
                                 ),
                               ),
                               SizedBox(height: 16.h),
                               Text(
-                                widget
-                                    .appointment.physiotherapistInCharge!.name!,
+                                physiotherapist.name!,
                                 style: AppTextStyle.h2,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                widget.appointment.physiotherapistInCharge!
-                                    .speciality!,
+                                physiotherapist.speciality!,
                                 style: AppTextStyle.c1,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
@@ -133,16 +134,11 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                               context: context,
                               initialDate: DateTime.now(),
                               firstDate: DateTime(1950),
-                              //DateTime.now() - not to allow to choose before today.
                               lastDate: DateTime(2100));
 
                           if (pickedDate != null) {
-                            print(
-                                pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
                             String formattedDate =
                                 DateFormat('yyyy-MM-dd').format(pickedDate);
-                            print(
-                                formattedDate); //formatted date output using intl package =>  2021-03-16
                             setState(() {
                               dateController.text =
                                   formattedDate; //set output date to TextField value.
@@ -184,38 +180,38 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                             onPressed: () {
                               Get.back();
                             },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.white),
                             child: Text(
                               "Cancel",
                               style: AppTextStyle.h3
                                   .merge(AppTextStyle.brandBlueTextStyle),
                             ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.white),
                           ),
                           SizedBox(width: 16.w),
                           ElevatedButton(
                             onPressed: () {
                               deleteAppointment();
                             },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.brandRed),
                             child: Text(
                               "Delete",
                               style: AppTextStyle.h3
                                   .merge(AppTextStyle.whiteTextStyle),
                             ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.brandRed),
                           ),
                           SizedBox(width: 16.w),
                           ElevatedButton(
                             onPressed: () {
                               updateAppointment();
                             },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.brandBlue),
                             child: Text(
                               "Update",
                               style: AppTextStyle.h3,
                             ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.brandBlue),
                           ),
                         ],
                       ),
@@ -228,7 +224,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                   onPressed: () {
                     Get.back();
                   },
-                  icon: Icon(Icons.arrow_back_ios),
+                  icon: const Icon(Icons.arrow_back_ios),
                 ),
               ),
             ],

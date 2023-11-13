@@ -2,7 +2,7 @@ import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
-import 'package:brain_training_app/patient/chat/ui/page/chat_list_page.dart';
+import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/widget/game_card.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       "name": "Tic Tac Toe",
       "description": "This is tic tac toe",
       "img":
-          "https://www.rd.com/wp-content/uploads/2019/10/tic-tac-toe-scaled.jpg",
+          "https://media.istockphoto.com/id/1365567894/vector/hand-drawn-vector-tic-tac-toe-game-noughts-and-crosses-doodle-sketch.jpg?s=612x612&w=0&k=20&c=pSs72urXBp6V8pnXvuJIfX3krtUoFhHaX6fG2g1PxUQ=",
       "onTap": () {
         Get.toNamed(RouteHelper.getTicTacToe());
       },
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
           ],
         );
       case 1:
-        return ChatListPage();
+        return ChatList();
       case 2:
         return AppointmentMainPage();
       case 3:

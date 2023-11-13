@@ -5,10 +5,8 @@ import 'package:brain_training_app/patient/authentification/signIn/ui/page/sign_
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_first_page.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_second_page.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_success_page.dart';
-import 'package:brain_training_app/patient/chat/ui/page/chat_home_page_unilah.dart';
-import 'package:brain_training_app/patient/chat/ui/page/chat_prep_send.dart';
-import 'package:brain_training_app/patient/chat/ui/page/chat_room_page.dart';
-import 'package:brain_training_app/patient/chat/ui/page/chat_search_page.dart';
+import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
+import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ai_game_settings.dart';
 import 'package:brain_training_app/patient/home/ui/page/home_page.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_edit_page.dart';
@@ -34,10 +32,8 @@ class RouteHelper {
   static const String profileEditPage = '/profile-edit-page';
 
   // chat module
-  static const String chatHomePage = "/chat-home-page";
-  static const String chatRoomPage = "/chat-room-page";
-  static const String chatSearchPage = "/chat-search-page";
-  static const String chatPrepSendPage = "/chat-prep-send-page";
+  static const String chatList = '/chat-list';
+  static const String chatPage = '/chat';
 
   static String getSplashScreen() => splash;
   static String getSignIn() => signIn;
@@ -54,10 +50,8 @@ class RouteHelper {
   static String getProfileEditPage() => profileEditPage;
 
   // chat module
-  static String getChatHomePage() => chatHomePage;
-  static String getChatRoomPage() => chatRoomPage;
-  static String getChatSearchPage() => chatSearchPage;
-  static String getChatPrepSendPage() => chatPrepSendPage;
+  static String getChatList() => chatList;
+  static String getChatPage() => chatPage;
 
   static List<GetPage> routes = [
     GetPage(
@@ -132,22 +126,17 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => const ProfileEditPage(),
     ),
-    //Chat
+
+    // chat module
     GetPage(
-      name: chatHomePage,
-      page: () => ChatHomePage(),
+      name: chatList,
+      transition: Transition.fadeIn,
+      page: () => const ChatList(),
     ),
     GetPage(
-      name: chatRoomPage,
-      page: () => const ChatRoomPage(),
-    ),
-    GetPage(
-      name: chatSearchPage,
-      page: () => ChatSearchPage(),
-    ),
-    GetPage(
-      name: chatPrepSendPage,
-      page: () => ChatPrepSendPage(),
+      name: chatPage,
+      transition: Transition.fadeIn,
+      page: () => Chat(),
     ),
   ];
 }
