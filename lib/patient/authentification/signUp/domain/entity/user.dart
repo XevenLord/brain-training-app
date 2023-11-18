@@ -78,6 +78,7 @@ class AppUser {
     String? gender,
     String? aboutMe,
     List<Appointment>? appointments,
+    String? profilePic,
   }) {
     this.uid = uid;
     this.name = name;
@@ -88,6 +89,7 @@ class AppUser {
     this.gender = gender;
     this.appointments = appointments;
     this.aboutMe = aboutMe;
+    this.profilePic = profilePic;
   }
 
   void clear() {

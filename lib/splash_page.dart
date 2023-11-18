@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/route_helper.dart';
@@ -24,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController controller;
+  late AppointmentViewModel appointmentViewModel;
   bool resourceLoaded = false;
 
   @override
@@ -47,6 +49,10 @@ class _SplashScreenState extends State<SplashScreen>
     debugModePrint("splash page: enter loaded");
     resourceLoaded = await AppConstant.loadResources();
     if (resourceLoaded && FirebaseAuth.instance.currentUser != null) {
+      appointmentViewModel = Get.find<AppointmentViewModel>();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        getPhysiotherapistList();
+      });
       Get.offAllNamed(
         RouteHelper.getPatientHome(),
       );
@@ -59,6 +65,11 @@ class _SplashScreenState extends State<SplashScreen>
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  void getPhysiotherapistList() async {
+    await appointmentViewModel.getPhysiotherapistList();
+    setState(() {});
   }
 
   @override

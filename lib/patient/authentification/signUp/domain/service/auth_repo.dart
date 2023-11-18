@@ -212,6 +212,7 @@ class FirebaseAuthRepository extends GetxController{
                 return Appointment.fromJson(appointment);
               }))
             : [],
+        profilePic: data["profilePic"],
       );
 
       // store uid in shared preference

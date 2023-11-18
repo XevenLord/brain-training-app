@@ -26,14 +26,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
   void initState() {
     super.initState();
     appointmentViewModel = Get.find<AppointmentViewModel>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getPhysiotherapistList();
-    });
-  }
-
-  void getPhysiotherapistList() async {
-    physiotherapists = await appointmentViewModel.getPhysiotherapistList();
-    setState(() {});
+    physiotherapists = appointmentViewModel.physiotherapistList;
   }
 
   @override

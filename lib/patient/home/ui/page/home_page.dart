@@ -1,8 +1,10 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
+import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
+import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/widget/game_card.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
@@ -24,6 +26,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeViewModel homeVModel = Get.find<HomeViewModel>();
+  AppointmentViewModel appointmentVModel = Get.find<AppointmentViewModel>();
+  // ChatViewModel chatVModel = Get.find<ChatViewModel>();
+
   int _selectedIndex = 0;
 
   List<String> categories = [
@@ -66,6 +71,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     final appUser = Get.find<AppUser>();
+    // chatVModel.initUsersListener();
     onTapNav(widget.pageIndex ?? 0);
   }
 

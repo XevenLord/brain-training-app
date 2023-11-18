@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -7,6 +8,7 @@ import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -36,6 +38,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController introController = TextEditingController();
 
+  bool changeProfilePic = false;
+
   final appUser = Get.find<AppUser>();
 
   @override
@@ -54,15 +58,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   void updateProfile() async {
     if (introController.text == null)
       _fbKey.currentState!.fields["aboutMe"]!.didChange(null);
-    print("check null of about");
-    print(_fbKey.currentState!.value["aboutMe"] == null);
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
       await profileVModel.updateProfile(_fbKey.currentState!.value);
-      print("back to profile page...");
       Get.offAllNamed(RouteHelper.getPatientHome(), arguments: 3);
-    } else {
-      print("validation failed");
     }
   }
 
@@ -81,10 +80,96 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   Center(
                     child: Column(
                       children: [
-                        Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
-                            width: 80.w),
                         SizedBox(height: 16.h),
                         Text("Edit Profile", style: AppTextStyle.h2),
+                        SizedBox(height: 16.h),
+                        CupertinoButton(
+                            onPressed: () {
+                              setState(() {
+                                profileVModel.takeImageFromCamera();
+                              });
+                              changeProfilePic = true;
+                              print("The image has changed");
+                            },
+                            child: Padding(
+                                padding: EdgeInsets.only(bottom: 16.h),
+                                child: Obx(() => FutureBuilder<File?>(
+                                      future: Future.value(
+                                          profileVModel.imagefile.value),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          // While the image is loading, you can display a placeholder
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[200],
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            width: 100,
+                                            height: 100,
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.grey[800],
+                                            ),
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          // Handle any errors that occurred during loading
+                                          return Text(
+                                              'Error: ${snapshot.error}');
+                                        } else if (snapshot.data != null) {
+                                          // If the image is available, display it
+                                          return CircleAvatar(
+                                            radius: 60,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image.file(
+                                                snapshot.data!,
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          );
+                                        } else if (appUser.profilePic != null) {
+                                          // If no new image is available but appUser has a profilePic,
+                                          // load the image from appUser.profilePic
+                                          return CircleAvatar(
+                                            radius: 60,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              child: Image(
+                                                image: NetworkImage(
+                                                    appUser.profilePic!),
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          // If no image is available, display a default image or icon
+                                          return CircleAvatar(
+                                            radius: 60,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              width: 100,
+                                              height: 100,
+                                              child: Icon(
+                                                Icons.camera_alt,
+                                                color: Colors.grey[800],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    )))),
                       ],
                     ),
                   ),

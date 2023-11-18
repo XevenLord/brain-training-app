@@ -97,23 +97,6 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                             ],
                           ),
                           SizedBox(height: 16.h),
-                          // EmptyBox(
-                          //     decoration: BoxDecoration(
-                          //         color: AppColors.brandYellow.withOpacity(0.1),
-                          //         borderRadius: BorderRadius.circular(10.r)),
-                          //     child: Text("Below are your appointment dates!",
-                          //         style: AppTextStyle.blackTextStyle)),
-                          // ...List.generate(
-                          //   appointmentList.length,
-                          //   (index) => Align(
-                          //     alignment: Alignment.centerRight,
-                          //     child: AppointmentTile(
-                          //       time: appointmentList[index]['time'],
-                          //       doctorName: appointmentList[index]['doctorName'],
-                          //       type: appointmentList[index]['type'],
-                          //     ),
-                          //   ),
-                          // ),
                           ...List.generate(
                             appointments?.length ?? 0,
                             (index) => appointments == null
