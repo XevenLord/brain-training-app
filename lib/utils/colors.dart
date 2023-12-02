@@ -27,4 +27,12 @@ class AppColors {
       Color(0xFF69A6D2),
     ],
   );
+  static const LinearGradient linearBluePurple = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF8258AB),
+      Color(0xFF0085FF),
+    ],
+  );
 }

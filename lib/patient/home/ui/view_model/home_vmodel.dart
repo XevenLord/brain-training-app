@@ -5,18 +5,10 @@ import 'package:brain_training_app/route_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeViewModel extends GetxController implements GetxService{
+class HomeViewModel extends GetxController implements GetxService {
   HomeViewModel();
 
   void signOutUser(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

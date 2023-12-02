@@ -45,14 +45,17 @@ class _SignInPageState extends State<SignInPage> {
           );
         });
     try {
-      if (selectedRole == "admin") {}
       await FirebaseAuthRepository.signInWithEmailAndPassword(
           email: _emailInput.text, password: _passwordInput.text);
       debugModePrint("null check getCurrentUser " +
           (FirebaseAuthRepository.getCurrentUser() == null).toString());
       debugModePrint("null check get find uid " +
           (Get.find<AppUser>().uid == null).toString());
-      Get.offAllNamed(RouteHelper.getPatientHome());
+      if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
+        Get.offAllNamed(RouteHelper.getAdminHome());
+      } else {
+        Get.offAllNamed(RouteHelper.getPatientHome());
+      }
     } on FirebaseAuthException catch (e) {
       Get.back();
       //wrong Email
@@ -177,8 +180,11 @@ class _SignInPageState extends State<SignInPage> {
                                   .merge(AppTextStyle.blackTextStyle),
                             ),
                             InkWell(
-                              onTap: () => Get.offAllNamed(
-                                  RouteHelper.getSignUpFirstPage()),
+                              onTap: () {
+                                if (selectedRole == "admin") {}
+                                Get.offAllNamed(
+                                    RouteHelper.getSignUpFirstPage());
+                              },
                               child: Text(
                                 "Sign Up",
                                 style: AppTextStyle.h3.merge(AppTextStyle

@@ -159,6 +159,7 @@ class FirebaseAuthRepository extends GetxController{
         "dateOfBirth": data["dob"],
         "gender": data["gender"],
         "registeredOn": FieldValue.serverTimestamp(),
+        "role": "patient",
         // "appointments": [],
       });
       debugModePrint("init set firebase done...");
@@ -170,6 +171,7 @@ class FirebaseAuthRepository extends GetxController{
         phoneNumber: data["phoneNumber"],
         dateOfBirth: data["dateOfBirth"],
         gender: data["gender"],
+        role: "patient",
         // appointments: [],
       );
       debugModePrint("init process done...");
@@ -213,6 +215,7 @@ class FirebaseAuthRepository extends GetxController{
               }))
             : [],
         profilePic: data["profilePic"],
+        role: data["role"],
       );
 
       // store uid in shared preference

@@ -12,6 +12,7 @@ class AppUser {
   String? aboutMe;
   List<Appointment>? appointments;
   String? profilePic;
+  String? role;
 
   AppUser({
     this.uid,
@@ -24,6 +25,7 @@ class AppUser {
     this.appointments,
     this.aboutMe,
     this.profilePic,
+    this.role,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class AppUser {
           : [],
       aboutMe: json["aboutMe"],
       profilePic: json["profilePic"],
+      role: json["role"],
     );
   }
 
@@ -65,6 +68,7 @@ class AppUser {
           : [],
       'aboutMe': aboutMe,
       'profilePic': profilePic,
+      'role': role,
     };
   }
 
@@ -79,6 +83,7 @@ class AppUser {
     String? aboutMe,
     List<Appointment>? appointments,
     String? profilePic,
+    String? role,
   }) {
     this.uid = uid;
     this.name = name;
@@ -90,6 +95,7 @@ class AppUser {
     this.appointments = appointments;
     this.aboutMe = aboutMe;
     this.profilePic = profilePic;
+    this.role = role;
   }
 
   void clear() {
@@ -103,5 +109,6 @@ class AppUser {
     appointments = null;
     aboutMe = null;
     profilePic = null;
+    role = null;
   }
 }

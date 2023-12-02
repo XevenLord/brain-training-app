@@ -53,9 +53,9 @@ class _SplashScreenState extends State<SplashScreen>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getPhysiotherapistList();
       });
-      Get.offAllNamed(
-        RouteHelper.getPatientHome(),
-      );
+      Get.offAllNamed(Get.find<AppUser>().role == "admin"
+          ? RouteHelper.getAdminHome()
+          : RouteHelper.getPatientHome());
     } else {
       Get.offNamed(RouteHelper.getSignIn());
     }
