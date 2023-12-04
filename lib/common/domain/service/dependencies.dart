@@ -1,3 +1,5 @@
+import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
+import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
@@ -27,4 +29,9 @@ Future<void> init() async {
   Get.lazyPut(() => AppointmentViewModel());
   Get.lazyPut(() => ChatViewModel(), fenix: true);
   Get.lazyPut(() => ProfileViewModel());
+
+  // *Admin*
+  // Admin Service
+  Get.lazyPut(() => AdminHomeService());
+  Get.lazyPut(() => AdminHomeViewModel());
 }

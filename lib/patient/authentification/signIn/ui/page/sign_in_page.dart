@@ -53,7 +53,8 @@ class _SignInPageState extends State<SignInPage> {
           (Get.find<AppUser>().uid == null).toString());
       if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
         Get.offAllNamed(RouteHelper.getAdminHome());
-      } else {
+      } else if (selectedRole == "patient" &&
+          Get.find<AppUser>().role == "patient") {
         Get.offAllNamed(RouteHelper.getPatientHome());
       }
     } on FirebaseAuthException catch (e) {

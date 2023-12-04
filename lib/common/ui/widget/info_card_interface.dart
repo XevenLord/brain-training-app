@@ -7,6 +7,8 @@ abstract class InfoCardInterface {
     required String age,
     bool hasEditIcon,
     bool hasCheckIcon,
+    Function()? onEdit,
+    Function()? onCheck,
   });
 }
 

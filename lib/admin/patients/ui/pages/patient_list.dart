@@ -1,18 +1,19 @@
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class AdminList extends StatefulWidget {
-  const AdminList({super.key});
+class PatientList extends StatefulWidget {
+  const PatientList({super.key});
 
   @override
-  State<AdminList> createState() => _AdminListState();
+  State<PatientList> createState() => _PatientListState();
 }
 
-class _AdminListState extends State<AdminList> {
+class _PatientListState extends State<PatientList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,22 +38,21 @@ class _AdminListState extends State<AdminList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InfoCardTile().buildInfoCard(
-                name: "Mr. Pua",
-                age: "20",
-                gender: "Male",
-                position: "Admin",
-              ),
+                  name: "Mr. Pua",
+                  age: "20",
+                  gender: "Male",
+                  onEdit: ()  {
+                    Get.toNamed(RouteHelper.getPatientOverviewPage());
+                  }),
               InfoCardTile().buildInfoCard(
                 name: "Mr. Lee",
                 age: "50",
                 gender: "Male",
-                position: "Assistant",
               ),
               InfoCardTile().buildInfoCard(
                 name: "Mr. Tay",
                 age: "60",
                 gender: "Male",
-                position: "Assistant",
               ),
               Center(
                 child: Padding(

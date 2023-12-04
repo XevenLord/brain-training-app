@@ -3,6 +3,8 @@ import 'package:brain_training_app/admin/appointments/ui/pages/appointment_main_
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_first_screen.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_screen.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
+import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
+import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
@@ -39,9 +41,17 @@ class RouteHelper {
   static const String adminSignUpFirstScreen = '/admin-signup-first-screen';
   static const String adminSignUpSecondScreen = '/admin-signup-second-screen';
   static const String adminHome = '/admin-home';
+
+  // *Admin Appointment*
   static const String adminAppointmentPage = '/admin-appointment-page';
   static const String adminAppointmentEditPage = '/admin-appointment-edit-page';
+
+  // *Admin List*
   static const String adminListPage = '/admin-list-page';
+
+  // *Admin Patient List*
+  static const String patientListPage = '/patient-list-page';
+  static const String patientOverviewPage = '/patient-overview-page';
 
   // chat module
   static const String chatList = '/chat-list';
@@ -70,9 +80,17 @@ class RouteHelper {
   static String getAdminSignUpFirstScreen() => adminSignUpFirstScreen;
   static String getAdminSignUpSecondScreen() => adminSignUpSecondScreen;
   static String getAdminHome() => adminHome;
+
+  // *Admin Appointment*
   static String getAdminAppointmentPage() => adminAppointmentPage;
   static String getAdminAppointmentEditPage() => adminAppointmentEditPage;
+
+  // *Admin List*
   static String getAdminListPage() => adminListPage;
+
+  // *Admin Patient List*
+  static String getPatientListPage() => patientListPage;
+  static String getPatientOverviewPage() => patientOverviewPage;
 
   static List<GetPage> routes = [
     GetPage(
@@ -159,7 +177,6 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => Chat(),
     ),
-
     // *Admin*
     GetPage(
       name: adminSignUpFirstScreen,
@@ -176,6 +193,7 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => AdminHomePage(),
     ),
+    // *Admin Appointment*
     GetPage(
       name: adminAppointmentPage,
       transition: Transition.fadeIn,
@@ -185,6 +203,17 @@ class RouteHelper {
       name: adminListPage,
       transition: Transition.fadeIn,
       page: () => const AdminList(),
-    )
+    ),
+    // *Admin Patient List*
+    GetPage(
+      name: patientListPage,
+      transition: Transition.fadeIn,
+      page: () => const PatientList(),
+    ),
+    GetPage(
+      name: patientOverviewPage,
+      transition: Transition.fadeIn,
+      page: () => const PatientOverview(),
+    ),
   ];
 }

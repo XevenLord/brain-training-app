@@ -34,6 +34,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Align(
           alignment: Alignment.centerLeft,
@@ -59,6 +60,24 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                   _calendarFormat = format;
                 });
               },
+              calendarStyle: CalendarStyle(
+                isTodayHighlighted: true,
+                selectedDecoration: BoxDecoration(
+                  color: AppColors.lightBlue,
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: TextStyle(color: Colors.white),
+                todayDecoration: BoxDecoration(
+                  color: Colors.purpleAccent,
+                  shape: BoxShape.circle,
+                ),
+                defaultDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                weekendDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+              ),
             ),
             Expanded(
               child: ListView(
@@ -216,24 +235,27 @@ class InformationRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          '$title',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black54,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            '$title',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black54,
+            ),
           ),
-        ),
-        Text(
-          '$value',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+          Text(
+            '$value',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

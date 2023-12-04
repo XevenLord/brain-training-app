@@ -41,8 +41,6 @@ class _AdminListState extends State<AdminList> {
                 age: "20",
                 gender: "Male",
                 position: "Admin",
-                hasCheckIcon: false,
-                hasEditIcon: false,
               ),
               InfoCardTile().buildInfoCard(
                 name: "Mr. Lee",

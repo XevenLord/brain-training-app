@@ -12,8 +12,10 @@ class InfoCardTile implements InfoCardInterface {
       required String age,
       String? position,
       bool hasEditIcon = true,
-      bool hasCheckIcon = true,
-      EdgeInsetsGeometry? margin = const EdgeInsets.only(bottom: 16)}) {
+      bool hasCheckIcon = false,
+      EdgeInsetsGeometry? margin = const EdgeInsets.only(bottom: 16),
+      Function()? onEdit,
+      Function()? onCheck}) {
     return Container(
       margin: margin,
       padding: EdgeInsets.all(16.w),
@@ -121,6 +123,7 @@ class InfoCardTile implements InfoCardInterface {
                   children: [
                     hasEditIcon
                         ? InkWell(
+                            onTap: () => {if (onEdit != null) onEdit()},
                             child: Container(
                                 width: 50.w,
                                 height: 50.w,
@@ -135,6 +138,7 @@ class InfoCardTile implements InfoCardInterface {
                         ? Column(children: [
                             SizedBox(height: 8.w),
                             InkWell(
+                              onTap: () => {if (onCheck != null) onCheck()},
                               child: Container(
                                   width: 50.w,
                                   height: 50.w,

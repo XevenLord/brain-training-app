@@ -1,4 +1,6 @@
-import 'package:brain_training_app/common/ui/widget/screen.dart';
+import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
+import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
+import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
@@ -7,8 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class AdminHomePage extends StatelessWidget {
+class AdminHomePage extends StatefulWidget {
   AdminHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<AdminHomePage> createState() => _AdminHomePageState();
+}
+
+class _AdminHomePageState extends State<AdminHomePage> {
+  int _currentIndex = 0;
 
   final List<Map<String, dynamic>> categories = [
     {
@@ -18,9 +27,23 @@ class AdminHomePage extends StatelessWidget {
         Get.toNamed(RouteHelper.getAdminAppointmentPage());
       }
     },
-    {"category": "Patient", "icon": Icons.person_pin_rounded, "onTap": () {}},
-    {"category": "Game Result", "icon": IconData(0xf43b), "onTap": () {}},
-    {"category": "Reminder", "icon": Icons.notifications, "onTap": () {}},
+    {
+      "category": "Patient",
+      "icon": Icons.person_pin_rounded,
+      "onTap": () {
+        Get.toNamed(RouteHelper.getPatientListPage());
+      }
+    },
+    {
+      "category": "Game Result",
+      "icon": IconData(0xf43b),
+      "onTap": () {},
+    },
+    {
+      "category": "Reminder",
+      "icon": Icons.notifications,
+      "onTap": () {},
+    },
     {
       "category": "Admin",
       "icon": Icons.admin_panel_settings,
@@ -28,7 +51,11 @@ class AdminHomePage extends StatelessWidget {
         Get.toNamed(RouteHelper.getAdminListPage());
       }
     },
-    {"category": "Survey", "icon": Icons.edit_document, "onTap": () {}},
+    {
+      "category": "Survey",
+      "icon": Icons.edit_document,
+      "onTap": () {},
+    },
   ];
 
   @override
@@ -40,6 +67,10 @@ class AdminHomePage extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(
                 gradient: AppColors.linearBluePurple,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
               ),
               child: Padding(
                 padding: EdgeInsets.only(
@@ -51,22 +82,40 @@ class AdminHomePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          "Hi, Mr. Ryan",
-                          style: AppTextStyle.h3
-                              .merge(AppTextStyle.whiteTextStyle),
+                        Padding(
+                          padding: EdgeInsets.only(right: 12.w),
+                          child: Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
+                              width: 44.w),
                         ),
-                        Text(
-                          "NeuroFit Dashboard",
-                          style: AppTextStyle.h2
-                              .merge(AppTextStyle.whiteTextStyle),
-                        )
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Hi, Mr. Ryan",
+                              style: AppTextStyle.h3
+                                  .merge(AppTextStyle.whiteTextStyle),
+                            ),
+                            Text(
+                              "NeuroFit Dashboard",
+                              style: AppTextStyle.h2
+                                  .merge(AppTextStyle.whiteTextStyle),
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                    Image.asset(AppConstant.NEUROFIT_LOGO_ONLY, width: 80.w),
+                    IconButton(
+                      onPressed: () {
+                        Get.find<AdminHomeViewModel>().signOutUser(context);
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -74,7 +123,9 @@ class AdminHomePage extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
               alignment: Alignment.centerLeft,
-              child: Text("Categories", style: AppTextStyle.h2),
+              child: Text("Categories",
+                  style:
+                      AppTextStyle.h2.merge(AppTextStyle.brandBlueTextStyle)),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -86,43 +137,19 @@ class AdminHomePage extends StatelessWidget {
                     crossAxisSpacing: 16.w,
                     mainAxisSpacing: 16.h, // Added mainAxisSpacing
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      ...categories.map((category) => InkWell(
-                            onTap: category["onTap"],
-                            child: Container(
-                              margin: EdgeInsets.only(top: 10.h),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.r),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 2,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    category["icon"],
-                                    size: 50.w,
-                                    color: AppColors.brandBlue,
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Text(
-                                    category["category"],
-                                    style: AppTextStyle.h4.merge(
-                                      AppTextStyle.brandBlueTextStyle,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )),
+                      ...categories
+                          .map((category) => CategoryCard().buildCategoryCard(
+                                category: category["category"],
+                                icon: category["icon"],
+                                onTap: category["onTap"],
+                                iconSize: 50.w,
+                                foregroundColor: AppColors.brandBlue,
+                                backgroundColor: Colors.white,
+                                isRow: false,
+                              ))
+                          .toList(),
                     ],
                   ),
                 ),
@@ -130,6 +157,31 @@ class AdminHomePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: AppColors.brandBlue,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
