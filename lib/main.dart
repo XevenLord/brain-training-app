@@ -1,16 +1,19 @@
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/view_model/sign_up_controller.dart';
+import 'package:brain_training_app/patient/game/2048/models/board_adapter.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
 import 'package:brain_training_app/common/domain/service/dependencies.dart'
     as dep;
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'firebase_options.dart';
 import 'patient/authentification/signUp/domain/service/auth_repo.dart';
@@ -24,6 +27,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await Hive.initFlutter();
+  Hive.registerAdapter(BoardAdapter());
 
   FirebaseAuthRepository.subscribeIDTokenListening();
 
@@ -44,14 +50,16 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         designSize: const Size(450, 974.4),
         builder: (context, child) {
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Neurofit',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
+          return ProviderScope(
+            child: GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Neurofit',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              initialRoute: RouteHelper.getSplashScreen(),
+              getPages: RouteHelper.routes,
             ),
-            initialRoute: RouteHelper.getSplashScreen(),
-            getPages: RouteHelper.routes,
           );
         });
   }

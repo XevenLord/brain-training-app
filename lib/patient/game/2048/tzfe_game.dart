@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:get/get.dart';
 
 import 'components/button.dart';
 import 'components/empy_board.dart';
@@ -9,14 +10,14 @@ import 'components/tile_board.dart';
 import 'const/colors.dart';
 import 'managers/board.dart';
 
-class Game extends ConsumerStatefulWidget {
-  const Game({super.key});
+class TZFEGame extends ConsumerStatefulWidget {
+  const TZFEGame({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GameState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TZFEGameState();
 }
 
-class _GameState extends ConsumerState<Game>
+class _TZFEGameState extends ConsumerState<TZFEGame>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   //The contoller used to move the the tiles
   late final AnimationController _moveController = AnimationController(
@@ -81,6 +82,19 @@ class _GameState extends ConsumerState<Game>
         },
         child: Scaffold(
           backgroundColor: backgroundColor,
+          appBar: AppBar(
+            backgroundColor: backgroundColor,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: textColor,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+          ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -163,7 +177,6 @@ class _GameState extends ConsumerState<Game>
     //Remove the Observer for the Lifecycles of the App
     WidgetsBinding.instance.removeObserver(this);
 
-    //Dispose the animations.
     _moveAnimation.dispose();
     _scaleAnimation.dispose();
     _moveController.dispose();

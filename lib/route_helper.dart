@@ -14,6 +14,7 @@ import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_success_page.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
+import 'package:brain_training_app/patient/game/2048/tzfe_game.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ai_game_settings.dart';
 import 'package:brain_training_app/patient/home/ui/page/home_page.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_edit_page.dart';
@@ -31,7 +32,11 @@ class RouteHelper {
   static const String signUpDone = '/signup-done';
   static const String forgetPassword = '/forget-password';
   static const String patientHome = '/patient-home';
+
+  // Game
   static const String ticTacToe = '/tic-tac-toe';
+  static const String tZFEGame = '/TZFEGame';
+
   static const String appointmentBookingPage = '/appointment-booking-page';
   static const String appointmentEditPage = '/appointment-edit-page';
   static const String appointmentSuccessPage = '/appointment-success-page';
@@ -65,7 +70,11 @@ class RouteHelper {
   static String getSignUpDonePage() => signUpDone;
   static String getForgetPassword() => forgetPassword;
   static String getPatientHome() => patientHome;
+
+  // Game
   static String getTicTacToe() => ticTacToe;
+  static String getTZFEGame() => tZFEGame;
+
   static String getAppointmentBookingPage() => appointmentBookingPage;
   static String getAppointmentEditPage() => appointmentEditPage;
   static String getAppointmentSuccessPage() => appointmentSuccessPage;
@@ -132,6 +141,11 @@ class RouteHelper {
       name: ticTacToe,
       transition: Transition.fadeIn,
       page: () => const GameSettings(),
+    ),
+    GetPage(
+      name: tZFEGame,
+      transition: Transition.fadeIn,
+      page: () => const TZFEGame(),
     ),
     GetPage(
       name: appointmentBookingPage,

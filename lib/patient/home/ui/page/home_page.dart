@@ -54,7 +54,9 @@ class _HomePageState extends State<HomePage> {
       "description": "This is mathematics",
       "img":
           "https://image.shutterstock.com/image-illustration/mathematics-horizontal-banner-presentation-website-260nw-1798855321.jpg",
-      "onTap": () {}
+      "onTap": () {
+        Get.toNamed(RouteHelper.getTZFEGame());
+      }
     },
     {
       "name": "Sudoku",
