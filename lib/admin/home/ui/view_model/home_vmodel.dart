@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,14 +13,14 @@ class AdminHomeViewModel extends GetxController implements GetxService {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Do you want to log out?'),
+        title: Text('Do you want to log out?', style: AppTextStyle.h2),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               print("you choose no");
               Get.back();
             },
-            child: Text('No'),
+            child: Text('No', style: AppTextStyle.h2),
           ),
           TextButton(
             onPressed: () async {
@@ -37,7 +38,7 @@ class AdminHomeViewModel extends GetxController implements GetxService {
                 () => Get.offNamed(RouteHelper.getSignIn()),
               );
             },
-            child: Text('Yes'),
+            child: Text('Yes', style: AppTextStyle.h2),
           ),
         ],
       ),

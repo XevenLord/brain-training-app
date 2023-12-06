@@ -86,7 +86,41 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         CupertinoButton(
                             onPressed: () {
                               setState(() {
-                                profileVModel.takeImageFromCamera();
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        height: 150.h,
+                                        child: Column(
+                                          children: [
+                                            ListTile(
+                                              leading: Icon(
+                                                Icons.camera_alt,
+                                                color: AppColors.brandBlue,
+                                              ),
+                                              title: Text("Camera"),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                profileVModel
+                                                    .takeImageFromCamera();
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: Icon(
+                                                Icons.photo,
+                                                color: AppColors.brandBlue,
+                                              ),
+                                              title: Text("Gallery"),
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                profileVModel
+                                                    .takeImageFromGallery();
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
                               });
                               changeProfilePic = true;
                               print("The image has changed");

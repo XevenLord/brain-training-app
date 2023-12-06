@@ -37,6 +37,17 @@ class ProfileViewModel extends GetxController implements GetxService {
     }
   }
 
+  void takeImageFromGallery() async {
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    if (image != null) {
+      imagefile.value = File(image.path);
+      _uploadFile();
+    } else {
+      print('Image capture failed.');
+    }
+  }
+
   void _uploadFile() {
     if (imagefile == null) return;
     final storageRef = FirebaseStorage.instance.ref();

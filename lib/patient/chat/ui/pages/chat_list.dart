@@ -1,9 +1,6 @@
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
-import 'package:brain_training_app/patient/chat/ui/widgets/chat_item.dart';
-import 'package:brain_training_app/route_helper.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,13 +31,13 @@ class _ChatListState extends State<ChatList> {
         slivers: [
           SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CupertinoSearchTextField(
-                          key: UniqueKey(),
-                          onChanged: (value) {},
-                          onSubmitted: (value) {},
-                        ),
-              )),
+            padding: const EdgeInsets.all(16.0),
+            child: CupertinoSearchTextField(
+              key: UniqueKey(),
+              onChanged: (value) {},
+              onSubmitted: (value) {},
+            ),
+          )),
           Obx(() => SliverList(
                   delegate: SliverChildListDelegate(
                       chatViewModel.messages.values.toList().map((data) {

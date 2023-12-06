@@ -1,3 +1,4 @@
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,7 +47,7 @@ class _ChatState extends State<Chat> {
                 targetUid: null,
               },
               'names': {
-                currentUserId: FirebaseAuth.instance.currentUser?.displayName,
+                currentUserId: Get.find<AppUser>().name,
                 targetUid: targetName
               }
             }).then((value) => chatDocId = value);

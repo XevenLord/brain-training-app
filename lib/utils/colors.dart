@@ -35,4 +35,12 @@ class AppColors {
       Color(0xFF0085FF),
     ],
   );
+  static const LinearGradient linearBlue = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF9CD0F6),
+      Color(0xFFB8C3FF)
+    ],
+  );
 }

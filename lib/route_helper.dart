@@ -15,6 +15,8 @@ import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_game.dart';
+import 'package:brain_training_app/patient/game/flip_card_memory/memory_game.dart';
+import 'package:brain_training_app/patient/game/maths/math_game.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ai_game_settings.dart';
 import 'package:brain_training_app/patient/home/ui/page/home_page.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_edit_page.dart';
@@ -36,6 +38,8 @@ class RouteHelper {
   // Game
   static const String ticTacToe = '/tic-tac-toe';
   static const String tZFEGame = '/TZFEGame';
+  static const String memoryGame = '/memory-game';
+  static const String mathGame = '/math-game';
 
   static const String appointmentBookingPage = '/appointment-booking-page';
   static const String appointmentEditPage = '/appointment-edit-page';
@@ -74,6 +78,8 @@ class RouteHelper {
   // Game
   static String getTicTacToe() => ticTacToe;
   static String getTZFEGame() => tZFEGame;
+  static String getMemoryGame() => memoryGame;
+  static String getMathGame() => mathGame;
 
   static String getAppointmentBookingPage() => appointmentBookingPage;
   static String getAppointmentEditPage() => appointmentEditPage;
@@ -137,6 +143,7 @@ class RouteHelper {
         );
       },
     ),
+    // Game
     GetPage(
       name: ticTacToe,
       transition: Transition.fadeIn,
@@ -147,6 +154,17 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => const TZFEGame(),
     ),
+    GetPage(
+      name: memoryGame,
+      transition: Transition.fadeIn,
+      page: () => MemoryGameHomePage(),
+    ),
+    GetPage(
+      name: mathGame,
+      transition: Transition.fadeIn,
+      page: () => const MathGame(),
+    ),
+
     GetPage(
       name: appointmentBookingPage,
       transition: Transition.fadeIn,

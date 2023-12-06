@@ -38,7 +38,8 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
       appBar: AppBar(
         title: Align(
           alignment: Alignment.centerLeft,
-          child: Text("Appointments", style: AppTextStyle.blackTextStyle),
+          child: Text("Appointments",
+              style: AppTextStyle.blackTextStyle.merge(AppTextStyle.h2)),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),

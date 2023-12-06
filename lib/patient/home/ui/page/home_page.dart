@@ -5,11 +5,13 @@ import 'package:brain_training_app/patient/appointment/ui/view_model/appointment
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
+import 'package:brain_training_app/patient/healthCheck/ui/widgets/question_card.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/widget/game_card.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_main_page.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/test_page.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   // ChatViewModel chatVModel = Get.find<ChatViewModel>();
 
   int _selectedIndex = 0;
+  int popupIndex = 0;
 
   List<String> categories = [
     "All",
@@ -42,29 +45,38 @@ class _HomePageState extends State<HomePage> {
   List<Map> games = [
     {
       "name": "Tic Tac Toe",
-      "description": "This is tic tac toe",
-      "img":
-          "https://media.istockphoto.com/id/1365567894/vector/hand-drawn-vector-tic-tac-toe-game-noughts-and-crosses-doodle-sketch.jpg?s=612x612&w=0&k=20&c=pSs72urXBp6V8pnXvuJIfX3krtUoFhHaX6fG2g1PxUQ=",
+      "description":
+          "Tic-tac-toe is a 3x3 grid game to get three in a row and win.",
+      "img": "assets/images/tic_tac_toe_game.png",
       "onTap": () {
         Get.toNamed(RouteHelper.getTicTacToe());
       },
     },
     {
-      "name": "Mathematics",
-      "description": "This is mathematics",
-      "img":
-          "https://image.shutterstock.com/image-illustration/mathematics-horizontal-banner-presentation-website-260nw-1798855321.jpg",
+      "name": "Memory Flip Card",
+      "description":
+          "A memory flip card game tests your recall by matching pairs of hidden cards.",
+      "img": "assets/images/flipcard_game.jpg",
       "onTap": () {
-        Get.toNamed(RouteHelper.getTZFEGame());
+        Get.toNamed(RouteHelper.getMemoryGame());
       }
     },
     {
-      "name": "Sudoku",
-      "description": "This is sudoku",
-      "img":
-          "https://sudoku-puzzles.net/wp-content/puzzles/asterisk-sudoku/easy/1.png",
+      "name": "Mathematics",
+      "description":
+          "A math game enhances math skills through fun challenges and problem-solving.",
+      "img": "assets/images/mathematics_game.png",
       "onTap": () {
-        Get.toNamed(RouteHelper.getTicTacToe());
+        Get.toNamed(RouteHelper.getMathGame());
+      }
+    },
+    {
+      "name": "2048",
+      "description":
+          "2048 is a number puzzle game where you merge tiles to reach 2048.",
+      "img": "assets/images/2048_game.png",
+      "onTap": () {
+        Get.toNamed(RouteHelper.getTZFEGame());
       }
     },
   ];
@@ -83,6 +95,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void updatePopupIndex(int newIndex) {
+    setState(() {
+      popupIndex = newIndex;
+    });
+  }
+
   Widget currentScreen() {
     switch (_selectedIndex) {
       case 0:
@@ -90,6 +108,17 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10.h),
+            TextButton(
+                child: Text("Update your mental status?"),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return StatefulBuilder(builder: (context, setState) {
+                          return QuestionCard();
+                        });
+                      });
+                }),
             SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
               scrollDirection: Axis.horizontal,

@@ -27,6 +27,11 @@ class GameCard extends StatefulWidget {
 }
 
 class _GameCardState extends State<GameCard> {
+  bool isNetworkImage() {
+    Uri? uri = Uri.tryParse(widget.img);
+    return uri != null && (uri.scheme == 'http' || uri.scheme == 'https');
+  }
+
   @override
   Widget build(BuildContext context) {
     return EmptyBox(
@@ -53,8 +58,7 @@ class _GameCardState extends State<GameCard> {
               decoration: BoxDecoration(
                 color: AppColors.white,
                 image: DecorationImage(
-                  image: NetworkImage(widget.img),
-                  // AssetImage(widget.img),
+                  image: Image.asset(widget.img).image,
                   fit: BoxFit.cover,
                 ),
                 borderRadius: const BorderRadius.only(
@@ -74,7 +78,8 @@ class _GameCardState extends State<GameCard> {
                         color: Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.more_horiz, color: Colors.black87),
+                      child:
+                          const Icon(Icons.more_horiz, color: Colors.black87),
                     ),
                   ),
                 ],
@@ -89,9 +94,13 @@ class _GameCardState extends State<GameCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(widget.description,
-                          style:
-                              AppTextStyle.c2.merge(AppTextStyle.greyTextStyle)),
+                      Expanded(
+                        child: Text(widget.description,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: AppTextStyle.c2
+                                .merge(AppTextStyle.greyTextStyle)),
+                      ),
                       IconButton(
                         // padding: EdgeInsets.zero,
                         alignment: Alignment.centerRight,
