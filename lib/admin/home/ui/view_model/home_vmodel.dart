@@ -20,7 +20,7 @@ class AdminHomeViewModel extends GetxController implements GetxService {
               print("you choose no");
               Get.back();
             },
-            child: Text('No', style: AppTextStyle.h2),
+            child: Text('No', style: AppTextStyle.h3),
           ),
           TextButton(
             onPressed: () async {
@@ -38,7 +38,7 @@ class AdminHomeViewModel extends GetxController implements GetxService {
                 () => Get.offNamed(RouteHelper.getSignIn()),
               );
             },
-            child: Text('Yes', style: AppTextStyle.h2),
+            child: Text('Yes', style: AppTextStyle.h3),
           ),
         ],
       ),

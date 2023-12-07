@@ -1,9 +1,6 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:brain_training_app/main.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -111,36 +108,6 @@ class FirebaseAuthRepository extends GetxController{
     } on FirebaseAuthException catch (e) {
       throw Error();
     }
-  }
-
-  Future<List<Appointment>> getAppointments() async {
-    List<Appointment> appointments = [];
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('appointments').get();
-
-    appointments = querySnapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-      debugModePrint("checking Appointment retrieved from firebase...");
-      return Appointment(
-        date: data['date'],
-        reason: data['reason'],
-        patientID: data['patientID'],
-        appointmentID: data['appointmentID'],
-        patient: data['patient'],
-        physiotherapistInCharge: Physiotherapist(
-          imgUrl: data['physiotherapistInCharge']['imgUrl'],
-          speciality: data['physiotherapistInCharge']['speciality'],
-          phone: data['physiotherapistInCharge']['phone'],
-          about: data['physiotherapistInCharge']['about'],
-          name: data['physiotherapistInCharge']['name'],
-          id: data['physiotherapistInCharge']['id'],
-          email: data['physiotherapistInCharge']['email'],
-        ),
-        time: data['time'],
-      );
-    }).toList();
-    return appointments;
   }
 
   // data map must contain uid, name, icNumber, email ...

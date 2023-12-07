@@ -52,10 +52,10 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                   ),
                   Center(
                     child: CircleAvatar(
-                      radius: 60,
+                      radius: 70.r,
                       child: appUser.profilePic != null && appUser.profilePic!.isNotEmpty
                           ? ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
+                              borderRadius: BorderRadius.circular(69.r),
                               child: Image(
                                 image: NetworkImage(appUser.profilePic! as String),
                                 width: 100,

@@ -1,4 +1,6 @@
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -14,6 +16,51 @@ class PatientList extends StatefulWidget {
 }
 
 class _PatientListState extends State<PatientList> {
+  late UserRepository userRepo;
+  late List<AppUser> patients;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    userRepo = Get.find<UserRepository>();
+    fetchPatients();
+    super.initState();
+  }
+
+  void fetchPatients() async {
+    try {
+      await userRepo.fetchAllPatients();
+      setState(() {
+        patients = userRepo.getPatientUsers;
+        isLoading = false; // Set loading to false after data is fetched
+      });
+    } catch (e) {
+      // Handle any potential errors during data fetching
+      print(e);
+      setState(() {
+        isLoading = false; // Set loading to false even on error
+      });
+    }
+  }
+
+  String calculateAge(DateTime? dateOfBirth) {
+    if (dateOfBirth == null) {
+      return 'N/A';
+    }
+
+    final currentDate = DateTime.now();
+    final age = currentDate.year - dateOfBirth.year;
+
+    if (currentDate.month < dateOfBirth.month ||
+        (currentDate.month == dateOfBirth.month &&
+            currentDate.day < dateOfBirth.day)) {
+      return (age - 1)
+          .toString(); // Subtract 1 if birthday hasn't occurred this year yet
+    }
+
+    return age.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,49 +79,27 @@ class _PatientListState extends State<PatientList> {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InfoCardTile().buildInfoCard(
-                  name: "Mr. Pua",
-                  age: "20",
-                  gender: "Male",
-                  onEdit: ()  {
-                    Get.toNamed(RouteHelper.getPatientOverviewPage());
-                  }),
-              InfoCardTile().buildInfoCard(
-                name: "Mr. Lee",
-                age: "50",
-                gender: "Male",
-              ),
-              InfoCardTile().buildInfoCard(
-                name: "Mr. Tay",
-                age: "60",
-                gender: "Male",
-              ),
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 30.w),
-                  child: Column(
-                    children: [
-                      IconButton(
-                        iconSize: 60.w,
-                        icon: Icon(Icons.add_circle,
-                            color: Colors.blue, size: 60.w),
-                        onPressed: () {},
+        child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...patients.map(
+                      (e) => InfoCardTile().buildInfoCard(
+                        name: e.name!,
+                        age: calculateAge(e.dateOfBirth),
+                        gender: e.gender!,
+                        onEdit: () {
+                          Get.toNamed(RouteHelper.getPatientOverviewPage(),
+                              arguments: e);
+                        },
                       ),
-                      Text("Add New Admin",
-                          style: AppTextStyle.h3
-                              .merge(AppTextStyle.brandBlueTextStyle)),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
+              ),
       ),
     );
   }

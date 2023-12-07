@@ -9,6 +9,7 @@ import 'package:brain_training_app/patient/appointment/ui/page/appointment_booki
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
 import 'package:brain_training_app/patient/authentification/signIn/ui/page/sign_in_page.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_first_page.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_second_page.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_success_page.dart';
@@ -245,7 +246,10 @@ class RouteHelper {
     GetPage(
       name: patientOverviewPage,
       transition: Transition.fadeIn,
-      page: () => const PatientOverview(),
+      page: () {
+        AppUser patient = Get.arguments;
+        return PatientOverview(patient: patient);
+      },
     ),
   ];
 }

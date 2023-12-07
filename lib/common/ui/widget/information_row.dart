@@ -1,3 +1,4 @@
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
 
 class InformationRow extends StatelessWidget {
@@ -11,8 +12,8 @@ class InformationRow extends StatelessWidget {
       {required this.title,
       required this.value,
       this.padding = const EdgeInsets.all(0),
-      this.titlefontSize = 14,
-      this.valuefontSize = 14});
+      this.titlefontSize = 16,
+      this.valuefontSize = 16});
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +27,14 @@ class InformationRow extends StatelessWidget {
             style: TextStyle(
               fontSize: titlefontSize,
               color: Colors.black54,
-            ),
+            ).merge(AppTextStyle.c1),
           ),
           Text(
             '$value',
             style: TextStyle(
               fontSize: valuefontSize,
               fontWeight: FontWeight.bold,
-            ),
+            ).merge(AppTextStyle.c1),
           ),
         ],
       ),

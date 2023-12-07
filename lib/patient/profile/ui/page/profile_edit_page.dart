@@ -170,10 +170,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                                           // If no new image is available but appUser has a profilePic,
                                           // load the image from appUser.profilePic
                                           return CircleAvatar(
-                                            radius: 60,
+                                            radius: 70.r,
                                             child: ClipRRect(
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                                  BorderRadius.circular(69.r),
                                               child: Image(
                                                 image: NetworkImage(
                                                     appUser.profilePic!),
