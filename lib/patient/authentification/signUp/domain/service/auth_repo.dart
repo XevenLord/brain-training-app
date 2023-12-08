@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // 3. sign in
 // 4. get user details
 
-class FirebaseAuthRepository extends GetxController{
+class FirebaseAuthRepository extends GetxController {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static FirebaseAuth get firebaseAuth => _firebaseAuth;
   User? get currentUser => _firebaseAuth.currentUser;
@@ -127,6 +127,7 @@ class FirebaseAuthRepository extends GetxController{
         "gender": data["gender"],
         "registeredOn": FieldValue.serverTimestamp(),
         "role": "patient",
+        "profilePic": data["profilePic"],
         // "appointments": [],
       });
       debugModePrint("init set firebase done...");
@@ -139,6 +140,7 @@ class FirebaseAuthRepository extends GetxController{
         dateOfBirth: data["dateOfBirth"],
         gender: data["gender"],
         role: "patient",
+        profilePic: data["profilePic"],
         // appointments: [],
       );
       debugModePrint("init process done...");
@@ -153,7 +155,6 @@ class FirebaseAuthRepository extends GetxController{
   static Future<bool> getUserDetails(String uid) async {
     final appUser = Get.find<AppUser>();
     try {
-      debugModePrint("auth repo: getting user details...");
       dynamic data = await FirebaseFirestore.instance
           .collection("users")
           .doc(uid)
@@ -164,9 +165,6 @@ class FirebaseAuthRepository extends GetxController{
         debugModePrint("No doc found");
         throw Error();
       }
-
-      print("check the appointments (1)");
-
       appUser.setDetails(
         uid: data["uid"],
         name: data["name"],
@@ -176,11 +174,6 @@ class FirebaseAuthRepository extends GetxController{
         dateOfBirth: DateTime.parse(data["dateOfBirth"]),
         gender: data["gender"],
         aboutMe: data["aboutMe"],
-        appointments: data["appointments"] != null
-            ? List<Appointment>.from(data["appointments"].map((appointment) {
-                return Appointment.fromJson(appointment);
-              }))
-            : [],
         profilePic: data["profilePic"],
         role: data["role"],
       );
@@ -190,12 +183,15 @@ class FirebaseAuthRepository extends GetxController{
       if (appUser.uid != null) {
         await prefs.setString('uid', appUser.uid!);
       }
-
       return true;
     } on FirebaseException catch (e) {
       return false;
     } catch (e) {
       return false;
     }
+  }
+
+  static Future<void> sendPasswordResetEmail({required String email}) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 }

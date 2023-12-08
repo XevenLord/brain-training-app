@@ -40,53 +40,58 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
           height: 20,
         ),
         // Circle Avatar Picture
-        appUser.aboutMe != null && appUser.aboutMe!.isNotEmpty
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("About Yourself",
-                      style: AppTextStyle.h2
-                          .merge(AppTextStyle.brandBlueTextStyle)),
-                  SizedBox(
-                    height: 12.h,
-                  ),
-                  Center(
-                    child: CircleAvatar(
-                      radius: 70.r,
-                      child: appUser.profilePic != null && appUser.profilePic!.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(69.r),
-                              child: Image(
-                                image: NetworkImage(appUser.profilePic! as String),
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.fill,
-                              ))
-                          : Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              width: 100,
-                              height: 100,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.grey[800],
-                              )),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 12.h,
-                  ),
-                  EmptyBox(
-                      decoration: BoxDecoration(
-                          color: AppColors.brandBlue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10.r)),
-                      child: Text('"${appUser.aboutMe!}"',
-                          style: AppTextStyle.h3)),
-                ],
-              )
-            : Container(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("About Yourself",
+                style: AppTextStyle.h2.merge(AppTextStyle.brandBlueTextStyle)),
+            SizedBox(
+              height: 12.h,
+            ),
+            Center(
+              child: CircleAvatar(
+                radius: 70.r,
+                child: appUser.profilePic != null &&
+                        appUser.profilePic!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(69.r),
+                        child: Image(
+                          image: NetworkImage(appUser.profilePic! as String),
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
+                        ))
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        width: 100,
+                        height: 100,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.grey[800],
+                        )),
+              ),
+            ),
+            SizedBox(
+              height: 12.h,
+            ),
+            appUser.aboutMe != null && appUser.aboutMe!.isNotEmpty
+                ? EmptyBox(
+                    decoration: BoxDecoration(
+                        color: AppColors.brandBlue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10.r)),
+                    child:
+                        Text('"${appUser.aboutMe!}"', style: AppTextStyle.h3))
+                : EmptyBox(
+                    decoration: BoxDecoration(
+                        color: AppColors.lightBlue.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(10.r)),
+                    child: Text('Edit to add self-description',
+                        style: AppTextStyle.h3)),
+          ],
+        ),
         SizedBox(height: 20.h),
         InfoTile(title: "Name", label: appUser.name!),
         InfoTile(title: "IC Number", label: appUser.icNumber!),
@@ -103,13 +108,13 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
           alignment: Alignment.centerRight,
           child: CircleAvatar(
             radius: 30.r,
-            backgroundColor: AppColors.brandBlue,
+            backgroundColor: AppColors.lightBlue,
             child: IconButton(
               color: AppColors.white,
               onPressed: () {
                 Get.toNamed(RouteHelper.getProfileEditPage());
               },
-              icon: Icon(Icons.edit),
+              icon: const Icon(Icons.edit, color: AppColors.brandBlue),
             ),
           ),
         )

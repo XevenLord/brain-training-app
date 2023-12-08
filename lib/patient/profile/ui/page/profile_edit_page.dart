@@ -38,8 +38,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController introController = TextEditingController();
 
-  bool changeProfilePic = false;
-
   final appUser = Get.find<AppUser>();
 
   @override
@@ -84,126 +82,126 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         Text("Edit Profile", style: AppTextStyle.h2),
                         SizedBox(height: 16.h),
                         CupertinoButton(
-                            onPressed: () {
-                              setState(() {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        height: 150.h,
-                                        child: Column(
-                                          children: [
-                                            ListTile(
-                                              leading: Icon(
-                                                Icons.camera_alt,
-                                                color: AppColors.brandBlue,
-                                              ),
-                                              title: Text("Camera"),
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                                profileVModel
-                                                    .takeImageFromCamera();
-                                              },
-                                            ),
-                                            ListTile(
-                                              leading: Icon(
-                                                Icons.photo,
-                                                color: AppColors.brandBlue,
-                                              ),
-                                              title: Text("Gallery"),
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                                profileVModel
-                                                    .takeImageFromGallery();
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    });
-                              });
-                              changeProfilePic = true;
-                              print("The image has changed");
-                            },
-                            child: Padding(
-                                padding: EdgeInsets.only(bottom: 16.h),
-                                child: Obx(() => FutureBuilder<File?>(
-                                      future: Future.value(
-                                          profileVModel.imagefile.value),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          // While the image is loading, you can display a placeholder
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                            ),
-                                            width: 100,
-                                            height: 100,
-                                            child: Icon(
+                          onPressed: () {
+                            setState(() {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      height: 150.h,
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            leading: const Icon(
                                               Icons.camera_alt,
-                                              color: Colors.grey[800],
+                                              color: AppColors.brandBlue,
                                             ),
-                                          );
-                                        } else if (snapshot.hasError) {
-                                          // Handle any errors that occurred during loading
-                                          return Text(
-                                              'Error: ${snapshot.error}');
-                                        } else if (snapshot.data != null) {
-                                          // If the image is available, display it
-                                          return CircleAvatar(
-                                            radius: 60,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              child: Image.file(
-                                                snapshot.data!,
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.fill,
-                                              ),
+                                            title: Text("Camera"),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              profileVModel
+                                                  .takeImageFromCamera();
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: const Icon(
+                                              Icons.photo,
+                                              color: AppColors.brandBlue,
                                             ),
-                                          );
-                                        } else if (appUser.profilePic != null) {
-                                          // If no new image is available but appUser has a profilePic,
-                                          // load the image from appUser.profilePic
-                                          return CircleAvatar(
-                                            radius: 70.r,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(69.r),
-                                              child: Image(
-                                                image: NetworkImage(
-                                                    appUser.profilePic!),
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          // If no image is available, display a default image or icon
-                                          return CircleAvatar(
-                                            radius: 60,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                              ),
-                                              width: 100,
-                                              height: 100,
-                                              child: Icon(
-                                                Icons.camera_alt,
-                                                color: Colors.grey[800],
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    )))),
+                                            title: Text("Gallery"),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              profileVModel
+                                                  .takeImageFromGallery();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            });
+                            print("The image has changed");
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 16.h),
+                            child: Obx(
+                              () => FutureBuilder<File?>(
+                                future:
+                                    Future.value(profileVModel.imagefile.value),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    // While the image is loading, you can display a placeholder
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      width: 100,
+                                      height: 100,
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.grey[800],
+                                      ),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    // Handle any errors that occurred during loading
+                                    return Text('Error: ${snapshot.error}');
+                                  } else if (snapshot.data != null) {
+                                    // If the image is available, display it
+                                    return CircleAvatar(
+                                      radius: 60,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Image.file(
+                                          snapshot.data!,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    );
+                                  } else if (appUser.profilePic != null) {
+                                    // If no new image is available but appUser has a profilePic,
+                                    // load the image from appUser.profilePic
+                                    return CircleAvatar(
+                                      radius: 70.r,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(69.r),
+                                        child: Image(
+                                          image:
+                                              NetworkImage(appUser.profilePic!),
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    // If no image is available, display a default image or icon
+                                    return CircleAvatar(
+                                      radius: 60,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                        ),
+                                        width: 100,
+                                        height: 100,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -317,10 +315,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                         },
                         child: Text(
                           "Update",
-                          style: AppTextStyle.h3,
+                          style: AppTextStyle.h3
+                              .merge(AppTextStyle.brandBlueTextStyle),
                         ),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.brandBlue),
+                            backgroundColor: AppColors.lightBlue),
                       ),
                     ],
                   ),

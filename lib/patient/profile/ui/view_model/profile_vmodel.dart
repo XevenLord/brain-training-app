@@ -20,7 +20,6 @@ class ProfileViewModel extends GetxController implements GetxService {
     });
     if (_profilePicUrl != null) newData['profilePic'] = _profilePicUrl;
     isUpdated = await ProfileService.onUpdateProfileDetails(newData);
-
     update();
     return isUpdated;
   }

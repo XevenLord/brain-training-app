@@ -38,28 +38,47 @@ class _SignInPageState extends State<SignInPage> {
 
   void _signUserIn() async {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
     try {
       await FirebaseAuthRepository.signInWithEmailAndPassword(
           email: _emailInput.text, password: _passwordInput.text);
-      debugModePrint("null check getCurrentUser " +
-          (FirebaseAuthRepository.getCurrentUser() == null).toString());
-      debugModePrint("null check get find uid " +
-          (Get.find<AppUser>().uid == null).toString());
       if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
         Get.offAllNamed(RouteHelper.getAdminHome());
       } else if (selectedRole == "patient" &&
           Get.find<AppUser>().role == "patient") {
         Get.offAllNamed(RouteHelper.getPatientHome());
+      } else {
+        Get.back(); // Close the loading dialog
+        // Show a custom AlertDialog for other roles
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Column(
+                children: [
+                  // Customize the content for the other role here
+                  Image.asset(AppConstant.WRONG_MARK, width: 100.w),
+                  SizedBox(height: 10.h),
+                  Text(
+                    "You don't have permission for this role!",
+                    textAlign: TextAlign.center,
+                    style: AppTextStyle.h3,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
       }
     } on FirebaseAuthException catch (e) {
-      Get.back();
-      //wrong Email
+      Get.back(); // Close the loading dialog
+      // Show an AlertDialog for wrong email or password
       showDialog(
         context: context,
         builder: (context) {
@@ -68,8 +87,11 @@ class _SignInPageState extends State<SignInPage> {
               children: [
                 Image.asset(AppConstant.WRONG_MARK, width: 100.w),
                 SizedBox(height: 10.h),
-                Text("Wrong email or password entered!",
-                    textAlign: TextAlign.center, style: AppTextStyle.h3),
+                Text(
+                  "Wrong email or password entered!",
+                  textAlign: TextAlign.center,
+                  style: AppTextStyle.h3,
+                ),
               ],
             ),
           );
@@ -94,7 +116,6 @@ class _SignInPageState extends State<SignInPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 16.0),
                       child: DropdownButton<String>(
-                        
                         value: selectedRole,
                         items: const [
                           DropdownMenuItem<String>(

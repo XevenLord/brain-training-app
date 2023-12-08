@@ -1,15 +1,11 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
-import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -29,8 +25,6 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     setState(() {
       timeSlots = timeSlotsTemplate;
     });
@@ -40,6 +34,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
         appts = value;
       });
     });
+    super.initState();
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -48,7 +43,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
   String storedTimeSlot = "";
   int timeSlotIndex = -1;
 
-  TextEditingController _commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
 
   List timeSlots = [];
 
@@ -66,7 +61,6 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
 
   void updateTimeSlots() {
     timeSlots = List.from(timeSlotsTemplate);
-
     for (int i = 0; i < appts.length; i++) {
       if (appts[i].date != null &&
           appts[i].date! == DateFormat('yyyy-MM-dd').format(_selectedDay)) {
@@ -75,10 +69,6 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
     }
     setState(() {});
   }
-
-  // bool checkTimeSlot(String timeSlot) {
-
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +91,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TableCalendar(
-                  firstDay: DateTime.utc(2010, 10, 16),
+                  firstDay: DateTime.utc(2022, 10, 16),
                   lastDay: DateTime.utc(2030, 3, 14),
                   focusedDay: _focusedDay,
                   selectedDayPredicate: (day) {
@@ -133,13 +123,13 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                   },
                   calendarStyle: CalendarStyle(
                     isTodayHighlighted: true,
-                    selectedDecoration: BoxDecoration(
+                    selectedDecoration: const BoxDecoration(
                       color: AppColors.brandBlue,
                       shape: BoxShape.circle,
                     ),
                     selectedTextStyle:
                         AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
-                    todayDecoration: BoxDecoration(
+                    todayDecoration: const BoxDecoration(
                       color: AppColors.lightBlue,
                       shape: BoxShape.circle,
                     ),
@@ -209,9 +199,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                   ),
                   child: InkWell(
                     onTap: () async {
-                      //  store data into view_model
-                      print("patient name");
-                      print(Get.find<AppUser>().name);
+                      if (storedTimeSlot.isEmpty) return;
                       await _appointmentViewModel.setAppointment(
                         date: _selectedDay,
                         time: storedTimeSlot,
@@ -220,6 +208,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                       );
                       setState(() {});
                       if (_appointmentViewModel.isAppointmentSet) {
+                        _appointmentViewModel.isAppointmentSet = false;
                         Get.toNamed(RouteHelper.getAppointmentSuccessPage());
                       } else {
                         Get.snackbar(

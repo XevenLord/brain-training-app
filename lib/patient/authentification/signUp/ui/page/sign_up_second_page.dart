@@ -1,13 +1,12 @@
+import 'dart:io';
+
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/view_model/sign_up_controller.dart';
-import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -32,9 +31,8 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     signUpController = Get.find<SignUpController>();
+    super.initState();
   }
 
   void checkPassword() {
@@ -46,7 +44,6 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
           );
         });
     if (_passwordInput.text != _confirmPasswordInput.text) {
-      // Get.back();
       showDialog(
         context: context,
         builder: (context) {
@@ -76,102 +73,212 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (signUpController.userDetails == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 16.h,
-              left: 8.w,
-              child: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: Icon(Icons.arrow_back_ios),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
-              child: FormBuilder(
-                key: _fbKey,
-                child: Column(
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
-                              width: 80.w),
-                          SizedBox(height: 16.h),
-                          Text("Create New Account", style: AppTextStyle.h2),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30.h),
-                    InputTextFormField(
-                      obscureText: obscureText,
-                      suffixIcon: InkWell(
-                        onTap: () {
-                          setState(() {
-                            obscureText = !obscureText;
-                          });
-                        },
-                        child: Icon(Icons.remove_red_eye),
-                      ),
-                      name: "password",
-                      promptText: "Password",
-                      textEditingController: _passwordInput,
-                      label: "Enter Your Password",
-                      keyboardType: TextInputType.name,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                            errorText: "Password is required!"),
-                        FormBuilderValidators.minLength(8,
-                            errorText:
-                                "Password must be at least 8 characters long."),
-                      ]),
-                    ),
-                    InputTextFormField(
-                      obscureText: obscureTextConfirm,
-                      suffixIcon: InkWell(
-                        onTap: () {
-                          setState(() {
-                            obscureTextConfirm = !obscureTextConfirm;
-                          });
-                        },
-                        child: Icon(Icons.remove_red_eye),
-                      ),
-                      name: "confirmPassword",
-                      promptText: "Confirm Password",
-                      textEditingController: _confirmPasswordInput,
-                      label: "Enter Your Password Again",
-                      keyboardType: TextInputType.number,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                            errorText: "Confirm password is required!"),
-                        FormBuilderValidators.minLength(8,
-                            errorText:
-                                "Password must be at least 8 characters long."),
-                      ]),
-                    ),
-                    SizedBox(height: 30.h),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          signUp();
-                        },
-                        child: Text(
-                          "Sign Up",
-                          style: AppTextStyle.h3,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.brandBlue),
-                      ),
-                    ),
-                  ],
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Positioned(
+                top: 16.h,
+                left: 8.w,
+                child: IconButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: const Icon(Icons.arrow_back_ios),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+                child: FormBuilder(
+                  key: _fbKey,
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
+                                width: 80.w),
+                            SizedBox(height: 16.h),
+                            Text("Create New Account", style: AppTextStyle.h2),
+                          ],
+                        ),
+                      ),
+                      // Image picker
+                      CupertinoButton(
+                        onPressed: () {
+                          setState(() {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 150.h,
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.camera_alt,
+                                            color: AppColors.brandBlue,
+                                          ),
+                                          title: Text("Camera"),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            signUpController
+                                                .takeImageFromCamera();
+                                          },
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.photo,
+                                            color: AppColors.brandBlue,
+                                          ),
+                                          title: Text("Gallery"),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            signUpController
+                                                .takeImageFromGallery();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          });
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 16.h),
+                          child: Obx(
+                            () => FutureBuilder<File?>(
+                              future:
+                                  Future.value(signUpController.imagefile.value),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  // While the image is loading, you can display a placeholder
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    width: 100,
+                                    height: 100,
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.grey[800],
+                                    ),
+                                  );
+                                } else if (snapshot.hasError) {
+                                  // Handle any errors that occurred during loading
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (snapshot.data != null) {
+                                  // If the image is available, display it
+                                  return CircleAvatar(
+                                    radius: 60,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.file(
+                                        snapshot.data!,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  // If no image is available, display a default image or icon
+                                  return CircleAvatar(
+                                    radius: 60,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      width: 100,
+                                      height: 100,
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                      InputTextFormField(
+                        obscureText: obscureText,
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                          child: const Icon(Icons.remove_red_eye),
+                        ),
+                        name: "password",
+                        promptText: "Password",
+                        textEditingController: _passwordInput,
+                        label: "Enter Your Password",
+                        keyboardType: TextInputType.name,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: "Password is required!"),
+                          FormBuilderValidators.minLength(8,
+                              errorText:
+                                  "Password must be at least 8 characters long."),
+                        ]),
+                      ),
+                      InputTextFormField(
+                        obscureText: obscureTextConfirm,
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              obscureTextConfirm = !obscureTextConfirm;
+                            });
+                          },
+                          child: const Icon(Icons.remove_red_eye),
+                        ),
+                        name: "confirmPassword",
+                        promptText: "Confirm Password",
+                        textEditingController: _confirmPasswordInput,
+                        label: "Enter Your Password Again",
+                        keyboardType: TextInputType.number,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: "Confirm password is required!"),
+                          FormBuilderValidators.minLength(8,
+                              errorText:
+                                  "Password must be at least 8 characters long."),
+                        ]),
+                      ),
+                      SizedBox(height: 30.h),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            signUp();
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.brandBlue),
+                          child: Text(
+                            "Sign Up",
+                            style: AppTextStyle.h3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

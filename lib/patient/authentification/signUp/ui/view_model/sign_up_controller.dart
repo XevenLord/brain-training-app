@@ -1,16 +1,20 @@
-import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'dart:io';
+
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/route_helper.dart';
-import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/use_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-class SignUpController {
-  // mcm can change to dynamic map will be better
+class SignUpController extends GetxController {
   Map<String, dynamic> _userDetails = {};
+  Map get userDetails => _userDetails;
+  final ImagePicker _picker = ImagePicker();
+  Rx<File?> imagefile = Rx<File?>(null);
+  var _profilePicUrl;
 
   void setFormData(Map<String, dynamic> data) {
     for (var element in data.entries) {
@@ -19,25 +23,18 @@ class SignUpController {
   }
 
   void signUpWithData(Map<String, dynamic> data) async {
-    debugModePrint("signup checking password: ${data['password']}");
     UserCredential signUpRes =
         await FirebaseAuthRepository.signUpWithEmailAndPassword(
       email: _userDetails['email'],
       password: data['password'],
     );
 
-    debugModePrint("1. sign up result: ${signUpRes}");
+    await _uploadFile();
+    if (_profilePicUrl != null) _userDetails['profilePic'] = _profilePicUrl;
 
     User newUser = signUpRes.user!;
-
-    debugModePrint("1 (a) ${newUser.uid}");
-    debugModePrint("1 (b) ${_userDetails}");
-
-    bool initRes = await Get.find<FirebaseAuthRepository>().initUserDataWithUID(
-        newUser.uid, _userDetails);
-
-    debugModePrint("2. firebase write result: ${initRes}");
-
+    bool initRes = await Get.find<FirebaseAuthRepository>()
+        .initUserDataWithUID(newUser.uid, _userDetails);
     if (!initRes) {
       killDialog();
       useErrorDialog(
@@ -51,5 +48,51 @@ class SignUpController {
     }
     killDialog();
     Get.toNamed(RouteHelper.getSignUpDonePage());
+  }
+
+  // Taking Image
+  void takeImageFromCamera() async {
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    if (image != null) {
+      imagefile.value = File(image.path);
+    } else {
+      print('Image capture failed.');
+    }
+  }
+
+  void takeImageFromGallery() async {
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    if (image != null) {
+      imagefile.value = File(image.path);
+    } else {
+      print('Image capture failed.');
+    }
+  }
+
+  Future<void> _uploadFile() async {
+    if (imagefile == null) return;
+    final storageRef = FirebaseStorage.instance.ref();
+    final profileImagesRef = storageRef
+        .child('${FirebaseAuth.instance.currentUser?.uid}/photos/profile.jpg');
+
+    final uploadTask = profileImagesRef.putFile(imagefile.value!);
+
+    // Wait for the upload to complete before proceeding
+    await uploadTask.whenComplete(() async {
+      try {
+        final downloadUrl = await profileImagesRef.getDownloadURL();
+        _profilePicUrl = downloadUrl;
+        update();
+        print(_profilePicUrl + ": updated profile pic url");
+
+        // Now that the URL is available, you can update _userDetails
+        if (_profilePicUrl != null) _userDetails['profilePic'] = _profilePicUrl;
+      } catch (error) {
+        // Handle any errors that occurred during URL retrieval
+        print("Error getting download URL: $error");
+      }
+    });
   }
 }

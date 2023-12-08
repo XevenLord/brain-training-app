@@ -1,7 +1,6 @@
+import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/appointment_slot.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/time_slot.dart';
 import 'package:brain_training_app/patient/appointment/domain/service/appointment_service.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -15,6 +14,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
   List<Appointment> appointments = [];
   Physiotherapist? chosenPhysiotherapist;
 
+  String? apptRef;
   bool isAppointmentSet = false;
 
   Future<List<Appointment>> getAppointmentList() async {
@@ -29,16 +29,6 @@ class AppointmentViewModel extends GetxController implements GetxService {
         chosenPhysiotherapist!.id!);
     update();
     return appointments;
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   setChosenPhysiotherapist({required Physiotherapist physiotherapist}) {
@@ -93,31 +83,24 @@ class AppointmentViewModel extends GetxController implements GetxService {
       time: time,
       reason: reason,
       physiotherapistID: chosenPhysiotherapist!.id,
-      // physiotherapistInCharge: Physiotherapist(
-      //   name: chosenPhysiotherapist!.name,
-      //   id: chosenPhysiotherapist!.id,
-      //   email: chosenPhysiotherapist!.email,
-      //   phone: chosenPhysiotherapist!.phone,
-      //   speciality: chosenPhysiotherapist!.speciality,
-      //   imgUrl: chosenPhysiotherapist!.imgUrl,
-      // ),
     );
+    apptRef = await AppointmentService.onSubmitAppointmentDetails(appointment);
 
-    AppointmentSlots appointmentSlots =
-        AppointmentSlots(date: date, timeSlots: {
-      time: TimeSlot(
-        patientID: appointment.patientID,
-        appointmentID: appointment.appointmentID,
-      ),
-    });
-
-    isAppointmentSet =
-        await AppointmentService.onSubmitAppointmentDetails(appointment);
+    NotificationAPI.showScheduledNotification(
+      id: apptRef.hashCode,
+      title: "Appointment with ${chosenPhysiotherapist!.name!}",
+      body: "Meet you on ${DateFormat('dd-MM-yyyy').format(date)}, ${time}",
+      payload: "This is the payload of the notification",
+      scheduledDate: createDateWithTimeSlot(
+          date: date.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+    );
+    isAppointmentSet = true;
     update();
   }
 
   Future<void> cancelAppointment({required Appointment appointment}) async {
     isAppointmentSet = await AppointmentService.deleteAppointment(appointment);
+    NotificationAPI.cancel(appointment.appointmentID.hashCode);
     update();
   }
 
@@ -125,38 +108,46 @@ class AppointmentViewModel extends GetxController implements GetxService {
       {required Appointment appointment,
       required String date,
       required String time,
-      required String reason}) {
+      required String reason}) async {
     String oldDate = appointment.date!;
     appointment.date = date;
     appointment.time = time;
     appointment.reason = reason;
-    return AppointmentService.updateAppointment(appointment, oldDate);
+    await AppointmentService.updateAppointment(appointment, oldDate);
+    Physiotherapist physio = physiotherapistList
+        .firstWhere((element) => element.id == appointment.physiotherapistID);
+    DateTime newDate = DateFormat('yyyy-MM-dd').parse(date);
+    NotificationAPI.showScheduledNotification(
+      id: appointment.appointmentID.hashCode,
+      title: "Appointment with ${physio.name}",
+      body: "Meet you on ${formatDateTime(newDate)}, ${time}",
+      payload: "This is the payload of the notification",
+      scheduledDate: createDateWithTimeSlot(
+          date: DateTime.now(), timeSlot: "9:30 PM"),
+      // scheduledDate: createDateWithTimeSlot(
+      //     date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+    );
   }
 
-  // DateTime? appointmentDate;
-  // String? appointmentTime;
-  // String? appointmentReason;
-  // String? doctorName;
+  DateTime createDateWithTimeSlot(
+      {required DateTime date, required String timeSlot}) {
+    final timeParts = timeSlot.split(' ');
+    final time = timeParts[0];
+    final period = timeParts[1];
 
-  // void setAppointmentDate(DateTime? date) {
-  //   appointmentDate = date;
-  //   update();
-  // }
+    final hourMinute = time.split(':');
+    var hour = int.parse(hourMinute[0]);
+    final minute = int.parse(hourMinute[1]);
 
-  // void setAppointmentTime(String? time) {
-  //   appointmentTime = time;
-  //   update();
-  // }
+    // Adjust hour for PM time slots
+    if (period == 'PM' && hour != 12) {
+      hour += 12;
+    }
+    return DateTime(date.year, date.month, date.day, hour, minute);
+  }
 
-  // void setAppointmentReason(String? reason) {
-  //   appointmentReason = reason;
-  //   update();
-  // }
-
-  // void reset() {
-  //   appointmentDate = null;
-  //   appointmentTime = null;
-  //   appointmentReason = null;
-  //   update();
-  // }
+  String formatDateTime(DateTime dateTime) {
+    final formatter = DateFormat('dd-MM-yyyy');
+    return formatter.format(dateTime);
+  }
 }

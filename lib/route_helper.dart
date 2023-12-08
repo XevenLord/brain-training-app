@@ -8,6 +8,7 @@ import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
+import 'package:brain_training_app/patient/authentification/signIn/ui/page/forget_password_page.dart';
 import 'package:brain_training_app/patient/authentification/signIn/ui/page/sign_in_page.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_first_page.dart';
@@ -133,6 +134,11 @@ class RouteHelper {
       name: signIn,
       transition: Transition.fadeIn,
       page: () => const SignInPage(),
+    ),
+    GetPage(
+      name: forgetPassword,
+      transition: Transition.fadeIn,
+      page: () => const ForgetPasswordPage(),
     ),
     GetPage(
       name: patientHome,
