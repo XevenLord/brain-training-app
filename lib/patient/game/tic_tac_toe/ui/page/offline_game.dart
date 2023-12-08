@@ -27,6 +27,8 @@ class _GameState extends State<Game> {
   late GameLetter playerLetter = widget.playerLetter;
   late GameMode mode = widget.mode;
   late bool stupidAi = widget.stupidAi;
+  int roundCount = 1;
+  int totalRound = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -196,6 +198,15 @@ class _GameState extends State<Game> {
                                   ),
                                 ],
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text("Round $roundCount",
+                                    style: GoogleFonts.roboto(
+                                      color: Colors.blueGrey,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    )),
+                              ),
                               const SizedBox(height: 10),
                               Padding(
                                 padding: const EdgeInsets.all(16),
@@ -226,22 +237,46 @@ class _GameState extends State<Game> {
                                           BoardState.playing
                                       ? 0
                                       : 1,
-                                  child: TextButton(
-                                    style: TextButton.styleFrom(
-                                      primary: Colors.blueGrey,
-                                      backgroundColor: Colors.white,
-                                      elevation: 7,
-                                      shadowColor: Colors.blue.withOpacity(0.1),
-                                      shape: const CircleBorder(),
-                                    ),
-                                    onPressed: controller.boardState ==
-                                            BoardState.playing
-                                        ? null
-                                        : () {
-                                            controller.resetBoard();
-                                          },
-                                    child: Icon(Icons.refresh_outlined),
-                                  ),
+                                  child: roundCount <= totalRound
+                                      ? TextButton(
+                                          style: TextButton.styleFrom(
+                                            primary: Colors.blueGrey,
+                                            backgroundColor: Colors.white,
+                                            elevation: 7,
+                                            shadowColor:
+                                                Colors.blue.withOpacity(0.1),
+                                            shape: const CircleBorder(),
+                                          ),
+                                          onPressed: controller.boardState ==
+                                                  BoardState.playing
+                                              ? null
+                                              : () {
+                                                  setState(() {
+                                                    roundCount++;
+                                                  });
+                                                  controller.resetBoard();
+                                                },
+                                          child: Icon(Icons.refresh_outlined),
+                                        )
+                                      : TextButton(
+                                          style: TextButton.styleFrom(
+                                            primary: Colors.blueGrey,
+                                            backgroundColor: Colors.white,
+                                            elevation: 4,
+                                            shadowColor:
+                                                Colors.blue.withOpacity(0.1),
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20))),
+                                          ),
+                                          onPressed: controller.boardState ==
+                                                  BoardState.playing
+                                              ? null
+                                              : () {
+                                                  Get.back();
+                                                },
+                                          child: Text("Finish"),
+                                        ),
                                 ),
                             ],
                           ),

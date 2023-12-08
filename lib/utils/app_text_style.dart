@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextStyle {
+  static TextStyle title = TextStyle(
+    fontSize: 55.sp,
+    fontWeight: FontWeight.w700,
+    fontFamily: "Montserrat",
+  );
   static TextStyle h1 = TextStyle(
     fontSize: 30.sp,
     fontWeight: FontWeight.w700,
@@ -57,6 +62,18 @@ class AppTextStyle {
   static TextStyle greyTextStyle = const TextStyle(color: AppColors.grey);
   static TextStyle brandBlueTextStyle =
       const TextStyle(color: AppColors.brandBlue);
+  static TextStyle brandRedTextStyle =
+      const TextStyle(color: AppColors.brandRed);
+  static TextStyle brandYellowTextStyle =
+      const TextStyle(color: AppColors.brandYellow);
+  static TextStyle brandGreenTextStyle =
+      const TextStyle(color: AppColors.brandGreen);
+  static TextStyle brandPurpleTextStyle =
+      const TextStyle(color: AppColors.brandPurple);
+  static TextStyle lightBlueTextStyle =
+      const TextStyle(color: AppColors.lightBlue);
+  static TextStyle lightPurpleTextStyle =
+      const TextStyle(color: AppColors.lightPurple);
   static TextStyle lightGreyTextStyle = const TextStyle(
     color: Color(0xFF6B779A),
   );

@@ -4,6 +4,7 @@ import 'package:brain_training_app/patient/game/maths/util/my_button.dart';
 import 'package:brain_training_app/patient/game/maths/util/result_message.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class MathGame extends StatefulWidget {
@@ -126,6 +127,10 @@ class _MathGameState extends State<MathGame> {
                 ),
               ),
             ),
+            SizedBox(height: 20.w),
+            Text("Type The Correct Answer",
+                style:
+                    AppTextStyle.h1.merge(AppTextStyle.lightPurpleTextStyle)),
             // question
             Expanded(
               child: Container(

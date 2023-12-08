@@ -18,9 +18,12 @@ import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_game.dart';
+import 'package:brain_training_app/patient/game/2048/tzfe_home.dart';
+import 'package:brain_training_app/patient/game/flip_card_memory/flip_card_home.dart';
 import 'package:brain_training_app/patient/game/flip_card_memory/memory_game.dart';
 import 'package:brain_training_app/patient/game/maths/math_game.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ai_game_settings.dart';
+import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ttt_home.dart';
 import 'package:brain_training_app/patient/home/ui/page/home_page.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_edit_page.dart';
 import 'package:brain_training_app/splash_page.dart';
@@ -28,6 +31,7 @@ import 'package:get/get.dart';
 
 import 'patient/appointment/domain/entity/appointment.dart';
 import 'patient/appointment/ui/page/appointment_edit_page.dart';
+import 'patient/game/maths/math_home.dart';
 
 class RouteHelper {
   static const String splash = '/splash';
@@ -39,6 +43,11 @@ class RouteHelper {
   static const String patientHome = '/patient-home';
 
   // Game
+  static const String mathHome = '/math-home';
+  static const String flipCardHome = '/flip-card-home';
+  static const String tZFEHome = '/tZFE-home';
+  static const String tTTHome = '/tTT-home';
+
   static const String ticTacToe = '/tic-tac-toe';
   static const String tZFEGame = '/TZFEGame';
   static const String memoryGame = '/memory-game';
@@ -80,6 +89,11 @@ class RouteHelper {
   static String getPatientHome() => patientHome;
 
   // Game
+  static String getMathHome() => mathHome;
+  static String getFlipCardHome() => flipCardHome;
+  static String getTZFEHome() => tZFEHome;
+  static String getTTTHome() => tTTHome;
+
   static String getTicTacToe() => ticTacToe;
   static String getTZFEGame() => tZFEGame;
   static String getMemoryGame() => memoryGame;
@@ -155,6 +169,26 @@ class RouteHelper {
     ),
     // Game
     GetPage(
+      name: mathHome,
+      transition: Transition.fadeIn,
+      page: () => const MathHome(),
+    ),
+    GetPage(
+      name: flipCardHome,
+      transition: Transition.fadeIn,
+      page: () => const FlipCardHome(),
+    ),
+    GetPage(
+      name: tZFEHome,
+      transition: Transition.fadeIn,
+      page: () => const TZFEHome(),
+    ),
+    GetPage(
+      name: tTTHome,
+      transition: Transition.fadeIn,
+      page: () => const TTTHome(),
+    ),
+    GetPage(
       name: ticTacToe,
       transition: Transition.fadeIn,
       page: () => const GameSettings(),
@@ -175,6 +209,7 @@ class RouteHelper {
       page: () => const MathGame(),
     ),
 
+    // Appointment
     GetPage(
       name: appointmentBookingPage,
       transition: Transition.fadeIn,

@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
           "Tic-tac-toe is a 3x3 grid game to get three in a row and win.",
       "img": "assets/images/tic_tac_toe_game.png",
       "onTap": () {
-        Get.toNamed(RouteHelper.getTicTacToe());
+        Get.toNamed(RouteHelper.getTTTHome());
       },
     },
     {
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
           "A memory flip card game tests your recall by matching pairs of hidden cards.",
       "img": "assets/images/flipcard_game.jpg",
       "onTap": () {
-        Get.toNamed(RouteHelper.getMemoryGame());
+        Get.toNamed(RouteHelper.getFlipCardHome());
       }
     },
     {
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           "A math game enhances math skills through fun challenges and problem-solving.",
       "img": "assets/images/mathematics_game.png",
       "onTap": () {
-        Get.toNamed(RouteHelper.getMathGame());
+        Get.toNamed(RouteHelper.getMathHome());
       }
     },
     {
@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           "2048 is a number puzzle game where you merge tiles to reach 2048.",
       "img": "assets/images/2048_game.png",
       "onTap": () {
-        Get.toNamed(RouteHelper.getTZFEGame());
+        Get.toNamed(RouteHelper.getTZFEHome());
       }
     },
   ];
@@ -118,21 +118,6 @@ class _HomePageState extends State<HomePage> {
                         });
                       });
                 }),
-            TextButton(
-              child: Text("click me to show notificaiton"),
-              onPressed: () {
-                NotificationAPI.showScheduledNotification(
-                  title: "This is a scheduled notification",
-                  body: "Reminder for your appointment",
-                  payload: "This is the payload of the notification",
-                  scheduledDate: DateTime.now().add(Duration(seconds: 10)),
-                );
-                // NotificationAPI.showNotification(
-                //     title: "This is a notification",
-                //     body: "This is the body of the notification",
-                //     payload: "This is the payload of the notification");
-              },
-            ),
             SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
               scrollDirection: Axis.horizontal,
