@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
@@ -48,6 +49,8 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> loaded() async {
     debugModePrint("splash page: enter loaded");
     resourceLoaded = await AppConstant.loadResources();
+    NotificationAPI.init(initScheduled: true);
+    listenNotifications();
     if (resourceLoaded && FirebaseAuth.instance.currentUser != null) {
       appointmentViewModel = Get.find<AppointmentViewModel>();
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,6 +64,13 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  void listenNotifications() =>
+      NotificationAPI.onNotifications.stream.listen(onClickedNotification);
+
+  void onClickedNotification(String? payload) {
+    Get.toNamed(RouteHelper.getPatientHome());
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -69,7 +79,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   void getPhysiotherapistList() async {
     await appointmentViewModel.getPhysiotherapistList();
-    setState(() {});
   }
 
   @override

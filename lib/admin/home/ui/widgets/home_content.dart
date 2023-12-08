@@ -131,7 +131,7 @@ class _HomeContentState extends State<HomeContent> {
               child: SingleChildScrollView(
                 child: Padding(
                   padding:
-                      EdgeInsets.only(left: 16.w, right: 16.w, bottom: 32.w),
+                      EdgeInsets.only(left: 16.w, right: 16.w, top: 10.w, bottom: 120.w),
                   child: GridView.count(
                     crossAxisCount: 2,
                     childAspectRatio: 0.85,

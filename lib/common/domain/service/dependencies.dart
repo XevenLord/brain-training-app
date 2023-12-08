@@ -1,5 +1,7 @@
 import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
+import 'package:brain_training_app/admin/profile/domain/services/admin_profile_service.dart';
+import 'package:brain_training_app/admin/profile/ui/view_model/admin_profile_view_model.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
@@ -36,4 +38,6 @@ Future<void> init() async {
   // Admin Service
   Get.lazyPut(() => AdminHomeService());
   Get.lazyPut(() => AdminHomeViewModel());
+  Get.lazyPut(() => AdminProfileService());
+  Get.lazyPut(() => AdminProfileViewModel());
 }

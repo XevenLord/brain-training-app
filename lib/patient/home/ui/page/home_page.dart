@@ -1,17 +1,16 @@
+import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
-import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/patient/healthCheck/ui/widgets/question_card.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/widget/game_card.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_main_page.dart';
 import 'package:brain_training_app/route_helper.dart';
-import 'package:brain_training_app/test_page.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -119,6 +118,21 @@ class _HomePageState extends State<HomePage> {
                         });
                       });
                 }),
+            TextButton(
+              child: Text("click me to show notificaiton"),
+              onPressed: () {
+                NotificationAPI.showScheduledNotification(
+                  title: "This is a scheduled notification",
+                  body: "Reminder for your appointment",
+                  payload: "This is the payload of the notification",
+                  scheduledDate: DateTime.now().add(Duration(seconds: 10)),
+                );
+                // NotificationAPI.showNotification(
+                //     title: "This is a notification",
+                //     body: "This is the body of the notification",
+                //     payload: "This is the payload of the notification");
+              },
+            ),
             SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
               scrollDirection: Axis.horizontal,
