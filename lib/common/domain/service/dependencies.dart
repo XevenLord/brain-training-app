@@ -1,3 +1,4 @@
+import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/admin/profile/domain/services/admin_profile_service.dart';
@@ -40,4 +41,5 @@ Future<void> init() async {
   Get.lazyPut(() => AdminHomeViewModel());
   Get.lazyPut(() => AdminProfileService());
   Get.lazyPut(() => AdminProfileViewModel());
+  Get.lazyPut(() => AdminAppointmentViewModel());
 }

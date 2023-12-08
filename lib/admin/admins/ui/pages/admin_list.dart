@@ -80,21 +80,21 @@ class _AdminListState extends State<AdminList> {
       ),
       body: SafeArea(
         child: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ...admins.map(
-                      (e) => InfoCardTile().buildInfoCard(
-                        name: e.name!,
-                        age: calculateAge(e.dateOfBirth),
-                        gender: e.gender!,
-                        position: e.role,
+                      (admin) => InfoCardTile().buildInfoCard(
+                        name: admin.name!,
+                        age: calculateAge(admin.dateOfBirth),
+                        gender: admin.gender!,
+                        position: admin.role,
                         onEdit: () {
-                          Get.toNamed(RouteHelper.getPatientOverviewPage(),
-                              arguments: e);
+                          Get.toNamed(RouteHelper.getAdminOverviewPage(),
+                              arguments: admin);
                         },
                       ),
                     ),

@@ -5,6 +5,7 @@ import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart';
+import 'package:brain_training_app/admin/admins/ui/pages/admin_overview.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
@@ -59,6 +60,7 @@ class RouteHelper {
 
   // *Admin List*
   static const String adminListPage = '/admin-list-page';
+  static const String adminOverviewPage = '/admin-overview-page';
 
   // *Admin Patient List*
   static const String patientListPage = '/patient-list-page';
@@ -104,6 +106,7 @@ class RouteHelper {
 
   // *Admin List*
   static String getAdminListPage() => adminListPage;
+  static String getAdminOverviewPage() => adminOverviewPage;
 
   // *Admin Patient List*
   static String getPatientListPage() => patientListPage;
@@ -238,10 +241,19 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => AppointmentMainPage(),
     ),
+    // *Admin List*
     GetPage(
       name: adminListPage,
       transition: Transition.fadeIn,
       page: () => const AdminList(),
+    ),
+    GetPage(
+      name: adminOverviewPage,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser admin = Get.arguments;
+        return AdminOverview(admin: admin);
+      },
     ),
     // *Admin Patient List*
     GetPage(

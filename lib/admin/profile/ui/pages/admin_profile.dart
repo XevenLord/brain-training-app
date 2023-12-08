@@ -113,7 +113,7 @@ class _AdminProfileState extends State<AdminProfile> {
                   onPressed: () {
                     Get.toNamed(RouteHelper.getProfileEditPage());
                   },
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                 ),
               ),
             )

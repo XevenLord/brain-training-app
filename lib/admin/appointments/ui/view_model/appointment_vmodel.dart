@@ -1,39 +1,21 @@
+import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/admin/appointments/domain/entity/physiotherapist.dart';
+import 'package:brain_training_app/admin/appointments/domain/services/admin_appt_service.dart';
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
-import 'package:brain_training_app/patient/appointment/domain/service/appointment_service.dart';
-import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
-import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AppointmentViewModel extends GetxController implements GetxService {
-  AppointmentViewModel();
-  List<Physiotherapist> physiotherapistList = [];
+class AdminAppointmentViewModel extends GetxController implements GetxService {
   List<Appointment> appointments = [];
-  Physiotherapist? chosenPhysiotherapist;
-
-  String? apptRef;
+  List<Physiotherapist> physiotherapistList = [];
   bool isAppointmentSet = false;
 
   Future<List<Appointment>> getAppointmentList() async {
-    appointments = await AppointmentService.getAppointmentList();
+    appointments = await AdminAppointmentService.getAppointmentList();
     sortAppointmentByDate();
     update();
     return appointments.reversed.toList();
-  }
-
-  Future<List<Appointment>> getAppointmentsByPhysiotherapistID() async {
-    appointments = await AppointmentService.getAppointmentListByPhysiotherapist(
-        chosenPhysiotherapist!.id!);
-    update();
-    return appointments;
-  }
-
-  setChosenPhysiotherapist({required Physiotherapist physiotherapist}) {
-    chosenPhysiotherapist = physiotherapist;
-    update();
   }
 
   void sortAppointmentByDate() {
@@ -58,44 +40,17 @@ class AppointmentViewModel extends GetxController implements GetxService {
         return a.date!.compareTo(b.date!);
       }
     });
-
     update();
   }
 
-  Future<List<Physiotherapist>> getPhysiotherapistList() async {
-    debugModePrint("entering getPhysiotherapistList");
-    physiotherapistList = await AppointmentService.getPhysiotherapistList();
-    return physiotherapistList;
-  }
-
-  Future<void> setAppointment(
-      {required DateTime date,
-      required String time,
-      String? reason,
-      String? patient}) async {
-    Appointment appointment = Appointment(
-      patient: Get.find<AppUser>().name,
-      patientID: Get.find<AppUser>().uid,
-      appointmentID: Get.find<AppUser>().uid! +
-          DateFormat("yyyy-MM-dd").format(date.toLocal()) +
-          time,
-      date: DateFormat("yyyy-MM-dd").format(date.toLocal()),
-      time: time,
-      reason: reason,
-      physiotherapistID: chosenPhysiotherapist!.id,
-    );
-    apptRef = await AppointmentService.onSubmitAppointmentDetails(appointment);
-
-    NotificationAPI.showScheduledNotification(
-      id: apptRef.hashCode,
-      title: "Appointment with ${chosenPhysiotherapist!.name!}",
-      body: "Meet you on ${DateFormat('dd-MM-yyyy').format(date)}, ${time}",
-      payload: "This is the payload of the notification",
-      scheduledDate: createDateWithTimeSlot(
-          date: date.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
-    );
-    isAppointmentSet = true;
-    update();
+  List<Appointment> filterAppointmentByDay(
+      {required DateTime day, required List<Appointment> appts}) {
+    if (appts.isNotEmpty) {
+      return appts
+          .where((element) => isSameDay(DateTime.parse(element.date!), day))
+          .toList();
+    }
+    return [];
   }
 
   Future<void> updateAppointment(
@@ -107,7 +62,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
     appointment.date = date;
     appointment.time = time;
     appointment.reason = reason;
-    await AppointmentService.updateAppointment(appointment, oldDate);
+    await AdminAppointmentService.updateAppointment(appointment, oldDate);
     Physiotherapist physio = physiotherapistList
         .firstWhere((element) => element.id == appointment.physiotherapistID);
     DateTime newDate = DateFormat('yyyy-MM-dd').parse(date);
@@ -116,15 +71,16 @@ class AppointmentViewModel extends GetxController implements GetxService {
       title: "Appointment with ${physio.name}",
       body: "Meet you on ${formatDateTime(newDate)}, ${time}",
       payload: "This is the payload of the notification",
-      scheduledDate:
-          createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
-      // scheduledDate: createDateWithTimeSlot(
-      //     date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+      // scheduledDate:
+      //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
+      scheduledDate: createDateWithTimeSlot(
+          date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
     );
   }
 
   Future<void> cancelAppointment({required Appointment appointment}) async {
-    isAppointmentSet = await AppointmentService.deleteAppointment(appointment);
+    isAppointmentSet =
+        await AdminAppointmentService.deleteAppointment(appointment);
     NotificationAPI.cancel(appointment.appointmentID.hashCode);
     update();
   }

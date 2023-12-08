@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
@@ -55,6 +56,9 @@ class _SplashScreenState extends State<SplashScreen>
       appointmentViewModel = Get.find<AppointmentViewModel>();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getPhysiotherapistList();
+        if (Get.find<AppUser>().role == "admin") {
+          Get.find<UserRepository>().fetchAllPatients();
+        }
       });
       Get.offAllNamed(Get.find<AppUser>().role == "admin"
           ? RouteHelper.getAdminHome()

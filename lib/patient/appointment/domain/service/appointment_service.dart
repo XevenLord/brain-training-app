@@ -13,7 +13,6 @@ class AppointmentService {
   static Future<String?> onSubmitAppointmentDetails(
     Appointment appointment,
   ) async {
-    final appUser = Get.find<AppUser>();
     try {
       final appointmentDocRef = FirebaseFirestore.instance
           .collection("appointments")
@@ -62,7 +61,6 @@ class AppointmentService {
 
   static Future<List<Appointment>> getAppointmentListByPhysiotherapist(
       String physiotherapistID) async {
-    final appUser = Get.find<AppUser>();
     return FirebaseFirestore.instance
         .collection("appointments")
         .where("physiotherapistID", isEqualTo: physiotherapistID)
@@ -75,7 +73,6 @@ class AppointmentService {
 
   static Future<bool> updateAppointment(
       Appointment appointment, String oldDate) async {
-    final appUser = Get.find<AppUser>();
     try {
       await Future.wait([
         FirebaseFirestore.instance
@@ -83,7 +80,6 @@ class AppointmentService {
             .doc(appointment.appointmentID)
             .set(appointment.toJson(), SetOptions(merge: true)),
       ]);
-      await FirebaseAuthRepository.getUserDetails(appUser.uid!);
       return true;
     } on FirebaseException catch (e) {
       return false;
@@ -91,7 +87,6 @@ class AppointmentService {
   }
 
   static Future<bool> deleteAppointment(Appointment appointment) async {
-    final appUser = Get.find<AppUser>();
     try {
       await Future.wait([
         FirebaseFirestore.instance
@@ -99,7 +94,6 @@ class AppointmentService {
             .doc(appointment.appointmentID)
             .delete(),
       ]);
-      await FirebaseAuthRepository.getUserDetails(appUser.uid!);
       return true;
     } on FirebaseException catch (e) {
       return false;

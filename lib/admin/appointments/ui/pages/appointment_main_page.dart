@@ -1,8 +1,10 @@
+import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -15,20 +17,56 @@ class AppointmentMainPage extends StatefulWidget {
 }
 
 class _AppointmentMainPageState extends State<AppointmentMainPage> {
-  late Map<DateTime, List<dynamic>> _events;
+  late AdminAppointmentViewModel _appointmentViewModel;
+  late UserRepository? _userRepo;
+  List<Appointment>? appointments;
+  List<Appointment>? filteredAppointments;
+  List<AppUser>? patients;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
 
   @override
   void initState() {
+    _appointmentViewModel = Get.find<AdminAppointmentViewModel>();
+    _userRepo = Get.find<UserRepository>();
+    getAppointmentList();
+    patients = _userRepo!.getPatientUsers;
     super.initState();
-    _events = {
-      DateTime(2023, 12, 1): ['Appointment 1', 'Appointment 2'],
-      DateTime(2023, 12, 5): ['Appointment 3'],
-      DateTime(2023, 12, 15): ['Appointment 4'],
-      // Add more appointments as needed
-    };
+  }
+
+  void getAppointmentList() async {
+    appointments = await _appointmentViewModel.getAppointmentList();
+    filterAppointmentByDay();
+    setState(() {});
+  }
+
+  void filterAppointmentByDay() {
+    print("filtering appointments");
+    filteredAppointments = _appointmentViewModel.filterAppointmentByDay(
+        day: _selectedDay, appts: appointments!);
+    filteredAppointments = filteredAppointments!.reversed.toList();
+    print("filtered appointments");
+    print(filteredAppointments);
+    setState(() {});
+  }
+
+  String calculateAge(DateTime? dateOfBirth) {
+    if (dateOfBirth == null) {
+      return 'N/A';
+    }
+
+    final currentDate = DateTime.now();
+    final age = currentDate.year - dateOfBirth.year;
+
+    if (currentDate.month < dateOfBirth.month ||
+        (currentDate.month == dateOfBirth.month &&
+            currentDate.day < dateOfBirth.day)) {
+      return (age - 1)
+          .toString(); // Subtract 1 if birthday hasn't occurred this year yet
+    }
+
+    return age.toString();
   }
 
   @override
@@ -42,75 +80,93 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
               style: AppTextStyle.blackTextStyle.merge(AppTextStyle.h2)),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Get.back(), // Or Get.back() if using GetX
         ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            TableCalendar(
-              firstDay: DateTime.utc(2023, 1, 1),
-              lastDay: DateTime.utc(2023, 12, 31),
-              focusedDay: DateTime.utc(2023, 7, 4),
-              calendarFormat: _calendarFormat,
-              onFormatChanged: (format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              },
-              calendarStyle: CalendarStyle(
-                isTodayHighlighted: true,
-                selectedDecoration: BoxDecoration(
-                  color: AppColors.lightBlue,
-                  shape: BoxShape.circle,
-                ),
-                selectedTextStyle: TextStyle(color: Colors.white),
-                todayDecoration: BoxDecoration(
-                  color: Colors.purpleAccent,
-                  shape: BoxShape.circle,
-                ),
-                defaultDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                weekendDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView(
+      body: appointments == null || patients == null
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
+              child: Column(
                 children: <Widget>[
-                  AppointmentCard(
-                    name: 'Lee Sha She',
-                    age: '50',
-                    gender: 'Male',
-                    reason: 'The head is pain',
-                    time: '0800',
+                  TableCalendar(
+                    firstDay: DateTime.utc(2022, 10, 16),
+                    lastDay: DateTime.utc(2030, 3, 14),
+                    focusedDay: _focusedDay,
+                    calendarFormat: _calendarFormat,
+                    availableCalendarFormats: const {
+                      CalendarFormat.month: 'Week',
+                      CalendarFormat.twoWeeks: 'Month',
+                      CalendarFormat.week: '2 weeks',
+                    },
+                    onFormatChanged: (format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    },
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onDaySelected: (selectedDay, focusedDay) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay =
+                            focusedDay; // update `_focusedDay` here as well
+                        filteredAppointments =
+                            _appointmentViewModel.filterAppointmentByDay(
+                                day: _selectedDay, appts: appointments!);
+                      });
+                    },
+                    calendarStyle: CalendarStyle(
+                      isTodayHighlighted: true,
+                      selectedDecoration: const BoxDecoration(
+                        color: AppColors.brandBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      selectedTextStyle:
+                          AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
+                      todayDecoration: const BoxDecoration(
+                        color: AppColors.lightBlue,
+                        shape: BoxShape.circle,
+                      ),
+                      todayTextStyle: AppTextStyle.h3,
+                      defaultTextStyle:
+                          AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
+                      weekendTextStyle:
+                          AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
+                    ),
                   ),
-                  AppointmentCard(
-                    name: 'Daniel Lim',
-                    age: '60',
-                    gender: 'Male',
-                    reason: "I can't think properly",
-                    time: '1200',
-                  ),
-                  AppointmentCard(
-                    name: 'Melissa Chia',
-                    age: '55',
-                    gender: 'Female',
-                    reason: "I can't calculate for dimain",
-                    time: '1400',
-                  ),
-                  SizedBox(height: 20.w)
+                  Expanded(
+                    child: ListView(
+                      children: <Widget>[
+                        if (filteredAppointments != null && patients != null)
+                          ...filteredAppointments!.map((appt) {
+                            AppUser patient = patients!.firstWhere(
+                                (element) => element.uid == appt.patientID);
+                            return AppointmentCard(
+                              name: patient.name!,
+                              age: calculateAge(patient.dateOfBirth),
+                              gender: patient.gender!,
+                              reason: appt.reason!,
+                              time: appt.time!,
+                            );
+                          }).toList(),
+                        if (filteredAppointments!.isEmpty)
+                          Padding(
+                            padding: EdgeInsets.only(top: 128.w),
+                            child: Center(
+                                child: Text("No appointments for this day",
+                                    style: AppTextStyle.h2)),
+                          ),
+                        SizedBox(height: 20.w)
+                      ],
+                    ),
+                  )
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
     );
   }
 }
@@ -133,7 +189,7 @@ class AppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
         children: <Widget>[
           Row(
@@ -141,13 +197,13 @@ class AppointmentCard extends StatelessWidget {
             children: [
               Text(
                 time,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: Colors.black54,
                 ),
               ),
-              Icon(Icons.more_vert, color: Colors.black54),
+              const Icon(Icons.more_vert, color: Colors.black54),
             ],
           ),
           CardWidget(name: name, age: age, gender: gender, reason: reason),
@@ -173,8 +229,8 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 8.0),
-      padding: EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
@@ -191,7 +247,7 @@ class CardWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -243,14 +299,14 @@ class InformationRow extends StatelessWidget {
         children: <Widget>[
           Text(
             '$title',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               color: Colors.black54,
             ),
           ),
           Text(
             '$value',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

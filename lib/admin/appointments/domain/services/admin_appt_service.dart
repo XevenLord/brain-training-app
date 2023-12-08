@@ -26,7 +26,6 @@ class AdminAppointmentService {
 
   static Future<List<Appointment>> getAppointmentListByPhysiotherapist(
       String physiotherapistID) async {
-    final appUser = Get.find<AppUser>();
     return FirebaseFirestore.instance
         .collection("appointments")
         .where("physiotherapistID", isEqualTo: physiotherapistID)
@@ -48,6 +47,20 @@ class AdminAppointmentService {
             .set(appointment.toJson(), SetOptions(merge: true)),
       ]);
       await FirebaseAuthRepository.getUserDetails(appUser.uid!);
+      return true;
+    } on FirebaseException catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> deleteAppointment(Appointment appointment) async {
+    try {
+      await Future.wait([
+        FirebaseFirestore.instance
+            .collection("appointments")
+            .doc(appointment.appointmentID)
+            .delete(),
+      ]);
       return true;
     } on FirebaseException catch (e) {
       return false;
