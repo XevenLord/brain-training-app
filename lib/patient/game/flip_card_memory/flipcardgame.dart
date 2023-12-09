@@ -3,15 +3,15 @@ import 'package:flip_card/flip_card.dart';
 import 'data.dart';
 import 'dart:async';
 
-class FlipCardGane extends StatefulWidget {
+class FlipCardGame extends StatefulWidget {
   final Level _level;
-  FlipCardGane(this._level);
+  FlipCardGame(this._level);
 
   @override
-  _FlipCardGaneState createState() => _FlipCardGaneState();
+  _FlipCardGameState createState() => _FlipCardGameState();
 }
 
-class _FlipCardGaneState extends State<FlipCardGane> {
+class _FlipCardGameState extends State<FlipCardGame> {
   int _previousIndex = -1;
   bool _flip = false;
   bool _start = false;

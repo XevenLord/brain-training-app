@@ -1,17 +1,23 @@
+import 'dart:async';
+
+import 'package:brain_training_app/patient/game/2048/components/countdown_timer.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:get/get.dart';
 
 import 'components/button.dart';
-import 'components/empy_board.dart';
+import 'components/empty_board.dart';
 import 'components/score_board.dart';
 import 'components/tile_board.dart';
 import 'const/colors.dart';
 import 'managers/board.dart';
 
 class TZFEGame extends ConsumerStatefulWidget {
-  const TZFEGame({super.key});
+  Level? level;
+  TZFEGame({super.key, this.level = Level.Easy});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TZFEGameState();
@@ -19,7 +25,9 @@ class TZFEGame extends ConsumerStatefulWidget {
 
 class _TZFEGameState extends ConsumerState<TZFEGame>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  //The contoller used to move the the tiles
+  late void Function() startGameTimer;
+
+  //The contoller used to move the tiles
   late final AnimationController _moveController = AnimationController(
     duration: const Duration(milliseconds: 100),
     vsync: this,
@@ -92,13 +100,22 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
               ),
               onPressed: () {
                 Get.back();
+                ref.read(boardManager.notifier).newGame();
               },
             ),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 32.w),
+                child: CountdownTimer(
+                  builder: (BuildContext context, void Function() startTimer) {
+                    startGameTimer = startTimer;
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
@@ -121,21 +138,22 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
                         ),
                         Row(
                           children: [
-                            ButtonWidget(
-                              icon: Icons.undo,
-                              onPressed: () {
-                                //Undo the round.
-                                ref.read(boardManager.notifier).undo();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 16.0,
-                            ),
+                            // ButtonWidget(
+                            //   icon: Icons.undo,
+                            //   onPressed: () {
+                            //     //Undo the round.
+                            //     ref.read(boardManager.notifier).undo();
+                            //   },
+                            // ),
+                            // const SizedBox(
+                            //   width: 16.0,
+                            // ),
                             ButtonWidget(
                               icon: Icons.refresh,
                               onPressed: () {
                                 //Restart the game
                                 ref.read(boardManager.notifier).newGame();
+                                startGameTimer.call();
                               },
                             )
                           ],
@@ -153,7 +171,8 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
                   const EmptyBoardWidget(),
                   TileBoardWidget(
                       moveAnimation: _moveAnimation,
-                      scaleAnimation: _scaleAnimation)
+                      scaleAnimation: _scaleAnimation,
+                      level: widget.level!)
                 ],
               )
             ],

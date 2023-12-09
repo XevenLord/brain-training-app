@@ -1,16 +1,16 @@
+import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import 'flipcardgame.dart';
-import 'data.dart';
-
-class MemoryGameHomePage extends StatefulWidget {
+class MathDifficultyPage extends StatefulWidget {
   @override
-  _MemoryGameHomePageState createState() => _MemoryGameHomePageState();
+  _MathDifficultyPageState createState() => _MathDifficultyPageState();
 }
 
-class _MemoryGameHomePageState extends State<MemoryGameHomePage> {
+class _MathDifficultyPageState extends State<MathDifficultyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,14 +35,7 @@ class _MemoryGameHomePageState extends State<MemoryGameHomePage> {
                 itemCount: _list.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                _list[index].goto!,
-                          ));
-                    },
+                    onTap: _list[index].goto,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Stack(
@@ -69,7 +62,7 @@ class _MemoryGameHomePageState extends State<MemoryGameHomePage> {
                                 Center(
                                     child: Text(
                                   _list[index].name!,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold,
@@ -88,7 +81,8 @@ class _MemoryGameHomePageState extends State<MemoryGameHomePage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: generatestar(_list[index].noOfstar!),
+                                  children:
+                                      generatestar(_list[index].noOfstar!),
                                 )
                               ],
                             ),
@@ -111,7 +105,7 @@ class _MemoryGameHomePageState extends State<MemoryGameHomePage> {
     for (int i = 0; i < no; i++) {
       _icons.insert(
           i,
-          Icon(
+          const Icon(
             Icons.star,
             color: Colors.yellow,
           ));
@@ -124,34 +118,44 @@ class Details {
   String? name;
   Color? primarycolor;
   Color? secondarycolor;
-  Widget? goto;
+  Function()? goto;
   int? noOfstar;
 
-  Details(
-      {this.name,
-      this.primarycolor,
-      this.secondarycolor,
-      this.noOfstar,
-      this.goto});
+  Details({
+    this.name,
+    this.primarycolor,
+    this.secondarycolor,
+    this.noOfstar,
+    this.goto,
+  });
 }
 
 List<Details> _list = [
   Details(
-      name: "EASY",
-      primarycolor: Colors.green,
-      secondarycolor: Colors.green[300],
-      noOfstar: 1,
-      goto: FlipCardGame(Level.Easy)),
+    name: "EASY",
+    primarycolor: Colors.green,
+    secondarycolor: Colors.green[300],
+    noOfstar: 1,
+    goto: () {
+      Get.toNamed(RouteHelper.getMathGame(), arguments: Level.Easy);
+    },
+  ),
   Details(
-      name: "MEDIUM",
-      primarycolor: Colors.orange,
-      secondarycolor: Colors.orange[300],
-      noOfstar: 2,
-      goto: FlipCardGame(Level.Medium)),
+    name: "MEDIUM",
+    primarycolor: Colors.orange,
+    secondarycolor: Colors.orange[300],
+    noOfstar: 2,
+    goto: () {
+      Get.toNamed(RouteHelper.getMathGame(), arguments: Level.Medium);
+    },
+  ),
   Details(
-      name: "HARD",
-      primarycolor: Colors.red,
-      secondarycolor: Colors.red[300],
-      noOfstar: 3,
-      goto: FlipCardGame(Level.Hard))
+    name: "HARD",
+    primarycolor: Colors.red,
+    secondarycolor: Colors.red[300],
+    noOfstar: 3,
+    goto: () {
+      Get.toNamed(RouteHelper.getMathGame(), arguments: Level.Hard);
+    },
+  )
 ];

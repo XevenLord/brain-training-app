@@ -31,6 +31,12 @@ class AppTextStyle {
     height: 1.4,
     fontFamily: 'Montserrat',
   );
+  static TextStyle h5 = TextStyle(
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    fontFamily: 'Montserrat',
+  );
   static TextStyle c1 = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.normal,

@@ -17,16 +17,19 @@ import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_
 import 'package:brain_training_app/patient/authentification/signUp/ui/page/sign_up_success_page.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
+import 'package:brain_training_app/patient/game/2048/tzfe_difficulty_page.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_game.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_home.dart';
 import 'package:brain_training_app/patient/game/flip_card_memory/flip_card_home.dart';
 import 'package:brain_training_app/patient/game/flip_card_memory/memory_game.dart';
+import 'package:brain_training_app/patient/game/maths/math_difficulty_page.dart';
 import 'package:brain_training_app/patient/game/maths/math_game.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ai_game_settings.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ttt_home.dart';
 import 'package:brain_training_app/patient/home/ui/page/home_page.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_edit_page.dart';
 import 'package:brain_training_app/splash_page.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:get/get.dart';
 
 import 'patient/appointment/domain/entity/appointment.dart';
@@ -47,6 +50,11 @@ class RouteHelper {
   static const String flipCardHome = '/flip-card-home';
   static const String tZFEHome = '/tZFE-home';
   static const String tTTHome = '/tTT-home';
+
+  static const String mathDifficultyPage = '/math-difficulty-page';
+  static const String flipCardDifficultyPage = '/flip-card-difficulty-page';
+  static const String tZFEDifficultyPage = '/tZFE-difficulty-page';
+  static const String tTTDifficultyPage = '/tTT-difficulty-page';
 
   static const String ticTacToe = '/tic-tac-toe';
   static const String tZFEGame = '/TZFEGame';
@@ -93,6 +101,11 @@ class RouteHelper {
   static String getFlipCardHome() => flipCardHome;
   static String getTZFEHome() => tZFEHome;
   static String getTTTHome() => tTTHome;
+
+  static String getMathDifficultyPage() => mathDifficultyPage;
+  static String getFlipCardDifficultyPage() => flipCardDifficultyPage;
+  static String getTZFEDifficultyPage() => tZFEDifficultyPage;
+  static String getTTTDifficultyPage() => tTTDifficultyPage;
 
   static String getTicTacToe() => ticTacToe;
   static String getTZFEGame() => tZFEGame;
@@ -188,6 +201,23 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => const TTTHome(),
     ),
+
+    GetPage(
+      name: mathDifficultyPage,
+      transition: Transition.fadeIn,
+      page: () => MathDifficultyPage(),
+    ),
+    GetPage(
+      name: flipCardDifficultyPage,
+      transition: Transition.fadeIn,
+      page: () => MemoryGameHomePage(),
+    ),
+    GetPage(
+      name: tZFEDifficultyPage,
+      transition: Transition.fadeIn,
+      page: () => const TZFEDifficultyPage(),
+    ),
+
     GetPage(
       name: ticTacToe,
       transition: Transition.fadeIn,
@@ -196,7 +226,7 @@ class RouteHelper {
     GetPage(
       name: tZFEGame,
       transition: Transition.fadeIn,
-      page: () => const TZFEGame(),
+      page: () => TZFEGame(),
     ),
     GetPage(
       name: memoryGame,
@@ -206,7 +236,14 @@ class RouteHelper {
     GetPage(
       name: mathGame,
       transition: Transition.fadeIn,
-      page: () => const MathGame(),
+      page: () {
+        Level level = Get.arguments;
+        print("RH: Level: $level");
+        print(level == Level.Easy);
+        return MathGame(
+          level: level,
+        );
+      },
     ),
 
     // Appointment

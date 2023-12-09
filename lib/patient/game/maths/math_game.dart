@@ -2,13 +2,15 @@ import 'dart:math';
 
 import 'package:brain_training_app/patient/game/maths/util/my_button.dart';
 import 'package:brain_training_app/patient/game/maths/util/result_message.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class MathGame extends StatefulWidget {
-  const MathGame({Key? key}) : super(key: key);
+  Level level;
+  MathGame({Key? key, required this.level}) : super(key: key);
 
   @override
   State<MathGame> createState() => _MathGameState();
@@ -35,9 +37,66 @@ class _MathGameState extends State<MathGame> {
   // number A, number B
   int numberA = 1;
   int numberB = 1;
+  int level = 10;
+  String operator = "+";
+
+  String questionText = '';
 
   // user answer
   String userAnswer = '';
+
+  @override
+  void initState() {
+    super.initState();
+    setLevel();
+    // Create a new question with a random operator
+    operator = getRandomOperator();
+    numberA = randomNumber.nextInt(level);
+    numberB = randomNumber.nextInt(level);
+
+    // Modify the questionText based on the random operator
+    if (operator == '-') {
+      // Ensure numberA is greater than numberB for subtraction
+      if (numberA < numberB) {
+        final temp = numberA;
+        numberA = numberB;
+        numberB = temp;
+      }
+    } else if (operator == '*') {
+      // Limit the multiplication result to a reasonable range
+      numberA = randomNumber.nextInt(level);
+      numberB = randomNumber.nextInt(10);
+    } else if (operator == '/') {
+      // Ensure numberA is divisible by numberB for division
+      numberB = randomNumber.nextInt(9) + 1;
+      numberA = numberB * (randomNumber.nextInt(level) + 1);
+    }
+
+    final operatorStr = operator == '*'
+        ? 'x'
+        : operator == '/'
+            ? '÷'
+            : operator;
+
+    // Set the initial questionText
+    questionText = '$numberA $operatorStr $numberB =';
+    setState(() {});
+  }
+
+  void setLevel() {
+    print("in set Level");
+    if (widget.level == Level.Easy) {
+      print(widget.level.toString());
+      level = 10;
+    } else if (widget.level == Level.Medium) {
+      print(widget.level.toString());
+      level = 50;
+    } else if (widget.level == Level.Hard) {
+      print(widget.level.toString());
+      level = 100;
+    }
+    setState(() {});
+  }
 
   // user tapped a button
   void buttonTapped(String button) {
@@ -62,31 +121,65 @@ class _MathGameState extends State<MathGame> {
 
   // check if user is correct or not
   void checkResult() {
-    if (numberA + numberB == int.parse(userAnswer)) {
+    int? result;
+    // Extract the operator from questionText
+    final operatorIndex = questionText.indexOf(RegExp('[+\\-x÷]'));
+    if (operatorIndex != -1) {
+      final operator = questionText[operatorIndex];
+
+      // Calculate the correct result based on the extracted operator
+      switch (operator) {
+        case '+':
+          result = numberA + numberB;
+          break;
+        case '-':
+          result = numberA - numberB;
+          break;
+        case 'x':
+          result = numberA * numberB;
+          break;
+        case '÷':
+          if (numberB != 0) {
+            result = numberA ~/ numberB;
+          }
+          break;
+      }
+    }
+
+    if (result != null && int.tryParse(userAnswer) == result) {
       showDialog(
-          context: context,
-          builder: (context) {
-            return ResultMessage(
-              message: 'Correct!',
-              onTap: goToNextQuestion,
-              icon: Icons.arrow_forward,
-            );
-          });
+        context: context,
+        builder: (context) {
+          return ResultMessage(
+            message: 'Correct!',
+            onTap: goToNextQuestion,
+            icon: Icons.arrow_forward,
+          );
+        },
+      );
     } else {
       showDialog(
-          context: context,
-          builder: (context) {
-            return ResultMessage(
-              message: 'Sorry try again',
-              onTap: goBackToQuestion,
-              icon: Icons.rotate_left,
-            );
-          });
+        context: context,
+        builder: (context) {
+          return ResultMessage(
+            message: 'Sorry, try again',
+            onTap: goBackToQuestion,
+            icon: Icons.rotate_left,
+          );
+        },
+      );
     }
   }
 
   // create random numbers
   var randomNumber = Random();
+
+  // create random operator
+  String getRandomOperator() {
+    final operators = ['+', '-', '*', '/'];
+    final random = Random();
+    return operators[random.nextInt(operators.length)];
+  }
 
   // GO TO NEXT QUESTION
   void goToNextQuestion() {
@@ -99,8 +192,35 @@ class _MathGameState extends State<MathGame> {
     });
 
     // create a new question
-    numberA = randomNumber.nextInt(10);
-    numberB = randomNumber.nextInt(10);
+    operator = getRandomOperator();
+    numberA = randomNumber.nextInt(level);
+    numberB = randomNumber.nextInt(level);
+
+    if (operator == '-') {
+      // Ensure numberA is greater than numberB for subtraction
+      if (numberA < numberB) {
+        final temp = numberA;
+        numberA = numberB;
+        numberB = temp;
+      }
+    } else if (operator == '*') {
+      // Limit the multiplication result to a reasonable range
+      numberA = randomNumber.nextInt(level);
+      numberB = randomNumber.nextInt(10);
+    } else if (operator == '/') {
+      // Ensure numberA is divisible by numberB for division
+      numberB = randomNumber.nextInt(9) + 1;
+      numberA = numberB * (randomNumber.nextInt(level) + 1);
+    }
+
+    final operatorStr = operator == '*'
+        ? 'x'
+        : operator == '/'
+            ? '÷'
+            : operator;
+
+    questionText = '$numberA $operatorStr $numberB =';
+    setState(() {});
   }
 
   // GO BACK TO QUESTION
@@ -140,7 +260,7 @@ class _MathGameState extends State<MathGame> {
                     children: [
                       // question
                       Text(
-                        numberA.toString() + ' + ' + numberB.toString() + ' = ',
+                        questionText,
                         style:
                             AppTextStyle.whiteTextStyle.merge(AppTextStyle.h1),
                       ),

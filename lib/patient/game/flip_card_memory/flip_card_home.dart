@@ -25,7 +25,7 @@ class _FlipCardHomeState extends State<FlipCardHome> {
           gradient: AppColors.transparentGreen,
           buttonColor: AppColors.lightGreen,
           btnTextColor: AppColors.brandGreen,
-          onTap: () => Get.toNamed(RouteHelper.getMemoryGame()),
+          onTap: () => Get.toNamed(RouteHelper.getFlipCardDifficultyPage()),
         ),
       ),
     );

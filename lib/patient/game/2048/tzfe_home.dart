@@ -25,7 +25,7 @@ class _TZFEHomeState extends State<TZFEHome> {
           gradient: AppColors.transparentRed,
           buttonColor: AppColors.lightRed,
           btnTextColor: AppColors.brandRed,
-          onTap: () => Get.toNamed(RouteHelper.getTZFEGame()),
+          onTap: () => Get.toNamed(RouteHelper.getTZFEDifficultyPage()),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,11 +10,15 @@ import 'animated_tile.dart';
 import 'button.dart';
 
 class TileBoardWidget extends ConsumerWidget {
-  const TileBoardWidget(
-      {super.key, required this.moveAnimation, required this.scaleAnimation});
+  TileBoardWidget(
+      {super.key,
+      required this.moveAnimation,
+      required this.scaleAnimation,
+      this.level = Level.Easy});
 
   final CurvedAnimation moveAnimation;
   final CurvedAnimation scaleAnimation;
+  Level? level;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

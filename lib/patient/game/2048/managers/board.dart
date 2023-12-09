@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
@@ -15,9 +16,12 @@ class BoardManager extends StateNotifier<Board> {
   // We will use this list to retrieve the right index when user swipes up/down
   // which will allow us to reuse most of the logic.
   final verticalOrder = [12, 8, 4, 0, 13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3];
+  List<int> valueList = [2];
+  int benchmark = 200;
 
   final StateNotifierProviderRef ref;
-  BoardManager(this.ref) : super(Board.newGame(0, [])) {
+  BoardManager(this.ref)
+      : super(Board.newGame(0, [])) {
     //Load the last saved state or start a new game.
     load();
   }
@@ -40,6 +44,8 @@ class BoardManager extends StateNotifier<Board> {
 
   // Start New Game
   void newGame() {
+    valueList = [2];
+    benchmark = 200;
     state = _newGame();
   }
 
@@ -144,7 +150,7 @@ class BoardManager extends StateNotifier<Board> {
       i = rng.nextInt(16);
     } while (indexes.contains(i));
 
-    return Tile(const Uuid().v4(), 2, i);
+    return Tile(const Uuid().v4(), valueList[rng.nextInt(valueList.length)], i);
   }
 
   //Merge tiles
@@ -184,6 +190,13 @@ class BoardManager extends StateNotifier<Board> {
     }
 
     //If tiles got moved then generate a new tile at random position of the available positions on the board.
+
+    if (score > benchmark) {
+      if (valueList.last < 16) {
+        valueList.add(valueList.last * 2);
+      }
+      benchmark += 200;
+    }
     if (tilesMoved) {
       tiles.add(random(indexes));
     }
@@ -205,6 +218,8 @@ class BoardManager extends StateNotifier<Board> {
         //If there is a tile with 2048 then the game is won.
         if (tile.value == 2048) {
           gameWon = true;
+          valueList = [2];
+          benchmark = 200;
         }
 
         var x = (i - (((i + 1) / 4).ceil() * 4 - 4));
@@ -317,7 +332,6 @@ class BoardManager extends StateNotifier<Board> {
     }
   }
 }
-
-final boardManager = StateNotifierProvider<BoardManager, Board>((ref) {
+dynamic boardManager = StateNotifierProvider<BoardManager, Board>((ref) {
   return BoardManager(ref);
 });

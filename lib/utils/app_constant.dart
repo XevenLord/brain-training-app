@@ -38,7 +38,8 @@ class AppConstant {
     try {
       debugModePrint("null check getCurrentUser " +
           (FirebaseAuthRepository.getCurrentUser() == null).toString());
-      debugModePrint("null check get find uid " + (Get.find<AppUser>().uid == null).toString());
+      debugModePrint("null check get find uid " +
+          (Get.find<AppUser>().uid == null).toString());
       if (FirebaseAuthRepository.getCurrentUser() != null &&
           Get.find<AppUser>().uid == null) {
         debugModePrint("loadResources: loading get user details...");
@@ -108,3 +109,5 @@ void debugModePrint(Object? object) {
     print(object);
   }
 }
+
+enum Level { Easy, Medium, Hard }
