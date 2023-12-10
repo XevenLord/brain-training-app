@@ -46,7 +46,7 @@ class _SignInPageState extends State<SignInPage> {
       },
     );
     try {
-      await FirebaseAuthRepository.signInWithEmailAndPassword(
+      await FirebaseAuthRepository.signInWithEmailAndPassword(context,
           email: _emailInput.text, password: _passwordInput.text);
       if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
         Get.offAllNamed(RouteHelper.getAdminHome());
@@ -55,7 +55,6 @@ class _SignInPageState extends State<SignInPage> {
         Get.offAllNamed(RouteHelper.getPatientHome());
       } else {
         Get.back(); // Close the loading dialog
-        // Show a custom AlertDialog for other roles
         showDialog(
           context: context,
           builder: (context) {
@@ -78,25 +77,21 @@ class _SignInPageState extends State<SignInPage> {
       }
     } on FirebaseAuthException catch (e) {
       Get.back(); // Close the loading dialog
-      // Show an AlertDialog for wrong email or password
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Column(
-              children: [
-                Image.asset(AppConstant.WRONG_MARK, width: 100.w),
-                SizedBox(height: 10.h),
-                Text(
-                  "Wrong email or password entered!",
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.h3,
-                ),
-              ],
-            ),
-          );
-        },
-      );
+      print(e.code);
+      switch (e.code) {
+        case 'invalid-email':
+          showMessage("Invalid email. Please try again.");
+          break;
+        case 'wrong-password':
+          showMessage("Wrong password. Please try again.");
+          break;
+        case 'user-not-found':
+          showMessage("User not found. Please sign up first.");
+          break;
+        case 'user-disabled':
+          showMessage("User has been disabled.");
+          break;
+      }
     }
   }
 

@@ -4,8 +4,11 @@ import 'package:brain_training_app/patient/appointment/domain/entity/appointment
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,7 +62,28 @@ class FirebaseAuthRepository extends GetxController {
     return _firebaseAuth.currentUser;
   }
 
-  static Future<UserCredential> signInWithEmailAndPassword(
+  static void showMessage(BuildContext context, String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Column(
+            children: [
+              Image.asset(AppConstant.ERROR_IMG, width: 100.w),
+              SizedBox(height: 10.h),
+              Text(
+                errorMessage,
+                textAlign: TextAlign.center,
+                style: AppTextStyle.h3,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<UserCredential> signInWithEmailAndPassword(BuildContext context,
       {required String email, required String password}) async {
     try {
       debugModePrint("entering signInWithEmailAndPassword");
@@ -73,6 +97,22 @@ class FirebaseAuthRepository extends GetxController {
       print("sign in : " + Get.find<AppUser>().name!);
       return res;
     } on FirebaseAuthException catch (e) {
+      Get.back();
+      print(e.code);
+      switch (e.code) {
+        case 'invalid-email':
+          showMessage(context, "Invalid email. Please try again.");
+          break;
+        case 'wrong-password':
+          showMessage(context, "Wrong password. Please try again.");
+          break;
+        case 'user-not-found':
+          showMessage(context, "User not found. Please sign up first.");
+          break;
+        case 'user-disabled':
+          showMessage(context, "User has been disabled.");
+          break;
+      }
       throw Error();
     }
   }

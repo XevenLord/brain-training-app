@@ -12,7 +12,7 @@ class AppConstant {
   static const String NEUROFIT_LOGO = 'assets/images/logo-no-background.png';
   static const String NEUROFIT_LOGO_ONLY = 'assets/images/logo-color.png';
   static const String LOADING_GIF = 'assets/images/loading.gif';
-  static const String ERROR_IMG = 'assets/images/error.png';
+  static const String ERROR_IMG = 'assets/images/error_symbol.png';
   static const String FORGET_PASSWORD = 'assets/images/forget_password.png';
   static const String DONE_CHECK = 'assets/images/signup_completed.png';
   static const String WRONG_MARK = 'assets/images/wrongmark.png';
