@@ -7,6 +7,7 @@ import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
+import 'package:brain_training_app/patient/game/maths/math_vmodel.dart';
 import 'package:brain_training_app/patient/healthCheck/ui/view_model/mental_quiz_vmodel.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
@@ -36,6 +37,7 @@ Future<void> init() async {
   Get.lazyPut(() => ChatViewModel(), fenix: true);
   Get.lazyPut(() => ProfileViewModel());
   Get.lazyPut(() => MentalQuizViewModel());
+  Get.lazyPut(() => MathGameViewModel());
 
   // *Admin*
   // Admin Service

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:brain_training_app/patient/game/maths/math_vmodel.dart';
 import 'package:brain_training_app/patient/game/maths/util/my_button.dart';
 import 'package:brain_training_app/patient/game/maths/util/result_message.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -17,6 +18,7 @@ class MathGame extends StatefulWidget {
 }
 
 class _MathGameState extends State<MathGame> {
+  late MathGameViewModel mathModel = Get.find<MathGameViewModel>();
   // number pad list
   List<String> numberPad = [
     '7',
@@ -150,6 +152,7 @@ class _MathGameState extends State<MathGame> {
       showDialog(
         context: context,
         builder: (context) {
+          submitCorrectAnswer(questionText, result.toString(), userAnswer);
           return ResultMessage(
             message: 'Correct!',
             onTap: goToNextQuestion,
@@ -161,6 +164,7 @@ class _MathGameState extends State<MathGame> {
       showDialog(
         context: context,
         builder: (context) {
+          submitWrongAnswer(questionText, result.toString(), userAnswer);
           return ResultMessage(
             message: 'Sorry, try again',
             onTap: goBackToQuestion,
@@ -227,6 +231,34 @@ class _MathGameState extends State<MathGame> {
   void goBackToQuestion() {
     // dismiss alert dialog
     Navigator.of(context).pop();
+  }
+
+  void submitCorrectAnswer(
+      String questionText, String correctAns, String userAnswer) async {
+    Map<String, dynamic> ansMap = {
+      "question": questionText,
+      "correctAns": correctAns,
+      "userAnswer": userAnswer,
+      "isUserCorrect": true,
+      "level": widget.level.toString().split('.').last,
+    };
+
+    mathModel.setMathResult(ansMap);
+    await mathModel.submitMathQuestAnswer();
+  }
+
+  void submitWrongAnswer(
+      String questionText, String correctAns, String userAnswer) async {
+    Map<String, dynamic> ansMap = {
+      "question": questionText,
+      "correctAns": correctAns,
+      "userAnswer": userAnswer,
+      "isUserCorrect": false,
+      "level": widget.level.toString().split('.').last,
+    };
+
+    mathModel.setMathResult(ansMap);
+    await mathModel.submitMathQuestAnswer();
   }
 
   @override
