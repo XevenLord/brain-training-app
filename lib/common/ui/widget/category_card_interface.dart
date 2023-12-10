@@ -12,6 +12,7 @@ abstract class CategoryCardInterface {
     double? cardSize,
     double? iconSize,
     double? fontSize,
+    TextStyle? textStyle,
     Function()? onTap,
   });
 }
@@ -27,6 +28,7 @@ class CategoryCard implements CategoryCardInterface {
     double? cardSize = 100,
     double? iconSize = 40,
     double? fontSize = 16,
+    TextStyle? textStyle,
     Function()? onTap,
     bool isRow = true,
   }) {
@@ -62,11 +64,12 @@ class CategoryCard implements CategoryCardInterface {
                     ),
                     Text(
                       category,
-                      style: TextStyle(
-                        color: foregroundColor,
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.bold,
-                      ).merge(AppTextStyle.h2),
+                      style: textStyle ??
+                          TextStyle(
+                            color: foregroundColor,
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.bold,
+                          ).merge(AppTextStyle.h2),
                     ),
                   ],
                 )

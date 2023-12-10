@@ -4,6 +4,9 @@ import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_main_page.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_first_screen.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_screen.dart';
+import 'package:brain_training_app/admin/games/common/ui/pages/games_result_categories.dart';
+import 'package:brain_training_app/admin/games/maths/ui/math_patient_list.dart';
+import 'package:brain_training_app/admin/games/maths/ui/math_score_overview.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_appt.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
@@ -91,6 +94,13 @@ class RouteHelper {
   static const String patientApptPage = '/patient-appt-page';
   static const String patientMentalResultPage = '/patient-mental-result-page';
 
+  // *Admin Games*
+  static const String adminGamePage = '/admin-game-page';
+
+  // *Admin maths*
+  static const String mathPatientList = '/math-patient-list';
+  static const String mathScoreOverview = '/math-score-overview';
+
   // chat module
   static const String chatList = '/chat-list';
   static const String chatPage = '/chat';
@@ -149,6 +159,13 @@ class RouteHelper {
   static String getPatientOverviewPage() => patientOverviewPage;
   static String getPatientApptPage() => patientApptPage;
   static String getPatientMentalResultPage() => patientMentalResultPage;
+
+  // *Admin Games*
+  static String getAdminGameCategoriesPage() => adminGamePage;
+
+  // *Admin maths*
+  static String getMathPatientList() => mathPatientList;
+  static String getMathScoreOverview() => mathScoreOverview;
 
   static List<GetPage> routes = [
     GetPage(
@@ -384,6 +401,26 @@ class RouteHelper {
       page: () {
         AppUser patient = Get.arguments;
         return PatientMentalResult(patient: patient);
+      },
+    ),
+    // *Admin Games*
+    GetPage(
+      name: adminGamePage,
+      transition: Transition.fadeIn,
+      page: () => const GamesResultCategories(),
+    ),
+    // *Admin maths*
+    GetPage(
+      name: mathPatientList,
+      transition: Transition.fadeIn,
+      page: () => const MathPatientList(),
+    ),
+    GetPage(
+      name: mathScoreOverview,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments;
+        return MathScoreOverview(patient: patient);
       },
     ),
   ];

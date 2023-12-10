@@ -14,6 +14,7 @@ class InfoCardTile implements InfoCardInterface {
       bool hasEditIcon = true,
       bool hasCheckIcon = false,
       EdgeInsetsGeometry? margin = const EdgeInsets.only(bottom: 16),
+      bool isView = false,
       Function()? onEdit,
       Function()? onCheck}) {
     return Container(
@@ -127,11 +128,15 @@ class InfoCardTile implements InfoCardInterface {
                             child: Container(
                                 width: 50.w,
                                 height: 50.w,
-                                decoration: BoxDecoration(
+                                decoration: isView ? null : BoxDecoration(
                                     color: AppColors.lightBlue,
                                     borderRadius: BorderRadius.circular(10.w)),
-                                child:
-                                    const Icon(Icons.edit, color: Colors.blue)),
+                                child: isView
+                                    ? Text("View",
+                                        style: AppTextStyle.h3.merge(
+                                            AppTextStyle.brandBlueTextStyle))
+                                    : const Icon(Icons.edit,
+                                        color: Colors.blue)),
                           )
                         : Container(),
                     hasCheckIcon

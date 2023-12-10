@@ -37,7 +37,9 @@ class _HomeContentState extends State<HomeContent> {
     {
       "category": "Game Result",
       "icon": Icons.gamepad,
-      "onTap": () {},
+      "onTap": () {
+        Get.toNamed(RouteHelper.getAdminGameCategoriesPage());
+      },
     },
     // {
     //   "category": "Reminder",
