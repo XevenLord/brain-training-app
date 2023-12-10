@@ -66,12 +66,12 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
         time: time!,
       );
     }
-    Get.back();
+    Get.back(result: true);
   }
 
   void deleteAppointment() async {
     await appointmentVModel.cancelAppointment(appointment: widget.appointment);
-    Get.back();
+    Get.back(result: true);
   }
 
   @override

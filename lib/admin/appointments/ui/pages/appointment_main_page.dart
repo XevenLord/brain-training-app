@@ -1,4 +1,5 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_page.dart';
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -8,17 +9,20 @@ import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 typedef parentFunctionCallback = void Function();
-class AppointmentMainPage extends StatefulWidget {
-  const AppointmentMainPage({super.key});
+
+class AdminAppointmentMainPage extends StatefulWidget {
+  const AdminAppointmentMainPage({super.key});
 
   @override
-  State<AppointmentMainPage> createState() => _AppointmentMainPageState();
+  State<AdminAppointmentMainPage> createState() =>
+      _AdminAppointmentMainPageState();
 }
 
-class _AppointmentMainPageState extends State<AppointmentMainPage> {
+class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   late AdminAppointmentViewModel _appointmentViewModel;
   late UserRepository? _userRepo;
   List<AdminAppointment>? appointments;
@@ -44,7 +48,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
   }
 
   @override
-  void didUpdateWidget(covariant AppointmentMainPage oldWidget) {
+  void didUpdateWidget(covariant AdminAppointmentMainPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     getAppointmentList();
   }
@@ -75,6 +79,17 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
     }
 
     return age.toString();
+  }
+
+  void navigateToEditPage(AdminAppointment appointment) async {
+    final result = await Get.to(
+      AdminAppointmentEditPage(appointment: appointment),
+    );
+
+    // Check if the result is true (operation was successful)
+    if (result == true) {
+      getAppointmentList(); // Fetch updated data
+    }
   }
 
   @override
@@ -160,6 +175,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                               reason: appt.reason!,
                               time: appt.time!,
                               appointment: appt,
+                              onEdit: () => navigateToEditPage(appt),
                             );
                           }).toList(),
                         if (filteredAppointments!.isEmpty)
@@ -187,6 +203,7 @@ class AppointmentCard extends StatelessWidget {
   final String reason;
   final String time;
   AdminAppointment appointment;
+  Function()? onEdit;
 
   AppointmentCard({
     required this.name,
@@ -195,6 +212,7 @@ class AppointmentCard extends StatelessWidget {
     required this.reason,
     required this.time,
     required this.appointment,
+    this.onEdit,
   });
 
   @override
@@ -222,7 +240,8 @@ class AppointmentCard extends StatelessWidget {
               age: age,
               gender: gender,
               reason: reason,
-              appointment: appointment),
+              appointment: appointment,
+              onEdit: onEdit),
         ],
       ),
     );
@@ -235,6 +254,7 @@ class CardWidget extends StatelessWidget {
   final String gender;
   final String reason;
   AdminAppointment appointment;
+  Function()? onEdit;
 
   CardWidget({
     required this.name,
@@ -242,10 +262,12 @@ class CardWidget extends StatelessWidget {
     required this.gender,
     required this.reason,
     required this.appointment,
+    this.onEdit,
   });
 
   @override
   Widget build(BuildContext context) {
+    DateTime apptDate = DateFormat('yyyy-MM-dd').parse(appointment.date!);
     return Container(
       margin: const EdgeInsets.only(top: 8.0),
       padding: const EdgeInsets.all(16.0),
@@ -287,18 +309,20 @@ class CardWidget extends StatelessWidget {
                       color: AppColors.lightBlue,
                       borderRadius: BorderRadius.circular(10.w)),
                   child: IconButton(
-                      onPressed: () {
-                        Get.toNamed(RouteHelper.getAdminAppointmentEditPage(),
-                            arguments: appointment);
-                      },
-                      icon: Icon(Icons.edit, color: Colors.blue))),
+                      onPressed: onEdit,
+                      icon: const Icon(Icons.edit, color: Colors.blue))),
               Container(
                   width: 50.w,
                   height: 50.w,
                   decoration: BoxDecoration(
-                      color: AppColors.lightBlue,
+                      color: apptDate.isBefore(DateTime.now())
+                          ? Colors.green
+                          : AppColors.lightBlue,
                       borderRadius: BorderRadius.circular(10.w)),
-                  child: Icon(Icons.check, color: Colors.blue)),
+                  child: Icon(Icons.check,
+                      color: apptDate.isBefore(DateTime.now())
+                          ? Colors.white
+                          : Colors.blue)),
             ],
           ),
         ],

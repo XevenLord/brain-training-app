@@ -322,7 +322,7 @@ class RouteHelper {
     GetPage(
       name: adminAppointmentPage,
       transition: Transition.fadeIn,
-      page: () => AppointmentMainPage(),
+      page: () => AdminAppointmentMainPage(),
     ),
     GetPage(
       name: adminAppointmentEditPage,
