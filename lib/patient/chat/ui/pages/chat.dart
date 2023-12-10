@@ -149,17 +149,19 @@ class _ChatState extends State<Chat> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Text(data['msg'],
-                                                  style: TextStyle(
-                                                    color: isSender(data['uid']
-                                                            .toString())
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                    fontSize: 16,
-                                                  ),
-                                                  maxLines: 100,
-                                                  overflow:
-                                                      TextOverflow.ellipsis),
+                                              Expanded(
+                                                child: Text(data['msg'],
+                                                    style: TextStyle(
+                                                      color: isSender(data['uid']
+                                                              .toString())
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                      fontSize: 16,
+                                                    ),
+                                                    maxLines: 100,
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                              ),
                                             ],
                                           ),
                                           Row(

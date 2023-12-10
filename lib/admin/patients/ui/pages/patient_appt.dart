@@ -73,7 +73,9 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
           child: appointments == null
               ? displayLoadingData()
               : appointments!.isEmpty
-                  ? displayEmptyDataLoaded("No appointment found")
+                  ? displayEmptyDataLoaded("No appointment found", () {
+                      Get.back();
+                    })
                   : SingleChildScrollView(
                       // check Future.delayed is useful for me or not
                       child: Column(
@@ -101,7 +103,6 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
                                     .merge(AppTextStyle.brandBlueTextStyle)),
                           ),
                           SizedBox(height: 24.h),
-
                           ...List.generate(
                             appointments?.length ?? 0,
                             (index) => appointments == null

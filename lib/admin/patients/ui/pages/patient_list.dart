@@ -36,7 +36,6 @@ class _PatientListState extends State<PatientList> {
       });
     } catch (e) {
       // Handle any potential errors during data fetching
-      print(e);
       setState(() {
         isLoading = false; // Set loading to false even on error
       });

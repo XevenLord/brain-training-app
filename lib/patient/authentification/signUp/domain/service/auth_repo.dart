@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:brain_training_app/main.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -94,11 +92,9 @@ class FirebaseAuthRepository extends GetxController {
       await storeCredentials(email, password);
       debugModePrint("entering getUserDetails");
       await getUserDetails(res.user!.uid);
-      print("sign in : " + Get.find<AppUser>().name!);
       return res;
     } on FirebaseAuthException catch (e) {
       Get.back();
-      print(e.code);
       switch (e.code) {
         case 'invalid-email':
           showMessage(context, "Invalid email. Please try again.");

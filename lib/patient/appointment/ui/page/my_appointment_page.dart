@@ -70,7 +70,10 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           child: appointments == null
               ? displayLoadingData()
               : appointments!.isEmpty
-                  ? displayEmptyDataLoaded("No appointment found")
+                  ? displayEmptyDataLoaded("No appointment found", () {
+                      Get.offAllNamed(RouteHelper.getPatientHome(),
+                          arguments: 2);
+                    })
                   : SingleChildScrollView(
                       // check Future.delayed is useful for me or not
                       child: Column(

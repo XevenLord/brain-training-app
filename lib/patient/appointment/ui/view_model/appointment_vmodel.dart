@@ -98,8 +98,10 @@ class AppointmentViewModel extends GetxController implements GetxService {
       title: "Appointment with ${chosenPhysiotherapist!.name!}",
       body: "Meet you on ${DateFormat('dd-MM-yyyy').format(date)}, ${time}",
       payload: "This is the payload of the notification",
-      scheduledDate: createDateWithTimeSlot(
-          date: date.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+      scheduledDate:
+          createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:40 PM"),
+      // scheduledDate: createDateWithTimeSlot(
+      //     date: date.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
     );
     isAppointmentSet = true;
     update();
@@ -123,10 +125,10 @@ class AppointmentViewModel extends GetxController implements GetxService {
       title: "Appointment with ${physio.name}",
       body: "Meet you on ${formatDateTime(newDate)}, ${time}",
       payload: "This is the payload of the notification",
-      scheduledDate:
-          createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
-      // scheduledDate: createDateWithTimeSlot(
-      //     date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+      // scheduledDate:
+      //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
+      scheduledDate: createDateWithTimeSlot(
+          date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
     );
   }
 

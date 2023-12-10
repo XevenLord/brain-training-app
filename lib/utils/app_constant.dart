@@ -77,7 +77,7 @@ displayLoadingData() {
   );
 }
 
-displayEmptyDataLoaded(String message) {
+displayEmptyDataLoaded(String message, Function()? onBack) {
   return Stack(
     children: [
       Center(
@@ -96,7 +96,7 @@ displayEmptyDataLoaded(String message) {
       ),
       Positioned(
         child: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: onBack ?? () => Get.back(),
           icon: Icon(Icons.arrow_back),
         ),
       ),

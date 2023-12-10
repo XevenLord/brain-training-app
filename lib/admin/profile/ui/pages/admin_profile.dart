@@ -40,8 +40,7 @@ class _AdminProfileState extends State<AdminProfile> {
               height: 20,
             ),
             // Circle Avatar Picture
-            appUser != null &&
-                    appUser.aboutMe != null &&
+            appUser.aboutMe != null &&
                     appUser.aboutMe!.isNotEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +60,7 @@ class _AdminProfileState extends State<AdminProfile> {
                                   borderRadius: BorderRadius.circular(69.r),
                                   child: Image(
                                     image: NetworkImage(
-                                        appUser.profilePic! as String),
+                                        appUser.profilePic!),
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.fill,

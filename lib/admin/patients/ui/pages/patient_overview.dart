@@ -51,7 +51,9 @@ class _PatientOverviewState extends State<PatientOverview> {
             Color(0xFFFF484C),
           ],
         ),
-        "onTap": () {},
+        "onTap": () {
+          Get.toNamed(RouteHelper.getAdminGameCategoriesPage());
+        },
       },
       {
         "category": "Appointment",

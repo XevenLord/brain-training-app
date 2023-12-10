@@ -61,7 +61,7 @@ class _AdminOverviewState extends State<AdminOverview> {
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(60.r),
                     child: Image(
-                      image: NetworkImage(widget.admin.profilePic! as String),
+                      image: NetworkImage(widget.admin.profilePic!),
                       width: 100,
                       height: 100,
                       fit: BoxFit.fill,

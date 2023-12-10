@@ -53,11 +53,11 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: appBar,
-        body: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: appBar,
+      body: SafeArea(
+        child: Column(
           children: [
             !noBackBtn
                 ? PageHeader(
@@ -101,8 +101,8 @@ class Screen extends StatelessWidget {
             )
           ],
         ),
-        bottomNavigationBar: bottomNavigationBar,
       ),
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }
