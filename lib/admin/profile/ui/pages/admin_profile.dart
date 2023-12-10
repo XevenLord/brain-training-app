@@ -111,7 +111,8 @@ class _AdminProfileState extends State<AdminProfile> {
                 child: IconButton(
                   color: AppColors.white,
                   onPressed: () {
-                    Get.toNamed(RouteHelper.getProfileEditPage());
+                    Get.toNamed(RouteHelper.getAdminProfileEdit(),
+                        arguments: appUser);
                   },
                   icon: const Icon(Icons.edit),
                 ),

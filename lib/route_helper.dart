@@ -1,11 +1,16 @@
 import 'package:brain_training_app/admin/admins/ui/pages/admin_list.dart';
+import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_page.dart';
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_main_page.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_first_screen.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_screen.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
+import 'package:brain_training_app/admin/patients/ui/pages/patient_appt.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
+import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart';
 import 'package:brain_training_app/admin/admins/ui/pages/admin_overview.dart';
+import 'package:brain_training_app/admin/profile/ui/pages/admin_edit_profile.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
@@ -78,10 +83,13 @@ class RouteHelper {
   // *Admin List*
   static const String adminListPage = '/admin-list-page';
   static const String adminOverviewPage = '/admin-overview-page';
+  static const String adminProfileEdit = '/admin-profile-edit';
 
   // *Admin Patient List*
   static const String patientListPage = '/patient-list-page';
   static const String patientOverviewPage = '/patient-overview-page';
+  static const String patientApptPage = '/patient-appt-page';
+  static const String patientMentalResultPage = '/patient-mental-result-page';
 
   // chat module
   static const String chatList = '/chat-list';
@@ -134,10 +142,13 @@ class RouteHelper {
   // *Admin List*
   static String getAdminListPage() => adminListPage;
   static String getAdminOverviewPage() => adminOverviewPage;
+  static String getAdminProfileEdit() => adminProfileEdit;
 
   // *Admin Patient List*
   static String getPatientListPage() => patientListPage;
   static String getPatientOverviewPage() => patientOverviewPage;
+  static String getPatientApptPage() => patientApptPage;
+  static String getPatientMentalResultPage() => patientMentalResultPage;
 
   static List<GetPage> routes = [
     GetPage(
@@ -313,6 +324,16 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => AppointmentMainPage(),
     ),
+    GetPage(
+      name: adminAppointmentEditPage,
+      transition: Transition.fadeIn,
+      page: () {
+        AdminAppointment appointment = Get.arguments;
+        return AdminAppointmentEditPage(
+          appointment: appointment,
+        );
+      },
+    ),
     // *Admin List*
     GetPage(
       name: adminListPage,
@@ -327,6 +348,14 @@ class RouteHelper {
         return AdminOverview(admin: admin);
       },
     ),
+    GetPage(
+      name: adminProfileEdit,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser appUser = Get.arguments;
+        return AdminProfileEdit(appUser: appUser);
+      },
+    ),
     // *Admin Patient List*
     GetPage(
       name: patientListPage,
@@ -339,6 +368,22 @@ class RouteHelper {
       page: () {
         AppUser patient = Get.arguments;
         return PatientOverview(patient: patient);
+      },
+    ),
+    GetPage(
+      name: patientApptPage,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments;
+        return PatientAppointmentPage(patient: patient);
+      },
+    ),
+    GetPage(
+      name: patientMentalResultPage,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments;
+        return PatientMentalResult(patient: patient);
       },
     ),
   ];

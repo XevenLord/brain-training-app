@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
@@ -28,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> animation;
   late AnimationController controller;
   late AppointmentViewModel appointmentViewModel;
+  late AdminAppointmentViewModel adminAppointmentViewModel;
   bool resourceLoaded = false;
 
   @override
@@ -54,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen>
     listenNotifications();
     if (resourceLoaded && FirebaseAuth.instance.currentUser != null) {
       appointmentViewModel = Get.find<AppointmentViewModel>();
+      adminAppointmentViewModel = Get.find<AdminAppointmentViewModel>();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getPhysiotherapistList();
         if (Get.find<AppUser>().role == "admin") {
@@ -83,6 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void getPhysiotherapistList() async {
     await appointmentViewModel.getPhysiotherapistList();
+    await adminAppointmentViewModel.getPhysiotherapistList();
   }
 
   @override

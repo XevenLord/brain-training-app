@@ -1,9 +1,11 @@
+import 'package:brain_training_app/patient/healthCheck/ui/view_model/mental_quiz_vmodel.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class QuestionCard extends StatefulWidget {
   QuestionCard({
@@ -71,6 +73,13 @@ class _QuestionCardState extends State<QuestionCard> {
     }
   }
 
+  void submitMentalHealthAnswer(Map<String, String> data) async {
+    print("submitting mental health answer");
+    print(data);
+    bool res = await Get.find<MentalQuizViewModel>().submitMentalHealthAnswer(data);
+    print("upload res: $res");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -120,11 +129,27 @@ class _QuestionCardState extends State<QuestionCard> {
                             style: AppTextStyle.h3
                                 .merge(TextStyle(color: Color(0xFF1F2429))))),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (currentIndex != 4) {
+                          if (_selectedQuests[currentIndex] == -1) {
+                            return;
+                          }
                           setState(() {
                             currentIndex++;
                           });
+                        }
+
+                        if (currentIndex == 4) {
+                          dynamic answer = {
+                            quests[0]:
+                                emojis.values.elementAt(_selectedQuests[0]),
+                            quests[1]: ansOptions[_selectedQuests[1]],
+                            quests[2]: ansOptions[_selectedQuests[2]],
+                            quests[3]: ansOptions[_selectedQuests[3]],
+                            quests[4]: ansOptions[_selectedQuests[4]],
+                          };
+                          submitMentalHealthAnswer(answer);
+                          Navigator.pop(context);
                         }
                       },
                       style: ButtonStyle(

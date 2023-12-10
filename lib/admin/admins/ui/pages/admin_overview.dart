@@ -1,5 +1,6 @@
 import 'package:brain_training_app/common/ui/widget/information_row.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,6 @@ class _AdminOverviewState extends State<AdminOverview> {
       return (age - 1)
           .toString(); // Subtract 1 if birthday hasn't occurred this year yet
     }
-
     return age.toString();
   }
 
@@ -123,7 +123,9 @@ class _AdminOverviewState extends State<AdminOverview> {
                           vertical: 4, horizontal: 16.0),
                       textStyle: const TextStyle(fontSize: 14),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(RouteHelper.getAdminProfileEdit(), arguments: widget.admin);
+                    },
                     child: const Text('Edit Admin Profile'),
                   ),
                 ],

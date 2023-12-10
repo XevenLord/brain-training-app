@@ -1,6 +1,6 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 
-class Appointment {
+class AdminAppointment {
   String? appointmentID;
   String? patient;
   String? patientID;
@@ -10,7 +10,7 @@ class Appointment {
   Physiotherapist? physiotherapistInCharge;
   String? physiotherapistID;
 
-  Appointment(
+  AdminAppointment(
       {this.appointmentID,
       this.date,
       this.time,
@@ -20,7 +20,7 @@ class Appointment {
       this.patientID,
       this.physiotherapistID});
 
-  Appointment.fromJson(Map<String, dynamic> json) {
+  AdminAppointment.fromJson(Map<String, dynamic> json) {
     appointmentID = json['appointmentID'];
     patient = json['patient'];
     patientID = json['patientID'];
@@ -48,10 +48,10 @@ class Appointment {
     return data;
   }
 
-  static List<Appointment> fromJsonList(List<dynamic> json) {
-    List<Appointment> appointments = [];
+  static List<AdminAppointment> fromJsonList(List<dynamic> json) {
+    List<AdminAppointment> appointments = [];
     for(var element in json) {
-      appointments.add(Appointment.fromJson(element));
+      appointments.add(AdminAppointment.fromJson(element));
     }
     return appointments;
   }

@@ -2,16 +2,17 @@ import 'package:brain_training_app/admin/appointments/domain/entity/appointment.
 import 'package:brain_training_app/admin/appointments/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/admin/appointments/domain/services/admin_appt_service.dart';
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AdminAppointmentViewModel extends GetxController implements GetxService {
-  List<Appointment> appointments = [];
+  List<AdminAppointment> appointments = [];
   List<Physiotherapist> physiotherapistList = [];
   bool isAppointmentSet = false;
 
-  Future<List<Appointment>> getAppointmentList() async {
+  Future<List<AdminAppointment>> getAppointmentList() async {
     appointments = await AdminAppointmentService.getAppointmentList();
     sortAppointmentByDate();
     update();
@@ -43,8 +44,14 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
     update();
   }
 
-  List<Appointment> filterAppointmentByDay(
-      {required DateTime day, required List<Appointment> appts}) {
+  Future<List<Physiotherapist>> getPhysiotherapistList() async {
+    debugModePrint("entering getPhysiotherapistList");
+    physiotherapistList = await AdminAppointmentService.getPhysiotherapistList();
+    return physiotherapistList;
+  }
+
+  List<AdminAppointment> filterAppointmentByDay(
+      {required DateTime day, required List<AdminAppointment> appts}) {
     if (appts.isNotEmpty) {
       return appts
           .where((element) => isSameDay(DateTime.parse(element.date!), day))
@@ -54,7 +61,7 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
   }
 
   Future<void> updateAppointment(
-      {required Appointment appointment,
+      {required AdminAppointment appointment,
       required String date,
       required String time,
       required String reason}) async {
@@ -78,7 +85,8 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
     );
   }
 
-  Future<void> cancelAppointment({required Appointment appointment}) async {
+  Future<void> cancelAppointment(
+      {required AdminAppointment appointment}) async {
     isAppointmentSet =
         await AdminAppointmentService.deleteAppointment(appointment);
     NotificationAPI.cancel(appointment.appointmentID.hashCode);

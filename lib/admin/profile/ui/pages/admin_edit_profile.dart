@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/profile/ui/view_model/profile_vmodel.dart';
-import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,14 +14,15 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ProfileEditPage extends StatefulWidget {
-  const ProfileEditPage({super.key});
+class AdminProfileEdit extends StatefulWidget {
+  AppUser appUser;
+  AdminProfileEdit({super.key, required this.appUser});
 
   @override
-  State<ProfileEditPage> createState() => _ProfileEditPageState();
+  State<AdminProfileEdit> createState() => _AdminProfileEditState();
 }
 
-class _ProfileEditPageState extends State<ProfileEditPage> {
+class _AdminProfileEditState extends State<AdminProfileEdit> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late ProfileViewModel profileVModel;
 
@@ -35,19 +35,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController introController = TextEditingController();
 
-  final appUser = Get.find<AppUser>();
-
   @override
   void initState() {
     super.initState();
     profileVModel = Get.find<ProfileViewModel>();
-    nameController.text = appUser.name!;
-    icController.text = appUser.icNumber!;
-    emailController.text = appUser.email!;
-    phoneController.text = appUser.phoneNumber!;
-    genderController.text = appUser.gender!;
-    dobController.text = DateFormat("yyyy-MM-dd").format(appUser.dateOfBirth!);
-    if (appUser.aboutMe != null) introController.text = appUser.aboutMe!;
+    nameController.text = widget.appUser.name!;
+    icController.text = widget.appUser.icNumber!;
+    emailController.text = widget.appUser.email!;
+    phoneController.text = widget.appUser.phoneNumber!;
+    genderController.text = widget.appUser.gender!;
+    dobController.text = DateFormat("yyyy-MM-dd").format(widget.appUser.dateOfBirth!);
+    if (widget.appUser.aboutMe != null) introController.text = widget.appUser.aboutMe!;
   }
 
   void updateProfile() async {
@@ -56,7 +54,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
       await profileVModel.updateProfile(_fbKey.currentState!.value);
-      Get.offAllNamed(RouteHelper.getPatientHome(), arguments: 3);
+      Get.back();
     }
   }
 
@@ -158,7 +156,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                                         ),
                                       ),
                                     );
-                                  } else if (appUser.profilePic != null) {
+                                  } else if (widget.appUser.profilePic != null) {
                                     // If no new image is available but appUser has a profilePic,
                                     // load the image from appUser.profilePic
                                     return CircleAvatar(
@@ -168,7 +166,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                                             BorderRadius.circular(69.r),
                                         child: Image(
                                           image:
-                                              NetworkImage(appUser.profilePic!),
+                                              NetworkImage(widget.appUser.profilePic!),
                                           width: 100,
                                           height: 100,
                                           fit: BoxFit.fill,

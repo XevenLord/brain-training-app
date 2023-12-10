@@ -24,6 +24,13 @@ class AppointmentViewModel extends GetxController implements GetxService {
     return appointments.reversed.toList();
   }
 
+  Future<List<Appointment>> getAppointmentsByID(String uid) async {
+    appointments = await AppointmentService.getAppointmentsByID(uid);
+    sortAppointmentByDate();
+    update();
+    return appointments.reversed.toList();
+  }
+
   Future<List<Appointment>> getAppointmentsByPhysiotherapistID() async {
     appointments = await AppointmentService.getAppointmentListByPhysiotherapist(
         chosenPhysiotherapist!.id!);

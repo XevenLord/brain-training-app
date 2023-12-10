@@ -59,6 +59,29 @@ class AppointmentService {
     });
   }
 
+  static Future<List<Appointment>> getAppointmentsByID(String uid) async {
+    final appUser = Get.find<AppUser>();
+    return FirebaseFirestore.instance
+        .collection("appointments")
+        .where("patientID", isEqualTo: uid)
+        .get()
+        .then(
+          (value) =>
+              value.docs.map((e) => Appointment.fromJson(e.data())).toList(),
+        )
+        .then((appointments) {
+      // Sort the appointments based on time
+      appointments.sort((a, b) {
+        print("entering the checking sorting time slots");
+        // Convert time strings to DateTime objects for comparison
+        DateTime timeA = DateFormat.jm().parse(a.time!);
+        DateTime timeB = DateFormat.jm().parse(b.time!);
+        return timeA.compareTo(timeB); // for descending order
+      });
+      return appointments;
+    });
+  }
+
   static Future<List<Appointment>> getAppointmentListByPhysiotherapist(
       String physiotherapistID) async {
     return FirebaseFirestore.instance

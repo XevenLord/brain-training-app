@@ -1,12 +1,11 @@
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
 import 'package:brain_training_app/common/ui/widget/information_row.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -63,7 +62,11 @@ class _PatientOverviewState extends State<PatientOverview> {
             Color(0xFF765AFC),
           ],
         ),
-        "onTap": () {},
+        "onTap": () {
+          print("ontap appt patient");
+          Get.toNamed(RouteHelper.getPatientApptPage(),
+              arguments: widget.patient);
+        },
       },
       {
         "category": "Mental Health Check",
@@ -74,7 +77,11 @@ class _PatientOverviewState extends State<PatientOverview> {
             Color(0xFF41D73E),
           ],
         ),
-        "onTap": () {},
+        "onTap": () {
+          print("ontap appt patient");
+          Get.toNamed(RouteHelper.getPatientMentalResultPage(),
+              arguments: widget.patient);
+        },
       },
       {
         "category": "MMSE Result",
@@ -148,48 +155,48 @@ class _PatientOverviewState extends State<PatientOverview> {
               title: "Email",
               value: widget.patient.email!,
               padding: EdgeInsets.only(top: 8.w, bottom: 16.w)),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: SizedBox(
-              height: 40.w,
-              child: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xFF0D47A1),
-                            Color(0xFF1976D2),
-                            Color(0xFF42A5F5),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 16.0),
-                      textStyle: const TextStyle(fontSize: 14),
-                    ),
-                    onPressed: () {},
-                    child: const Text('Edit Patient Profile'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(4),
+          //   child: SizedBox(
+          //     height: 40.w,
+          //     child: Stack(
+          //       children: <Widget>[
+          //         Positioned.fill(
+          //           child: Container(
+          //             decoration: const BoxDecoration(
+          //               gradient: LinearGradient(
+          //                 colors: <Color>[
+          //                   Color(0xFF0D47A1),
+          //                   Color(0xFF1976D2),
+          //                   Color(0xFF42A5F5),
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //         TextButton(
+          //           style: TextButton.styleFrom(
+          //             foregroundColor: Colors.white,
+          //             padding: const EdgeInsets.symmetric(
+          //                 vertical: 4, horizontal: 16.0),
+          //             textStyle: const TextStyle(fontSize: 14),
+          //           ),
+          //           onPressed: () {},
+          //           child: const Text('Edit Patient Profile'),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           SizedBox(height: 20.w),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("History Records", style: AppTextStyle.h2),
-              TextButton(
-                onPressed: () {},
-                child: Text("PDF"),
-              ),
+              // TextButton(
+              //   onPressed: () {},
+              //   child: Text("PDF"),
+              // ),
             ],
           ),
           SizedBox(height: 20.w),

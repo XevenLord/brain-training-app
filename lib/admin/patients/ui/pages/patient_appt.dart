@@ -1,6 +1,7 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/appointment/ui/widget/appointment_tile.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
@@ -10,14 +11,15 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class MyAppointmentPage extends StatefulWidget {
-  const MyAppointmentPage({super.key});
+class PatientAppointmentPage extends StatefulWidget {
+  AppUser patient;
+  PatientAppointmentPage({super.key, required this.patient});
 
   @override
-  State<MyAppointmentPage> createState() => _MyAppointmentPageState();
+  State<PatientAppointmentPage> createState() => _PatientAppointmentPageState();
 }
 
-class _MyAppointmentPageState extends State<MyAppointmentPage> {
+class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
   late AppointmentViewModel appointmentViewModel;
   List<Appointment>? appointments;
 
@@ -29,7 +31,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   }
 
   Future getAppointmentList() async {
-    List<Appointment> appts = await appointmentViewModel.getAppointmentList();
+    List<Appointment> appts =
+        await appointmentViewModel.getAppointmentsByID(widget.patient.uid!);
     return appts;
   }
 
@@ -82,17 +85,23 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 alignment: Alignment.centerLeft,
                                 child: IconButton(
                                   onPressed: () {
-                                    Get.offAllNamed(
-                                        RouteHelper.getPatientHome(),
-                                        arguments: 2);
+                                    Get.back();
                                   },
                                   icon: Icon(Icons.arrow_back_ios),
                                 ),
                               ),
-                              Text("My Appointments", style: AppTextStyle.h1),
+                              Text("Appointments", style: AppTextStyle.h2),
                             ],
                           ),
                           SizedBox(height: 16.h),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Text("${widget.patient.name}",
+                                style: AppTextStyle.h2
+                                    .merge(AppTextStyle.brandBlueTextStyle)),
+                          ),
+                          SizedBox(height: 24.h),
+
                           ...List.generate(
                             appointments?.length ?? 0,
                             (index) => appointments == null

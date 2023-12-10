@@ -176,6 +176,10 @@ class FirebaseAuthRepository extends GetxController {
         aboutMe: data["aboutMe"],
         profilePic: data["profilePic"],
         role: data["role"],
+        position: data["position"],
+        mentalQuizCompletedDate: data["mentalQuizCompletedDate"] != null
+            ? DateTime.parse(data["mentalQuizCompletedDate"])
+            : null,
       );
 
       // store uid in shared preference

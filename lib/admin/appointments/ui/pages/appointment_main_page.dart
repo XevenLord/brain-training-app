@@ -2,6 +2,7 @@ import 'package:brain_training_app/admin/appointments/domain/entity/appointment.
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+typedef parentFunctionCallback = void Function();
 class AppointmentMainPage extends StatefulWidget {
   const AppointmentMainPage({super.key});
 
@@ -19,8 +21,8 @@ class AppointmentMainPage extends StatefulWidget {
 class _AppointmentMainPageState extends State<AppointmentMainPage> {
   late AdminAppointmentViewModel _appointmentViewModel;
   late UserRepository? _userRepo;
-  List<Appointment>? appointments;
-  List<Appointment>? filteredAppointments;
+  List<AdminAppointment>? appointments;
+  List<AdminAppointment>? filteredAppointments;
   List<AppUser>? patients;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -39,6 +41,12 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
     appointments = await _appointmentViewModel.getAppointmentList();
     filterAppointmentByDay();
     setState(() {});
+  }
+
+  @override
+  void didUpdateWidget(covariant AppointmentMainPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    getAppointmentList();
   }
 
   void filterAppointmentByDay() {
@@ -151,6 +159,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                               gender: patient.gender!,
                               reason: appt.reason!,
                               time: appt.time!,
+                              appointment: appt,
                             );
                           }).toList(),
                         if (filteredAppointments!.isEmpty)
@@ -177,6 +186,7 @@ class AppointmentCard extends StatelessWidget {
   final String gender;
   final String reason;
   final String time;
+  AdminAppointment appointment;
 
   AppointmentCard({
     required this.name,
@@ -184,6 +194,7 @@ class AppointmentCard extends StatelessWidget {
     required this.gender,
     required this.reason,
     required this.time,
+    required this.appointment,
   });
 
   @override
@@ -206,7 +217,12 @@ class AppointmentCard extends StatelessWidget {
               const Icon(Icons.more_vert, color: Colors.black54),
             ],
           ),
-          CardWidget(name: name, age: age, gender: gender, reason: reason),
+          CardWidget(
+              name: name,
+              age: age,
+              gender: gender,
+              reason: reason,
+              appointment: appointment),
         ],
       ),
     );
@@ -218,12 +234,14 @@ class CardWidget extends StatelessWidget {
   final String age;
   final String gender;
   final String reason;
+  AdminAppointment appointment;
 
   CardWidget({
     required this.name,
     required this.age,
     required this.gender,
     required this.reason,
+    required this.appointment,
   });
 
   @override
@@ -268,7 +286,12 @@ class CardWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: AppColors.lightBlue,
                       borderRadius: BorderRadius.circular(10.w)),
-                  child: Icon(Icons.edit, color: Colors.blue)),
+                  child: IconButton(
+                      onPressed: () {
+                        Get.toNamed(RouteHelper.getAdminAppointmentEditPage(),
+                            arguments: appointment);
+                      },
+                      icon: Icon(Icons.edit, color: Colors.blue))),
               Container(
                   width: 50.w,
                   height: 50.w,
@@ -287,8 +310,10 @@ class CardWidget extends StatelessWidget {
 class InformationRow extends StatelessWidget {
   final String title;
   final String value;
+  bool isWrapped;
 
-  InformationRow({required this.title, required this.value});
+  InformationRow(
+      {required this.title, required this.value, this.isWrapped = false});
 
   @override
   Widget build(BuildContext context) {
@@ -310,6 +335,7 @@ class InformationRow extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
+            softWrap: isWrapped,
           ),
         ],
       ),

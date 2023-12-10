@@ -39,11 +39,11 @@ class _HomeContentState extends State<HomeContent> {
       "icon": Icons.gamepad,
       "onTap": () {},
     },
-    {
-      "category": "Reminder",
-      "icon": Icons.notifications,
-      "onTap": () {},
-    },
+    // {
+    //   "category": "Reminder",
+    //   "icon": Icons.notifications,
+    //   "onTap": () {},
+    // },
     {
       "category": "Admin",
       "icon": Icons.admin_panel_settings,
@@ -130,8 +130,8 @@ class _HomeContentState extends State<HomeContent> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 16.w, right: 16.w, top: 10.w, bottom: 120.w),
+                  padding: EdgeInsets.only(
+                      left: 16.w, right: 16.w, top: 10.w, bottom: 120.w),
                   child: GridView.count(
                     crossAxisCount: 2,
                     childAspectRatio: 0.85,

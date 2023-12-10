@@ -13,6 +13,8 @@ class AppUser {
   List<Appointment>? appointments;
   String? profilePic;
   String? role;
+  String? position;
+  DateTime? mentalQuizCompletedDate;
 
   AppUser({
     this.uid,
@@ -26,6 +28,8 @@ class AppUser {
     this.aboutMe,
     this.profilePic,
     this.role,
+    this.position,
+    this.mentalQuizCompletedDate,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,10 @@ class AppUser {
       aboutMe: json["aboutMe"],
       profilePic: json["profilePic"],
       role: json["role"],
+      position: json["position"],
+      mentalQuizCompletedDate: json["mentalQuizCompletedDate"] != null
+          ? DateTime.parse(json["mentalQuizCompletedDate"])
+          : null,
     );
   }
 
@@ -69,6 +77,10 @@ class AppUser {
       'aboutMe': aboutMe,
       'profilePic': profilePic,
       'role': role,
+      'position': position,
+      'mentalQuizCompletedDate': mentalQuizCompletedDate != null
+          ? DateFormat().format(mentalQuizCompletedDate!)
+          : "",
     };
   }
 
@@ -84,6 +96,8 @@ class AppUser {
     List<Appointment>? appointments,
     String? profilePic,
     String? role,
+    String? position,
+    DateTime? mentalQuizCompletedDate,
   }) {
     this.uid = uid;
     this.name = name;
@@ -96,6 +110,8 @@ class AppUser {
     this.aboutMe = aboutMe;
     this.profilePic = profilePic;
     this.role = role;
+    this.position = position;
+    this.mentalQuizCompletedDate = mentalQuizCompletedDate;
   }
 
   void clear() {
@@ -110,5 +126,7 @@ class AppUser {
     aboutMe = null;
     profilePic = null;
     role = null;
+    position = null;
+    mentalQuizCompletedDate = null;
   }
 }
