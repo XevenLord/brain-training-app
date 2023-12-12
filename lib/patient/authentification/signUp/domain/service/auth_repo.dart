@@ -149,7 +149,7 @@ class FirebaseAuthRepository extends GetxController {
   // data map must contain uid, name, icNumber, email ...
   Future<bool> initUserDataWithUID(
       String uid, Map<String, dynamic> data) async {
-    debugModePrint("entering init process...");
+    // debugModePrint("entering init process...");
     final appUser = Get.find<AppUser>();
     try {
       debugModePrint("init process started...");
