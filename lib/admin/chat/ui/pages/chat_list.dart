@@ -70,20 +70,20 @@ class _ChatListState extends State<ChatList> {
                     Obx(() => SliverList(
                             delegate: SliverChildListDelegate(
                                 chatViewModel.messages.values.toList().map((data) {
-                          var physio = users.firstWhereOrNull(
+                          var user = users.firstWhereOrNull(
                               (e) => e.name == data['targetName']);
                           return CupertinoListTile(
                               padding: EdgeInsets.zero,
                               leading: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    physio!.profilePic ?? ""),
+                                    user!.profilePic ?? ""),
                               ),
                               title: Text(data['targetName'] ?? ""),
                               subtitle: Text(data['msg'] ?? ""),
                               onTap: () => {
                                     Get.to(Chat(
                                         targetName: data['targetName'],
-                                        targetUid: physio.uid))
+                                        targetUid: user.uid))
                                   });
                         }).toList())))
                   ],
