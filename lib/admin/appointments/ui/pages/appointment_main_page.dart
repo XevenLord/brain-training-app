@@ -35,10 +35,14 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   @override
   void initState() {
     _appointmentViewModel = Get.find<AdminAppointmentViewModel>();
-    _userRepo = Get.find<UserRepository>();
     getAppointmentList();
-    patients = _userRepo!.getPatientUsers;
+    fetchAllPatients();
     super.initState();
+  }
+
+  void fetchAllPatients() async {
+    patients = await UserRepository.fetchAllPatients();
+    setState(() {});
   }
 
   void getAppointmentList() async {

@@ -1,4 +1,5 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class AppUser {
@@ -10,11 +11,10 @@ class AppUser {
   DateTime? dateOfBirth;
   String? gender;
   String? aboutMe;
-  List<Appointment>? appointments;
   String? profilePic;
   String? role;
   String? position;
-  DateTime? mentalQuizCompletedDate;
+  DateTime? mentalQuiz;
 
   AppUser({
     this.uid,
@@ -24,12 +24,11 @@ class AppUser {
     this.phoneNumber,
     this.dateOfBirth,
     this.gender,
-    this.appointments,
     this.aboutMe,
     this.profilePic,
     this.role,
     this.position,
-    this.mentalQuizCompletedDate,
+    this.mentalQuiz,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -43,17 +42,12 @@ class AppUser {
           ? DateTime.parse(json["dateOfBirth"])
           : null,
       gender: json["gender"],
-      appointments: json["appointments"] != null
-          ? List<Appointment>.from(json["appointments"].map((appointment) {
-              return Appointment.fromJson(appointment);
-            }))
-          : [],
       aboutMe: json["aboutMe"],
       profilePic: json["profilePic"],
       role: json["role"],
       position: json["position"],
-      mentalQuizCompletedDate: json["mentalQuizCompletedDate"] != null
-          ? DateTime.parse(json["mentalQuizCompletedDate"])
+      mentalQuiz: json["mentalQuiz"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json["mentalQuiz"] * 1000)
           : null,
     );
   }
@@ -69,18 +63,11 @@ class AppUser {
           ? DateFormat("yyyy-mm-dd").format(dateOfBirth!)
           : "",
       'gender': gender,
-      'appointments': appointments != null
-          ? List<dynamic>.from(appointments!.map((appointment) {
-              return appointment.toJson();
-            }))
-          : [],
       'aboutMe': aboutMe,
       'profilePic': profilePic,
       'role': role,
       'position': position,
-      'mentalQuizCompletedDate': mentalQuizCompletedDate != null
-          ? DateFormat().format(mentalQuizCompletedDate!)
-          : "",
+      'mentalQuiz': mentalQuiz != null ? Timestamp.fromDate(mentalQuiz!) : null,
     };
   }
 
@@ -93,11 +80,10 @@ class AppUser {
     DateTime? dateOfBirth,
     String? gender,
     String? aboutMe,
-    List<Appointment>? appointments,
     String? profilePic,
     String? role,
     String? position,
-    DateTime? mentalQuizCompletedDate,
+    DateTime? mentalQuiz,
   }) {
     this.uid = uid;
     this.name = name;
@@ -106,12 +92,11 @@ class AppUser {
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
     this.gender = gender;
-    this.appointments = appointments;
     this.aboutMe = aboutMe;
     this.profilePic = profilePic;
     this.role = role;
     this.position = position;
-    this.mentalQuizCompletedDate = mentalQuizCompletedDate;
+    this.mentalQuiz = mentalQuiz;
   }
 
   void clear() {
@@ -122,11 +107,10 @@ class AppUser {
     phoneNumber = null;
     dateOfBirth = null;
     gender = null;
-    appointments = null;
     aboutMe = null;
     profilePic = null;
     role = null;
     position = null;
-    mentalQuizCompletedDate = null;
+    mentalQuiz = null;
   }
 }

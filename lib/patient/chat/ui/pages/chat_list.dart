@@ -15,10 +15,13 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
+  TextEditingController _searchController = new TextEditingController();
   late ChatViewModel chatViewModel;
   late UserRepository userRepo;
-  List<AppUser> admins = [];
+  late List<AppUser> allAdmins = [];
+  late List<AppUser> admins = [];
   bool isLoading = true;
+  bool showSearchUsers = false;
 
   @override
   void initState() {
@@ -31,9 +34,9 @@ class _ChatListState extends State<ChatList> {
 
   void fetchAdmins() async {
     try {
-      await userRepo.fetchAllAdmins();
+      allAdmins = await UserRepository.fetchAllAdmins();
       setState(() {
-        admins = userRepo.getAdminUsers;
+        admins = allAdmins;
         isLoading = false;
       });
     } catch (e) {
@@ -58,30 +61,62 @@ class _ChatListState extends State<ChatList> {
                     child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: CupertinoSearchTextField(
-                    key: UniqueKey(),
-                    onChanged: (value) {},
-                    onSubmitted: (value) {},
+                    // autofocus: true,
+                    controller: _searchController,
+                    onTap: () {
+                      setState(() {
+                        showSearchUsers = !showSearchUsers;
+                      });
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        admins = allAdmins
+                            .where((element) => element.name!
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                      });
+                    },
                   ),
                 )),
-                Obx(() => SliverList(
-                        delegate: SliverChildListDelegate(
-                            chatViewModel.messages.values.toList().map((data) {
-                      var physio = userRepo.getAdminUsers.firstWhereOrNull(
-                          (e) => e.name == data['targetName']);
-                      return CupertinoListTile(
-                          padding: EdgeInsets.zero,
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                physio!.profilePic ?? ""),
-                          ),
-                          title: Text(data['targetName'] ?? ""),
-                          subtitle: Text(data['msg'] ?? ""),
-                          onTap: () => {
-                                Get.to(Chat(
-                                    targetName: data['targetName'],
-                                    targetUid: physio.uid))
-                              });
-                    }).toList())))
+                showSearchUsers
+                    ? SliverList(
+                        delegate: SliverChildListDelegate(admins.map((user) {
+                          return CupertinoListTile(
+                              padding: EdgeInsets.zero,
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(user.profilePic ?? ""),
+                              ),
+                              title: Text(user.name ?? ""),
+                              onTap: () => {
+                                    Get.to(Chat(
+                                        targetName: user.name,
+                                        targetUid: user.uid))
+                                  });
+                        }).toList()),
+                      )
+                    : Obx(() => SliverList(
+                            delegate: SliverChildListDelegate(chatViewModel
+                                .messages.values
+                                .toList()
+                                .map((data) {
+                          var physio = allAdmins.firstWhereOrNull(
+                              (e) => e.name == data['targetName']);
+                          return CupertinoListTile(
+                              padding: EdgeInsets.zero,
+                              leading: CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(physio!.profilePic ?? ""),
+                              ),
+                              title: Text(data['targetName'] ?? ""),
+                              subtitle: Text(data['msg'] ?? ""),
+                              onTap: () => {
+                                    Get.to(Chat(
+                                        targetName: data['targetName'],
+                                        targetUid: physio.uid))
+                                  });
+                        }).toList())))
               ],
             ),
     );

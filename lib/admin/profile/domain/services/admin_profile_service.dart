@@ -17,7 +17,6 @@ class AdminProfileService {
         if (value == "") deleteDataInProfile(key);
       });
       await FirebaseAuthRepository.getUserDetails(appUser.uid!);
-      print("See profileeee");
       return res;
     } catch (e) {
       return Future.value(false);
@@ -34,7 +33,6 @@ class AdminProfileService {
           .then((value) => true)
           .catchError((error) => false);
       await FirebaseAuthRepository.getUserDetails(appUser.uid!);
-      print("See profileeee");
       return res;
     } catch (e) {
       return Future.value(false);

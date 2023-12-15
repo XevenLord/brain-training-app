@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MessageChat {
   String? uid;
   DateTime? createdOn;
@@ -13,8 +15,9 @@ class MessageChat {
 
   MessageChat.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
-    createdOn =
-        json['createdOn'] != null ? DateTime.parse(json['createdOn']) : null;
+    createdOn = json["createdOn"] != null
+        ? DateTime.fromMillisecondsSinceEpoch(json["createdOn"] * 1000)
+        : null;
     msg = json['msg'];
     type = json['type'];
   }
@@ -22,7 +25,7 @@ class MessageChat {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['uid'] = this.uid;
-    data['createdOn'] = this.createdOn.toString();
+    data['createdOn'] = Timestamp.fromDate(this.createdOn!);
     data['msg'] = this.msg;
     data['type'] = this.type;
     return data;

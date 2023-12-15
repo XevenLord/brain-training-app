@@ -17,7 +17,6 @@ class AdminHomeViewModel extends GetxController implements GetxService {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              print("you choose no");
               Get.back();
             },
             child: Text('No', style: AppTextStyle.h3),

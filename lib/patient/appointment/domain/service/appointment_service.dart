@@ -1,11 +1,7 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/appointment_slot.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/time_slot.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
-import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 

@@ -30,9 +30,8 @@ class _AdminListState extends State<AdminList> {
 
   void fetchAdmins() async {
     try {
-      await userRepo.fetchAllAdmins();
+      admins = await UserRepository.fetchAllAdmins();
       setState(() {
-        admins = userRepo.getAdminUsers;
         isLoading = false;
       });
     } catch (e) {

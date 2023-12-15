@@ -1,4 +1,5 @@
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/admin/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/admin/profile/domain/services/admin_profile_service.dart';
@@ -35,6 +36,7 @@ Future<void> init() async {
   Get.lazyPut(() => HomeViewModel());
   Get.lazyPut(() => AppointmentViewModel());
   Get.lazyPut(() => ChatViewModel(), fenix: true);
+  Get.lazyPut(() => AdminChatViewModel(), fenix: true);
   Get.lazyPut(() => ProfileViewModel());
   Get.lazyPut(() => MentalQuizViewModel());
   Get.lazyPut(() => MathGameViewModel());

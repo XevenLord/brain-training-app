@@ -1,12 +1,7 @@
-import 'dart:async';
-
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
-import 'package:brain_training_app/admin/appointments/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
-import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
-import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +24,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late AdminAppointmentViewModel appointmentVModel;
   String? time;
-  late Physiotherapist physiotherapist;
+  late AppUser physiotherapist;
 
   List<String> timeSlots = [
     "09:00 AM",
@@ -51,7 +46,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
     super.initState();
     appointmentVModel = Get.find<AdminAppointmentViewModel>();
     physiotherapist = appointmentVModel.physiotherapistList.firstWhere(
-        (element) => element.id == widget.appointment.physiotherapistID);
+        (element) => element.uid == widget.appointment.physiotherapistID);
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason!;
     time = widget.appointment.time!;
@@ -96,7 +91,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                               CircleAvatar(
                                 radius: 70.r,
                                 backgroundImage: NetworkImage(
-                                  physiotherapist.imgUrl!,
+                                  physiotherapist.profilePic!,
                                 ),
                               ),
                               SizedBox(height: 16.h),
@@ -108,7 +103,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                physiotherapist.speciality!,
+                                physiotherapist.position!,
                                 style: AppTextStyle.c1,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,

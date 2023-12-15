@@ -4,6 +4,7 @@ import 'package:brain_training_app/common/ui/widget/screen.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_calendar_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class AppointmentBookingPage extends StatefulWidget {
 
 class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
   late AppointmentViewModel _appointmentViewModel;
-  late Physiotherapist physiotherapist;
+  late AppUser physiotherapist;
 
   @override
   void initState() {
@@ -58,7 +59,7 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                     CircleAvatar(
                       radius: 70.r,
                       backgroundImage: NetworkImage(
-                        physiotherapist.imgUrl!,
+                        physiotherapist.profilePic!,
                       ),
                     ),
                     SizedBox(height: 16.h),
@@ -70,7 +71,7 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                     ),
                     SizedBox(height: 8.h),
                     Text(
-                      physiotherapist.speciality!,
+                      physiotherapist.position!,
                       style: AppTextStyle.c1.merge(AppTextStyle.whiteTextStyle),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -128,7 +129,7 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  physiotherapist.about!,
+                  physiotherapist.aboutMe!,
                   style: AppTextStyle.c2,
                 ),
                 SizedBox(height: 24.h),

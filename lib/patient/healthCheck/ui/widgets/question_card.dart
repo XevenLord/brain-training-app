@@ -1,9 +1,8 @@
 import 'package:brain_training_app/patient/healthCheck/ui/view_model/mental_quiz_vmodel.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -74,9 +73,9 @@ class _QuestionCardState extends State<QuestionCard> {
   }
 
   void submitMentalHealthAnswer(Map<String, String> data) async {
-    print("submitting mental health answer");
-    print(data);
-    bool res = await Get.find<MentalQuizViewModel>().submitMentalHealthAnswer(data);
+    bool res =
+        await Get.find<MentalQuizViewModel>().submitMentalHealthAnswer(data);
+
     print("upload res: $res");
   }
 
@@ -150,6 +149,35 @@ class _QuestionCardState extends State<QuestionCard> {
                           };
                           submitMentalHealthAnswer(answer);
                           Navigator.pop(context);
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Mental Health Check Up"),
+                                  content: Container(
+                                    height: 160.w,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Image.asset(AppConstant.DONE_CHECK,
+                                            width: 100.w),
+                                        SizedBox(height: 10.h),
+                                        const Text(
+                                            "Your answer has been submitted successfully, wish you have a good day!",
+                                            textAlign: TextAlign.center),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("OK"))
+                                  ],
+                                );
+                              });
                         }
                       },
                       style: ButtonStyle(

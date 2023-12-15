@@ -80,7 +80,6 @@ class _PatientOverviewState extends State<PatientOverview> {
           ],
         ),
         "onTap": () {
-          print("ontap appt patient");
           Get.toNamed(RouteHelper.getPatientMentalResultPage(),
               arguments: widget.patient);
         },

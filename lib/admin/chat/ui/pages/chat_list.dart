@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class ChatList extends StatefulWidget {
-  const ChatList({Key? key}) : super(key: key);
+class AdminChatList extends StatefulWidget {
+  const AdminChatList({Key? key}) : super(key: key);
 
   @override
-  _ChatListState createState() => _ChatListState();
+  _AdminChatListState createState() => _AdminChatListState();
 }
 
-class _ChatListState extends State<ChatList> {
+class _AdminChatListState extends State<AdminChatList> {
   late ChatViewModel chatViewModel;
   late UserRepository userRepo;
   List<AppUser> users = [];
@@ -32,9 +32,8 @@ class _ChatListState extends State<ChatList> {
 
   void fetchAllUsers() async {
     try {
-      await userRepo.fetchAllUsers();
+      users = await UserRepository.fetchAllUsers();
       setState(() {
-        users = userRepo.getAllUsers;
         isLoading = false;
       });
     } catch (e) {

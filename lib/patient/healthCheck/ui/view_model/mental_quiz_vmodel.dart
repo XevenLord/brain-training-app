@@ -12,7 +12,7 @@ class MentalQuizViewModel extends GetxController {
 
     if (res) {
       bool profileUpdated = await ProfileService.onUpdateProfileDetails({
-        "mentalQuiz": {DateTime.now().toString(): true}
+        "mentalQuiz": DateTime.now().toString()
       });
       return profileUpdated;
     } else {

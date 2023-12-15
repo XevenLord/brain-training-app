@@ -15,8 +15,11 @@ class ProfileViewModel extends GetxController implements GetxService {
   Future<bool> updateProfile(Map<String, dynamic> data) async {
     bool isUpdated = false;
     Map<String, dynamic> newData = {};
-    data.forEach((key, value) {
+    data.forEach((key, value) async {
       if (value != "") newData[key] = value;
+      if (key == "name") {
+        await ProfileService.updateNameInChats(value);
+      }
     });
     if (_profilePicUrl != null) newData['profilePic'] = _profilePicUrl;
     isUpdated = await ProfileService.onUpdateProfileDetails(newData);

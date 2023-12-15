@@ -28,9 +28,8 @@ class _MathPatientListState extends State<MathPatientList> {
 
   void fetchPatients() async {
     try {
-      await userRepo.fetchAllPatients();
+      patients = await UserRepository.fetchAllPatients();
       setState(() {
-        patients = userRepo.getPatientUsers;
         isLoading = false; // Set loading to false after data is fetched
       });
     } catch (e) {

@@ -91,24 +91,12 @@ class _GameCardState extends State<GameCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.title),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(widget.description,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: AppTextStyle.c2
-                                .merge(AppTextStyle.greyTextStyle)),
-                      ),
-                      IconButton(
-                        // padding: EdgeInsets.zero,
-                        alignment: Alignment.centerRight,
-                        icon: const Icon(Icons.arrow_right_alt),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                  Text(widget.description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: AppTextStyle.c2
+                          .merge(AppTextStyle.greyTextStyle)),
+                  SizedBox(height: 10.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: List.generate(

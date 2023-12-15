@@ -121,7 +121,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                             doctorName: appointmentViewModel
                                                 .physiotherapistList
                                                 .firstWhere((element) =>
-                                                    element.id ==
+                                                    element.uid ==
                                                     appointments![index]
                                                         .physiotherapistID!)
                                                 .name!,
@@ -131,10 +131,10 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                             img: appointmentViewModel
                                                 .physiotherapistList
                                                 .firstWhere((element) =>
-                                                    element.id ==
+                                                    element.uid ==
                                                     appointments![index]
                                                         .physiotherapistID!)
-                                                .imgUrl!,
+                                                .profilePic!,
                                             onEdit: () => Get.toNamed(
                                                 RouteHelper.getAppointmentEditPage(),
                                                 arguments: appointments![index]),
@@ -143,7 +143,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                   builder: (context) =>
                                                       AlertDialog(
                                                     title: Text(
-                                                        "Appointment Date ${appointments![index].date!} ${appointments![index].time!} with ${appointmentViewModel.physiotherapistList.firstWhere((element) => element.id == appointments![index].physiotherapistID!).name!}",
+                                                        "Appointment Date ${appointments![index].date!} ${appointments![index].time!} with ${appointmentViewModel.physiotherapistList.firstWhere((element) => element.uid == appointments![index].physiotherapistID!).name!}",
                                                         style: AppTextStyle.h3),
                                                     actions: <Widget>[
                                                       TextButton(

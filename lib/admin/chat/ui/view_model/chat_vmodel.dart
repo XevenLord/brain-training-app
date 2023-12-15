@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ChatViewModel extends GetxController {
+class AdminChatViewModel extends GetxController {
   var currentUser = FirebaseAuth.instance.currentUser?.uid;
   CollectionReference chats = FirebaseFirestore.instance.collection("chats");
 

@@ -3,22 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class UserRepository extends GetxService {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  List<AppUser> _allUsers = [];
-  List<AppUser> _patientUsers = [];
-  List<AppUser> _adminUsers = [];
-  List<AppUser> get getAllUsers => _allUsers;
-  List<AppUser> get getPatientUsers => _patientUsers;
-  List<AppUser> get getAdminUsers => _adminUsers;
-
-  Future<List<AppUser>> fetchAllUsers() async {
+  static Future<List<AppUser>> fetchAllUsers() async {
     try {
-      QuerySnapshot querySnapshot = await firestore.collection('users').get();
-      _allUsers = querySnapshot.docs.map((doc) {
+      List<AppUser> allUsers = [];
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('users').get();
+      allUsers = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return AppUser.fromJson(data);
       }).toList();
-      return _allUsers;
+      return allUsers;
     } catch (e) {
       // Handle exceptions
       print(e);
@@ -26,18 +20,19 @@ class UserRepository extends GetxService {
     }
   }
 
-  Future<List<AppUser>> fetchAllPatients() async {
+  static Future<List<AppUser>> fetchAllPatients() async {
     try {
-      QuerySnapshot querySnapshot = await firestore
+      List<AppUser> patientUsers = [];
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .where('role', isEqualTo: 'patient')
           .get();
 
-      _patientUsers = querySnapshot.docs.map((doc) {
+      patientUsers = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return AppUser.fromJson(data);
       }).toList();
-      return _patientUsers;
+      return patientUsers;
     } catch (e) {
       // Handle exceptions
       print(e);
@@ -45,21 +40,21 @@ class UserRepository extends GetxService {
     }
   }
 
-  Future<List<AppUser>> fetchAllAdmins() async {
+  static Future<List<AppUser>> fetchAllAdmins() async {
     try {
-      QuerySnapshot querySnapshot = await firestore
+      List<AppUser> adminUsers = [];
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .where('role', isEqualTo: 'admin')
           .get();
 
-      _adminUsers = querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return AppUser.fromJson(data);
+      adminUsers = querySnapshot.docs.map((doc) {
+        return AppUser.fromJson(doc.data() as Map<String, dynamic>);
       }).toList();
-      return _adminUsers;
+      return adminUsers;
     } catch (e) {
       // Handle exceptions
-      print(e);
+      print("Error User Repo: " + e.toString());
       return [];
     }
   }

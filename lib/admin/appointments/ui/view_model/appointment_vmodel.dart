@@ -2,6 +2,8 @@ import 'package:brain_training_app/admin/appointments/domain/entity/appointment.
 import 'package:brain_training_app/admin/appointments/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/admin/appointments/domain/services/admin_appt_service.dart';
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +11,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class AdminAppointmentViewModel extends GetxController implements GetxService {
   List<AdminAppointment> appointments = [];
-  List<Physiotherapist> physiotherapistList = [];
+  List<AppUser> physiotherapistList = [];
   bool isAppointmentSet = false;
 
   Future<List<AdminAppointment>> getAppointmentList() async {
@@ -44,9 +46,8 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
     update();
   }
 
-  Future<List<Physiotherapist>> getPhysiotherapistList() async {
-    debugModePrint("entering getPhysiotherapistList");
-    physiotherapistList = await AdminAppointmentService.getPhysiotherapistList();
+  Future<List<AppUser>> getPhysiotherapistList() async {
+    physiotherapistList = await UserRepository.fetchAllAdmins();
     return physiotherapistList;
   }
 
@@ -70,8 +71,8 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
     appointment.time = time;
     appointment.reason = reason;
     await AdminAppointmentService.updateAppointment(appointment, oldDate);
-    Physiotherapist physio = physiotherapistList
-        .firstWhere((element) => element.id == appointment.physiotherapistID);
+    AppUser physio = physiotherapistList
+        .firstWhere((element) => element.uid == appointment.physiotherapistID);
     DateTime newDate = DateFormat('yyyy-MM-dd').parse(date);
     NotificationAPI.showScheduledNotification(
       id: appointment.appointmentID.hashCode,

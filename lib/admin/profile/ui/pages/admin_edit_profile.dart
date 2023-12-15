@@ -115,7 +115,6 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                                     );
                                   });
                             });
-                            print("The image has changed");
                           },
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 16.h),

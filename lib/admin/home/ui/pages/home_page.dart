@@ -15,7 +15,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   int _currentIndex = 1;
 
   final List<Widget> pages = [
-    ChatList(), // Your ChatList widget
+    AdminChatList(), // Your ChatList widget
     HomeContent(), // Your Home content (you can rename it as needed)
     AdminProfile(), // Your Profile widget
   ];

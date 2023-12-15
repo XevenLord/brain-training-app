@@ -1,6 +1,6 @@
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/appointment/domain/service/appointment_service.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -10,9 +10,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentViewModel extends GetxController implements GetxService {
   AppointmentViewModel();
-  List<Physiotherapist> physiotherapistList = [];
+  List<AppUser> physiotherapistList = [];
   List<Appointment> appointments = [];
-  Physiotherapist? chosenPhysiotherapist;
+  AppUser? chosenPhysiotherapist;
 
   String? apptRef;
   bool isAppointmentSet = false;
@@ -33,12 +33,12 @@ class AppointmentViewModel extends GetxController implements GetxService {
 
   Future<List<Appointment>> getAppointmentsByPhysiotherapistID() async {
     appointments = await AppointmentService.getAppointmentListByPhysiotherapist(
-        chosenPhysiotherapist!.id!);
+        chosenPhysiotherapist!.uid!);
     update();
     return appointments;
   }
 
-  setChosenPhysiotherapist({required Physiotherapist physiotherapist}) {
+  setChosenPhysiotherapist({required AppUser physiotherapist}) {
     chosenPhysiotherapist = physiotherapist;
     update();
   }
@@ -69,9 +69,9 @@ class AppointmentViewModel extends GetxController implements GetxService {
     update();
   }
 
-  Future<List<Physiotherapist>> getPhysiotherapistList() async {
-    debugModePrint("entering getPhysiotherapistList");
-    physiotherapistList = await AppointmentService.getPhysiotherapistList();
+  Future<List<AppUser>> getPhysiotherapistList() async {
+    physiotherapistList = await UserRepository.fetchAllAdmins();
+    update();
     return physiotherapistList;
   }
 
@@ -89,7 +89,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
       date: DateFormat("yyyy-MM-dd").format(date.toLocal()),
       time: time,
       reason: reason,
-      physiotherapistID: chosenPhysiotherapist!.id,
+      physiotherapistID: chosenPhysiotherapist!.uid,
     );
     apptRef = await AppointmentService.onSubmitAppointmentDetails(appointment);
 
@@ -117,8 +117,8 @@ class AppointmentViewModel extends GetxController implements GetxService {
     appointment.time = time;
     appointment.reason = reason;
     await AppointmentService.updateAppointment(appointment, oldDate);
-    Physiotherapist physio = physiotherapistList
-        .firstWhere((element) => element.id == appointment.physiotherapistID);
+    AppUser physio = physiotherapistList
+        .firstWhere((physio) => physio.uid == appointment.physiotherapistID);
     DateTime newDate = DateFormat('yyyy-MM-dd').parse(date);
     NotificationAPI.showScheduledNotification(
       id: appointment.appointmentID.hashCode,

@@ -27,7 +27,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late AppointmentViewModel appointmentVModel;
   String? time;
-  late Physiotherapist physiotherapist;
+  late AppUser physiotherapist;
 
   List<String> timeSlots = [
     "09:00 AM",
@@ -51,7 +51,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
     super.initState();
     appointmentVModel = Get.find<AppointmentViewModel>();
     physiotherapist = appointmentVModel.physiotherapistList.firstWhere(
-        (element) => element.id == widget.appointment.physiotherapistID);
+        (element) => element.uid == widget.appointment.physiotherapistID);
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason!;
     time = widget.appointment.time!;
@@ -96,7 +96,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                               CircleAvatar(
                                 radius: 70.r,
                                 backgroundImage: NetworkImage(
-                                  physiotherapist.imgUrl!,
+                                  physiotherapist.profilePic!,
                                 ),
                               ),
                               SizedBox(height: 16.h),
@@ -108,7 +108,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                physiotherapist.speciality!,
+                                physiotherapist.position!,
                                 style: AppTextStyle.c1,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,

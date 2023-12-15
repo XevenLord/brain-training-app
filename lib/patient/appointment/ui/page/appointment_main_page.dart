@@ -1,13 +1,9 @@
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
-import 'package:brain_training_app/patient/appointment/domain/service/appointment_service.dart';
-import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/appointment/ui/widget/doctor_card.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -20,13 +16,14 @@ class AppointmentMainPage extends StatefulWidget {
 
 class _AppointmentMainPageState extends State<AppointmentMainPage> {
   late AppointmentViewModel appointmentViewModel;
-  List<Physiotherapist> physiotherapists = [];
+  List<AppUser> physiotherapists = [];
 
   @override
   void initState() {
     super.initState();
     appointmentViewModel = Get.find<AppointmentViewModel>();
     physiotherapists = appointmentViewModel.physiotherapistList;
+    print("physiotherapists: $physiotherapists");
   }
 
   @override
@@ -54,14 +51,15 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                         physiotherapists.length,
                         (index) => DoctorCard(
                           doctorName: physiotherapists[index].name!,
-                          position: physiotherapists[index].speciality!,
-                          imgUrl: physiotherapists[index].imgUrl!,
+                          position: physiotherapists[index].position!,
+                          imgUrl: physiotherapists[index].profilePic!,
                           rating: 5.0,
                           onTap: () {
                             appointmentViewModel.setChosenPhysiotherapist(
                               physiotherapist: physiotherapists[index],
                             );
-                            Get.toNamed(RouteHelper.getAppointmentBookingPage());
+                            Get.toNamed(
+                                RouteHelper.getAppointmentBookingPage());
                             // Navigator.push(
                             //   context,
                             //   MaterialPageRoute(

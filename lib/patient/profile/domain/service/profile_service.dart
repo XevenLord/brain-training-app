@@ -40,4 +40,25 @@ class ProfileService {
       return Future.value(false);
     }
   }
+
+  static Future<bool> updateNameInChats(String name) {
+    final appUser = Get.find<AppUser>();
+    try {
+      FirebaseFirestore.instance
+          .collection('chats')
+          .where('users.${appUser.uid}', isNull: true)
+          .get()
+          .then((QuerySnapshot snapshot) {
+        snapshot.docs.forEach((doc) {
+          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          Map<String, dynamic> names = data['names'];
+          names[appUser.uid!] = name;
+          doc.reference.update({'names': names});
+        });
+      });
+      return Future.value(true);
+    } catch (e) {
+      return Future.value(false);
+    }
+  }
 }

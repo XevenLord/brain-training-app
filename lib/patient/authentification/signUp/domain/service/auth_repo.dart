@@ -109,7 +109,7 @@ class FirebaseAuthRepository extends GetxController {
           showMessage(context, "User has been disabled.");
           break;
       }
-      throw Error();
+      throw e;
     }
   }
 
@@ -149,7 +149,7 @@ class FirebaseAuthRepository extends GetxController {
   // data map must contain uid, name, icNumber, email ...
   Future<bool> initUserDataWithUID(
       String uid, Map<String, dynamic> data) async {
-    // debugModePrint("entering init process...");
+    debugModePrint("entering init process...");
     final appUser = Get.find<AppUser>();
     try {
       debugModePrint("init process started...");
@@ -213,8 +213,8 @@ class FirebaseAuthRepository extends GetxController {
         profilePic: data["profilePic"],
         role: data["role"],
         position: data["position"],
-        mentalQuizCompletedDate: data["mentalQuizCompletedDate"] != null
-            ? DateTime.parse(data["mentalQuizCompletedDate"])
+        mentalQuiz: data["mentalQuiz"] != null
+            ? DateTime.fromMillisecondsSinceEpoch(data["mentalQuiz"] * 1000)
             : null,
       );
 

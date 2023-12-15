@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getPhysiotherapistList();
         if (Get.find<AppUser>().role == "admin") {
-          Get.find<UserRepository>().fetchAllPatients();
+          UserRepository.fetchAllPatients();
         }
       });
       Get.offAllNamed(Get.find<AppUser>().role == "admin"
