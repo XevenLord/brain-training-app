@@ -1,4 +1,5 @@
 import 'package:brain_training_app/admin/admins/ui/pages/admin_list.dart';
+import 'package:brain_training_app/admin/admins/ui/pages/admin_register.dart';
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_page.dart';
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_main_page.dart';
@@ -14,6 +15,7 @@ import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart';
 import 'package:brain_training_app/admin/admins/ui/pages/admin_overview.dart';
 import 'package:brain_training_app/admin/profile/ui/pages/admin_edit_profile.dart';
+import 'package:brain_training_app/common/domain/entity/math_ans.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
@@ -78,6 +80,7 @@ class RouteHelper {
   static const String adminSignUpFirstScreen = '/admin-signup-first-screen';
   static const String adminSignUpSecondScreen = '/admin-signup-second-screen';
   static const String adminHome = '/admin-home';
+  static const String adminRegister = '/admin-register';
 
   // *Admin Appointment*
   static const String adminAppointmentPage = '/admin-appointment-page';
@@ -144,6 +147,7 @@ class RouteHelper {
   static String getAdminSignUpFirstScreen() => adminSignUpFirstScreen;
   static String getAdminSignUpSecondScreen() => adminSignUpSecondScreen;
   static String getAdminHome() => adminHome;
+  static String getAdminRegister() => adminRegister;
 
   // *Admin Appointment*
   static String getAdminAppointmentPage() => adminAppointmentPage;
@@ -335,6 +339,11 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () => AdminHomePage(),
     ),
+    GetPage(
+      name: adminRegister,
+      transition: Transition.fadeIn,
+      page: () => const AdminRegisterPage(),
+    ),
     // *Admin Appointment*
     GetPage(
       name: adminAppointmentPage,
@@ -373,6 +382,7 @@ class RouteHelper {
         return AdminProfileEdit(appUser: appUser);
       },
     ),
+
     // *Admin Patient List*
     GetPage(
       name: patientListPage,
@@ -419,8 +429,12 @@ class RouteHelper {
       name: mathScoreOverview,
       transition: Transition.fadeIn,
       page: () {
-        AppUser patient = Get.arguments;
-        return MathScoreOverview(patient: patient);
+        AppUser patient = Get.arguments[0];
+        List<MathAnswer> mathAns = Get.arguments[1];
+        return MathScoreOverview(
+          patient: patient,
+          mathAns: mathAns,
+        );
       },
     ),
   ];

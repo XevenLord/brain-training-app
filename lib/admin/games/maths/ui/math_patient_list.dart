@@ -1,6 +1,6 @@
+import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
-import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +16,15 @@ class MathPatientList extends StatefulWidget {
 
 class _MathPatientListState extends State<MathPatientList> {
   late UserRepository userRepo;
-  late List<AppUser> patients;
+  late MathResultViewModel mathResultViewModel;
+  dynamic patients;
   bool isLoading = true;
 
   @override
   void initState() {
+    mathResultViewModel = Get.find<MathResultViewModel>();
     userRepo = Get.find<UserRepository>();
+    mathResultViewModel.getMathUserIdList();
     fetchPatients();
     super.initState();
   }
@@ -29,6 +32,7 @@ class _MathPatientListState extends State<MathPatientList> {
   void fetchPatients() async {
     try {
       patients = await UserRepository.fetchAllPatients();
+      filterPatientByGame();
       setState(() {
         isLoading = false; // Set loading to false after data is fetched
       });
@@ -41,7 +45,17 @@ class _MathPatientListState extends State<MathPatientList> {
     }
   }
 
+  void filterPatientByGame() {
+    dynamic filteredPatients = patients.where((element) =>
+        mathResultViewModel.matchedUserIdList.contains(element.uid));
+    setState(() {
+      patients = filteredPatients;
+    });
+  }
+
   String calculateAge(DateTime? dateOfBirth) {
+    print("Calculate age");
+    print(dateOfBirth.runtimeType);
     if (dateOfBirth == null) {
       return 'N/A';
     }
@@ -68,6 +82,12 @@ class _MathPatientListState extends State<MathPatientList> {
         foregroundColor: AppColors.brandBlue,
         title: const Text('Mathematics Game'),
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Get.back();
+          },
+        ),
       ),
       body: SafeArea(
         child: isLoading
@@ -83,9 +103,12 @@ class _MathPatientListState extends State<MathPatientList> {
                         age: calculateAge(e.dateOfBirth),
                         gender: e.gender!,
                         isView: true,
-                        onEdit: () {
+                        onEdit: () async {
+                          dynamic mathAns = await mathResultViewModel
+                              .getMathAnswersByUserId(e.uid!);
+                          setState(() {});
                           Get.toNamed(RouteHelper.getMathScoreOverview(),
-                              arguments: e);
+                              arguments: [e, mathAns]);
                         },
                       ),
                     ),

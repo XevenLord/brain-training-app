@@ -46,8 +46,42 @@ class SignUpController extends GetxController {
 
       return;
     }
+
+    _userDetails.clear();
     killDialog();
     Get.toNamed(RouteHelper.getSignUpDonePage());
+  }
+
+  Future<bool> adminSignUpWithData(Map<String, dynamic> data) async {
+    print(data);
+    UserCredential signUpRes =
+        await FirebaseAuthRepository.registerAdmin(
+      email: data['email'],
+      password: data['password'],
+    );
+
+    await _uploadFile();
+    if (_profilePicUrl != null) data['profilePic'] = _profilePicUrl;
+
+    data.addAll({"role": "admin"});
+    data.addAll({"position": "Assistant"});
+
+    User newUser = signUpRes.user!;
+    bool initRes = await Get.find<FirebaseAuthRepository>()
+        .initUserDataWithUID(newUser.uid, data, setUserDetails: false);
+    if (!initRes) {
+      killDialog();
+      useErrorDialog(
+          title: "Oops! Something went wrong",
+          titleStyle: AppTextStyle.h2,
+          description:
+              "An error occurred while creating your account. Please try again later.",
+          descriptionStyle: AppTextStyle.c1);
+
+      return false;
+    }
+    killDialog();
+    return initRes;
   }
 
   // Taking Image
@@ -89,6 +123,7 @@ class SignUpController extends GetxController {
 
         // Now that the URL is available, you can update _userDetails
         if (_profilePicUrl != null) _userDetails['profilePic'] = _profilePicUrl;
+        imagefile.value = null;
       } catch (error) {
         // Handle any errors that occurred during URL retrieval
         print("Error getting download URL: $error");

@@ -6,8 +6,6 @@ class MentalQuizViewModel extends GetxController {
   Map<String, dynamic> mentalResult = {};
 
   Future<bool> submitMentalHealthAnswer(Map<String, String> answers) async {
-    print("Mental Quiz View Model: Submitting mental quiz");
-    print(answers);
     bool res = await MentalQuestService.submitMentalHealthAnswer(answers);
 
     if (res) {

@@ -5,6 +5,7 @@ import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -146,9 +147,28 @@ class FirebaseAuthRepository extends GetxController {
     }
   }
 
+  static Future<UserCredential> registerAdmin(
+      {required String email, required String password}) async {
+    FirebaseApp app = await Firebase.initializeApp(
+        name: 'Secondary', options: Firebase.app().options);
+    try {
+      UserCredential userCredential = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password);
+      await app.delete();
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      // Do something with exception. This try/catch is here to make sure
+      // that even if the user creation fails, app.delete() runs, if is not,
+      // next time Firebase.initializeApp() will fail as the previous one was
+      // not deleted.
+      await app.delete();
+      throw Error();
+    }
+  }
+
   // data map must contain uid, name, icNumber, email ...
-  Future<bool> initUserDataWithUID(
-      String uid, Map<String, dynamic> data) async {
+  Future<bool> initUserDataWithUID(String uid, Map<String, dynamic> data,
+      {bool setUserDetails = true}) async {
     debugModePrint("entering init process...");
     final appUser = Get.find<AppUser>();
     try {
@@ -162,23 +182,30 @@ class FirebaseAuthRepository extends GetxController {
         "dateOfBirth": data["dob"],
         "gender": data["gender"],
         "registeredOn": FieldValue.serverTimestamp(),
-        "role": "patient",
+        "role": data["role"] ?? "patient",
         "profilePic": data["profilePic"],
+        "aboutMe": data["aboutMe"],
         // "appointments": [],
       });
+      if (data["role"] == "admin") {
+        await userCollection.doc(uid).update({
+          "position": data["position"],
+        });
+      }
       debugModePrint("init set firebase done...");
-      appUser.setDetails(
-        uid: data["uid"],
-        name: data["name"],
-        icNumber: data["icNumber"],
-        email: data["email"],
-        phoneNumber: data["phoneNumber"],
-        dateOfBirth: data["dateOfBirth"],
-        gender: data["gender"],
-        role: "patient",
-        profilePic: data["profilePic"],
-        // appointments: [],
-      );
+      if (setUserDetails)
+        appUser.setDetails(
+          uid: data["uid"],
+          name: data["name"],
+          icNumber: data["icNumber"],
+          email: data["email"],
+          phoneNumber: data["phoneNumber"],
+          dateOfBirth: data["dateOfBirth"],
+          gender: data["gender"],
+          role: "patient",
+          profilePic: data["profilePic"],
+          // appointments: [],
+        );
       debugModePrint("init process done...");
       return true;
     } catch (e) {
@@ -213,8 +240,10 @@ class FirebaseAuthRepository extends GetxController {
         profilePic: data["profilePic"],
         role: data["role"],
         position: data["position"],
+
+        // Here got error at below 16/12/2023
         mentalQuiz: data["mentalQuiz"] != null
-            ? DateTime.fromMillisecondsSinceEpoch(data["mentalQuiz"] * 1000)
+            ? DateTime.parse(data["mentalQuiz"])
             : null,
       );
 

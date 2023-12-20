@@ -47,7 +47,7 @@ class AppUser {
       role: json["role"],
       position: json["position"],
       mentalQuiz: json["mentalQuiz"] != null
-          ? DateTime.fromMillisecondsSinceEpoch(json["mentalQuiz"] * 1000)
+          ? DateTime.parse(json["mentalQuiz"])
           : null,
     );
   }

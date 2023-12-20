@@ -1,7 +1,6 @@
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class MathGameService {
   static Future<bool> submitQuestionWithAnswer(
@@ -20,7 +19,11 @@ class MathGameService {
           DateTime.now().toUtc().millisecondsSinceEpoch.toString();
 
       await mathDoc.doc(customDocumentId).set({
-        "answer": answers,
+        "correctAns": answers["correctAns"],
+        "isUserCorrect": answers["isUserCorrect"],
+        "question": answers["question"],
+        "level": answers["level"],
+        "userAnswer": answers["userAnswer"],
         "timestamp": FieldValue.serverTimestamp(),
       });
 

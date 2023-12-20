@@ -51,6 +51,13 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
     return physiotherapistList;
   }
 
+  List<AdminAppointment> filterAppointmentByMe() {
+    return appointments
+        .where(
+            (element) => element.physiotherapistID == Get.find<AppUser>().uid)
+        .toList();
+  }
+
   List<AdminAppointment> filterAppointmentByDay(
       {required DateTime day, required List<AdminAppointment> appts}) {
     if (appts.isNotEmpty) {

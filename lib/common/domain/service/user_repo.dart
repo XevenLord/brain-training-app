@@ -28,6 +28,7 @@ class UserRepository extends GetxService {
           .where('role', isEqualTo: 'patient')
           .get();
 
+      print("Check fetch patients data");
       patientUsers = querySnapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         return AppUser.fromJson(data);

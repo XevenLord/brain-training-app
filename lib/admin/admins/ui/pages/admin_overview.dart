@@ -96,44 +96,85 @@ class _AdminOverviewState extends State<AdminOverview> {
               title: "Email",
               value: widget.admin.email!,
               padding: EdgeInsets.only(top: 8.w, bottom: 16.w)),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: SizedBox(
-              height: 40.w,
-              child: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xFF0D47A1),
-                            Color(0xFF1976D2),
-                            Color(0xFF42A5F5),
-                          ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  height: 40.w,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(height: 10.w),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 4, horizontal: 16.0),
+                          textStyle: const TextStyle(fontSize: 14),
+                        ),
+                        onPressed: () {
+                          Get.toNamed(RouteHelper.getAdminProfileEdit(),
+                              arguments: widget.admin);
+                        },
+                        child: const Text('Edit Admin Profile'),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 10.w),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 16.0),
-                      textStyle: const TextStyle(fontSize: 14),
-                    ),
-                    onPressed: () {
-                      Get.toNamed(RouteHelper.getAdminProfileEdit(), arguments: widget.admin);
-                    },
-                    child: const Text('Edit Admin Profile'),
-                  ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(width: 20.w),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  height: 40.w,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(
+                                    0xFFFF0000), // Start with red color (hex: FF0000)
+                                Color(
+                                    0xFFB71C1C), // Transition to a darker red (hex: B71C1C)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.w),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 4, horizontal: 16.0),
+                          textStyle: const TextStyle(fontSize: 14),
+                        ),
+                        onPressed: () {},
+                        child: const Text('Delete Admin'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 20.w),
-
           // May can have a list of admin's patients here
           // or a list of admin's appointments
         ]),

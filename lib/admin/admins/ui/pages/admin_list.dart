@@ -82,40 +82,45 @@ class _AdminListState extends State<AdminList> {
             ? const Center(child: CircularProgressIndicator())
             : Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...admins.map(
-                      (admin) => InfoCardTile().buildInfoCard(
-                        name: admin.name!,
-                        age: calculateAge(admin.dateOfBirth),
-                        gender: admin.gender!,
-                        position: admin.role,
-                        onEdit: () {
-                          Get.toNamed(RouteHelper.getAdminOverviewPage(),
-                              arguments: admin);
-                        },
-                      ),
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30.w),
-                        child: Column(
-                          children: [
-                            IconButton(
-                              iconSize: 60.w,
-                              icon: Icon(Icons.add_circle,
-                                  color: Colors.blue, size: 60.w),
-                              onPressed: () {},
-                            ),
-                            Text("Add New Admin",
-                                style: AppTextStyle.h3
-                                    .merge(AppTextStyle.brandBlueTextStyle)),
-                          ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...admins.map(
+                        (admin) => InfoCardTile().buildInfoCard(
+                          name: admin.name!,
+                          age: calculateAge(admin.dateOfBirth),
+                          gender: admin.gender!,
+                          position: admin.role,
+                          onEdit: () {
+                            Get.toNamed(RouteHelper.getAdminOverviewPage(),
+                                arguments: admin);
+                          },
                         ),
                       ),
-                    )
-                  ],
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 30.w),
+                          child: Column(
+                            children: [
+                              IconButton(
+                                iconSize: 60.w,
+                                icon: Icon(Icons.add_circle,
+                                    color: Colors.blue, size: 60.w),
+                              onPressed: () {
+                                  Get.toNamed(RouteHelper.getAdminRegister());
+                                },
+                              ),
+                              Text("Add New Admin",
+                                  style: AppTextStyle.h3
+                                      .merge(AppTextStyle.brandBlueTextStyle)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30.w)
+                    ],
+                  ),
                 ),
               ),
       ),

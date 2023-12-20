@@ -80,6 +80,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
       required String time,
       String? reason,
       String? patient}) async {
+    print("Chosen physiotherapist: ${chosenPhysiotherapist!.name}");
     Appointment appointment = Appointment(
       patient: Get.find<AppUser>().name,
       patientID: Get.find<AppUser>().uid,
@@ -99,9 +100,10 @@ class AppointmentViewModel extends GetxController implements GetxService {
       body: "Meet you on ${DateFormat('dd-MM-yyyy').format(date)}, ${time}",
       payload: "This is the payload of the notification",
       scheduledDate:
-          createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:40 PM"),
+          createDateWithTimeSlot(date: DateTime.now(), timeSlot: "6:43 PM"),
       // scheduledDate: createDateWithTimeSlot(
       //     date: date.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+      // need to have more reminders: 30 mins, 1 hour, 1 day before
     );
     isAppointmentSet = true;
     update();

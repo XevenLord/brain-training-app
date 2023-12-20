@@ -27,6 +27,8 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   late UserRepository? _userRepo;
   List<AdminAppointment>? appointments;
   List<AdminAppointment>? filteredAppointments;
+  List<AdminAppointment>? filteredMeAppointments;
+  List<AdminAppointment>? filteredMeAppointmentsByDay;
   List<AppUser>? patients;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -48,6 +50,8 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   void getAppointmentList() async {
     appointments = await _appointmentViewModel.getAppointmentList();
     filterAppointmentByDay();
+    filteredMeAppointments = _appointmentViewModel.filterAppointmentByMe();
+    filterMeAppointmentByDay();
     setState(() {});
   }
 
@@ -58,12 +62,17 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   }
 
   void filterAppointmentByDay() {
-    print("filtering appointments");
     filteredAppointments = _appointmentViewModel.filterAppointmentByDay(
         day: _selectedDay, appts: appointments!);
     filteredAppointments = filteredAppointments!.reversed.toList();
-    print("filtered appointments");
-    print(filteredAppointments);
+    setState(() {});
+  }
+
+  void filterMeAppointmentByDay() {
+    filteredMeAppointmentsByDay = _appointmentViewModel.filterAppointmentByDay(
+        day: _selectedDay, appts: filteredMeAppointments!);
+    filteredMeAppointmentsByDay =
+        filteredMeAppointmentsByDay!.reversed.toList();
     setState(() {});
   }
 
@@ -98,104 +107,168 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text("Appointments",
-              style: AppTextStyle.blackTextStyle.merge(AppTextStyle.h2)),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Get.back(), // Or Get.back() if using GetX
-        ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: appointments == null || patients == null
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              child: Column(
-                children: <Widget>[
-                  TableCalendar(
-                    firstDay: DateTime.utc(2022, 10, 16),
-                    lastDay: DateTime.utc(2030, 3, 14),
-                    focusedDay: _focusedDay,
-                    calendarFormat: _calendarFormat,
-                    availableCalendarFormats: const {
-                      CalendarFormat.month: 'Week',
-                      CalendarFormat.twoWeeks: 'Month',
-                      CalendarFormat.week: '2 weeks',
-                    },
-                    onFormatChanged: (format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    },
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                    },
-                    onDaySelected: (selectedDay, focusedDay) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay =
-                            focusedDay; // update `_focusedDay` here as well
-                        filteredAppointments =
-                            _appointmentViewModel.filterAppointmentByDay(
-                                day: _selectedDay, appts: appointments!);
-                      });
-                    },
-                    calendarStyle: CalendarStyle(
-                      isTodayHighlighted: true,
-                      selectedDecoration: const BoxDecoration(
-                        color: AppColors.brandBlue,
-                        shape: BoxShape.circle,
+        appBar: AppBar(
+          bottom: const TabBar(
+              unselectedLabelColor: AppColors.brandBlue,
+              labelColor: AppColors.black,
+              tabs: [Tab(text: "All"), Tab(text: "Me")]),
+          title: Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Appointments",
+                style: AppTextStyle.blackTextStyle.merge(AppTextStyle.h2)),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Get.back(), // Or Get.back() if using GetX
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
+        body: appointments == null || patients == null
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: Column(
+                  children: [
+                    TableCalendar(
+                      firstDay: DateTime.utc(2022, 10, 16),
+                      lastDay: DateTime.utc(2030, 3, 14),
+                      focusedDay: _focusedDay,
+                      calendarFormat: _calendarFormat,
+                      availableCalendarFormats: const {
+                        CalendarFormat.month: 'Week',
+                        CalendarFormat.twoWeeks: 'Month',
+                        CalendarFormat.week: '2 weeks',
+                      },
+                      onFormatChanged: (format) {
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      },
+                      selectedDayPredicate: (day) {
+                        return isSameDay(_selectedDay, day);
+                      },
+                      onDaySelected: (selectedDay, focusedDay) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay =
+                              focusedDay; // update `_focusedDay` here as well
+                          filteredAppointments =
+                              _appointmentViewModel.filterAppointmentByDay(
+                                  day: _selectedDay, appts: appointments!);
+                          filteredMeAppointmentsByDay =
+                              _appointmentViewModel.filterAppointmentByDay(
+                                  day: _selectedDay,
+                                  appts: filteredMeAppointments!);
+                        });
+                      },
+                      calendarStyle: CalendarStyle(
+                        isTodayHighlighted: true,
+                        selectedDecoration: const BoxDecoration(
+                          color: AppColors.brandBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        selectedTextStyle:
+                            AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
+                        todayDecoration: const BoxDecoration(
+                          color: AppColors.lightBlue,
+                          shape: BoxShape.circle,
+                        ),
+                        todayTextStyle: AppTextStyle.h3,
+                        defaultTextStyle:
+                            AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
+                        weekendTextStyle:
+                            AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
                       ),
-                      selectedTextStyle:
-                          AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
-                      todayDecoration: const BoxDecoration(
-                        color: AppColors.lightBlue,
-                        shape: BoxShape.circle,
-                      ),
-                      todayTextStyle: AppTextStyle.h3,
-                      defaultTextStyle:
-                          AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
-                      weekendTextStyle:
-                          AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
                     ),
-                  ),
-                  Expanded(
-                    child: ListView(
-                      children: <Widget>[
-                        if (filteredAppointments != null && patients != null)
-                          ...filteredAppointments!.map((appt) {
-                            AppUser patient = patients!.firstWhere(
-                                (element) => element.uid == appt.patientID);
-                            return AppointmentCard(
-                              name: patient.name!,
-                              age: calculateAge(patient.dateOfBirth),
-                              gender: patient.gender!,
-                              reason: appt.reason!,
-                              time: appt.time!,
-                              appointment: appt,
-                              onEdit: () => navigateToEditPage(appt),
-                            );
-                          }).toList(),
-                        if (filteredAppointments!.isEmpty)
-                          Padding(
-                            padding: EdgeInsets.only(top: 128.w),
-                            child: Center(
-                                child: Text("No appointments for this day",
-                                    style: AppTextStyle.h2)),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: ListView(
+                                  children: <Widget>[
+                                    if (filteredAppointments != null &&
+                                        patients != null)
+                                      ...filteredAppointments!.map((appt) {
+                                        AppUser patient = patients!.firstWhere(
+                                            (element) =>
+                                                element.uid == appt.patientID);
+                                        return AppointmentCard(
+                                          name: patient.name!,
+                                          age:
+                                              calculateAge(patient.dateOfBirth),
+                                          gender: patient.gender!,
+                                          reason: appt.reason!,
+                                          time: appt.time!,
+                                          appointment: appt,
+                                          onEdit: () =>
+                                              navigateToEditPage(appt),
+                                        );
+                                      }).toList(),
+                                    if (filteredAppointments!.isEmpty)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 128.w),
+                                        child: Center(
+                                            child: Text(
+                                                "No appointments for this day",
+                                                style: AppTextStyle.h2)),
+                                      ),
+                                    SizedBox(height: 20.w)
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                        SizedBox(height: 20.w)
-                      ],
+                          Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: ListView(
+                                  children: <Widget>[
+                                    if (filteredMeAppointmentsByDay != null &&
+                                        patients != null)
+                                      ...filteredMeAppointmentsByDay!
+                                          .map((appt) {
+                                        AppUser patient = patients!.firstWhere(
+                                            (element) =>
+                                                element.uid == appt.patientID);
+                                        return AppointmentCard(
+                                          name: patient.name!,
+                                          age:
+                                              calculateAge(patient.dateOfBirth),
+                                          gender: patient.gender!,
+                                          reason: appt.reason!,
+                                          time: appt.time!,
+                                          appointment: appt,
+                                          onEdit: () =>
+                                              navigateToEditPage(appt),
+                                        );
+                                      }).toList(),
+                                    if (filteredMeAppointmentsByDay!.isEmpty)
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 128.w),
+                                        child: Center(
+                                            child: Text(
+                                                "No appointments for this day",
+                                                style: AppTextStyle.h2)),
+                                      ),
+                                    SizedBox(height: 20.w)
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }
