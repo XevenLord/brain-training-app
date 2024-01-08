@@ -67,18 +67,20 @@ class _AdminChatListState extends State<AdminChatList> {
                       ),
                     )),
                     Obx(() => SliverList(
-                            delegate: SliverChildListDelegate(
-                                chatViewModel.messages.values.toList().map((data) {
+                            delegate: SliverChildListDelegate(chatViewModel
+                                .messages.values
+                                .toList()
+                                .map((data) {
                           var user = users.firstWhereOrNull(
                               (e) => e.name == data['targetName']);
                           return CupertinoListTile(
                               padding: EdgeInsets.zero,
                               leading: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    user!.profilePic ?? ""),
+                                backgroundImage:
+                                    NetworkImage(user!.profilePic ?? ""),
                               ),
                               title: Text(data['targetName'] ?? ""),
-                              subtitle: Text(data['msg'] ?? ""),
+                              subtitle: Text(data['msg'].toString().startsWith("https://firebasestorage.googleapis.com") ? "[Image]" :data['msg'] ?? ""),
                               onTap: () => {
                                     Get.to(Chat(
                                         targetName: data['targetName'],

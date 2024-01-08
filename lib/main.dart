@@ -3,6 +3,7 @@ import 'package:brain_training_app/patient/authentification/signUp/ui/view_model
 import 'package:brain_training_app/patient/game/2048/models/board_adapter.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:camera/camera.dart';
+import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

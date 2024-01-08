@@ -55,10 +55,10 @@ Future<V> useLoadingDialog<V, T>({
 
 useInfoDialog(
     {required String title,
-    required TextStyle titleStyle,
-    required Widget content,
-    required String description,
-    required TextStyle descriptionStyle,
+    TextStyle? titleStyle,
+    Widget? content,
+    String? description,
+    TextStyle? descriptionStyle,
     String? confirmButtonText,
     String? cancelButtonText,
     String? customButtonText,
@@ -76,15 +76,16 @@ useInfoDialog(
     content: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        content,
+        content ?? Container(),
         const SizedBox(
           height: 15,
         ),
-        Text(
-          description,
-          style: descriptionStyle,
-          textAlign: descriptionTextAlign,
-        ),
+        if (description != null)
+          Text(
+            description,
+            style: descriptionStyle,
+            textAlign: descriptionTextAlign,
+          ),
       ],
     ),
     contentPadding: contentPadding,

@@ -1,3 +1,4 @@
 {
-  "cmake.sourceDirectory": "D:/Temp/UM Folder/3RD YR SEM 6/FYP/brain_training_app/linux"
+  "cmake.sourceDirectory": "D:/Temp/UM Folder/3RD YR SEM 6/FYP/brain_training_app/linux",
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

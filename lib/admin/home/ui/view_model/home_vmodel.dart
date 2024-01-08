@@ -34,7 +34,9 @@ class AdminHomeViewModel extends GetxController implements GetxService {
               );
               Timer(
                 const Duration(seconds: 2),
-                () => Get.offNamed(RouteHelper.getSignIn()),
+                () {
+                  Get.offAllNamed(RouteHelper.getSignIn());
+                },
               );
             },
             child: Text('Yes', style: AppTextStyle.h3),

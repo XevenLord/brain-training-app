@@ -14,6 +14,7 @@ import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart';
 import 'package:brain_training_app/admin/admins/ui/pages/admin_overview.dart';
+import 'package:brain_training_app/admin/patients/ui/pages/patient_shout.dart';
 import 'package:brain_training_app/admin/profile/ui/pages/admin_edit_profile.dart';
 import 'package:brain_training_app/common/domain/entity/math_ans.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
@@ -96,6 +97,7 @@ class RouteHelper {
   static const String patientOverviewPage = '/patient-overview-page';
   static const String patientApptPage = '/patient-appt-page';
   static const String patientMentalResultPage = '/patient-mental-result-page';
+  static const String patientShoutPage = '/patient-shout-page';
 
   // *Admin Games*
   static const String adminGamePage = '/admin-game-page';
@@ -163,6 +165,7 @@ class RouteHelper {
   static String getPatientOverviewPage() => patientOverviewPage;
   static String getPatientApptPage() => patientApptPage;
   static String getPatientMentalResultPage() => patientMentalResultPage;
+  static String getPatientShoutPage() => patientShoutPage;
 
   // *Admin Games*
   static String getAdminGameCategoriesPage() => adminGamePage;
@@ -411,6 +414,14 @@ class RouteHelper {
       page: () {
         AppUser patient = Get.arguments;
         return PatientMentalResult(patient: patient);
+      },
+    ),
+    GetPage(
+      name: patientShoutPage,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments;
+        return PatientShoutPage(patient: patient);
       },
     ),
     // *Admin Games*

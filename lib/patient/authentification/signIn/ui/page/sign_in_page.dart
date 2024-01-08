@@ -27,6 +27,28 @@ class _SignInPageState extends State<SignInPage> {
   bool obscureText = true;
   String selectedRole = "patient";
 
+  bool resourceLoaded = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loaded();
+    });
+  }
+
+  didChangeDependencies() {
+    super.didChangeDependencies();
+    loaded();
+  }
+
+  Future<void> loaded() async {
+    debugModePrint("sign page: enter loaded");
+    resourceLoaded = await AppConstant.loadResources();
+    setState(() {});
+  }
+
   void showMessage(String errorMessage) {
     showDialog(
       context: context,
@@ -99,127 +121,130 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 32.h, horizontal: 16.w),
-            child: FormBuilder(
-              key: _fbKey,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 16.0),
-                      child: DropdownButton<String>(
-                        value: selectedRole,
-                        items: const [
-                          DropdownMenuItem<String>(
-                            value: "patient",
-                            child: Text("patient"),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: "admin",
-                            child: Text("admin"),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            selectedRole = value!;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  Center(
+        child: resourceLoaded
+            ? SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 32.h, horizontal: 16.w),
+                  child: FormBuilder(
+                    key: _fbKey,
                     child: Column(
                       children: [
-                        Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
-                            width: 100.w),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: DropdownButton<String>(
+                              value: selectedRole,
+                              items: const [
+                                DropdownMenuItem<String>(
+                                  value: "patient",
+                                  child: Text("patient"),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: "admin",
+                                  child: Text("admin"),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedRole = value!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Column(
+                            children: [
+                              Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
+                                  width: 100.w),
+                              SizedBox(height: 16.h),
+                              Text("Welcome", style: AppTextStyle.h2),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: 16.h),
-                        Text("Welcome", style: AppTextStyle.h2),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  InputTextFormField(
-                    name: "email",
-                    promptText: "Email",
-                    textEditingController: _emailInput,
-                    label: "Enter Your Email",
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  InputTextFormField(
-                    name: "password",
-                    promptText: "Password",
-                    textEditingController: _passwordInput,
-                    label: "Enter Your Password",
-                    keyboardType: TextInputType.emailAddress,
-                    obscureText: obscureText,
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        setState(() {
-                          obscureText = !obscureText;
-                        });
-                      },
-                      child: Icon(Icons.remove_red_eye),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      onTap: () {
-                        Get.toNamed(RouteHelper.getForgetPassword());
-                      },
-                      child: Text("Forget Password"),
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                  Center(
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _signUserIn();
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.brandBlue),
-                          child: Text(
-                            "Sign In",
-                            style: AppTextStyle.h2,
+                        InputTextFormField(
+                          name: "email",
+                          promptText: "Email",
+                          textEditingController: _emailInput,
+                          label: "Enter Your Email",
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        InputTextFormField(
+                          name: "password",
+                          promptText: "Password",
+                          textEditingController: _passwordInput,
+                          label: "Enter Your Password",
+                          keyboardType: TextInputType.emailAddress,
+                          obscureText: obscureText,
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                            child: Icon(Icons.remove_red_eye),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            onTap: () {
+                              Get.toNamed(RouteHelper.getForgetPassword());
+                            },
+                            child: Text("Forget Password"),
                           ),
                         ),
                         SizedBox(height: 30.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: AppTextStyle.h3
-                                  .merge(AppTextStyle.blackTextStyle),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                if (selectedRole == "admin") {}
-                                Get.offAllNamed(
-                                    RouteHelper.getSignUpFirstPage());
-                              },
-                              child: Text(
-                                "Sign Up",
-                                style: AppTextStyle.h3.merge(AppTextStyle
-                                    .brandBlueTextStyle
-                                    .merge(AppTextStyle.underlineTextStyle)),
+                        Center(
+                          child: Column(
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  _signUserIn();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.brandBlue),
+                                child: Text(
+                                  "Sign In",
+                                  style: AppTextStyle.h2,
+                                ),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 30.h),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Don't have an account? ",
+                                    style: AppTextStyle.h3
+                                        .merge(AppTextStyle.blackTextStyle),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      if (selectedRole == "admin") {}
+                                      Get.offAllNamed(
+                                          RouteHelper.getSignUpFirstPage());
+                                    },
+                                    child: Text(
+                                      "Sign Up",
+                                      style: AppTextStyle.h3.merge(
+                                          AppTextStyle.brandBlueTextStyle.merge(
+                                              AppTextStyle.underlineTextStyle)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ),
+                ),
+              )
+            : Center(child: CircularProgressIndicator()),
       ),
     );
   }

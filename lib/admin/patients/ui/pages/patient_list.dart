@@ -79,23 +79,30 @@ class _PatientListState extends State<PatientList> {
       body: SafeArea(
         child: isLoading
             ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...patients.map(
-                      (e) => InfoCardTile().buildInfoCard(
-                        name: e.name!,
-                        age: calculateAge(e.dateOfBirth),
-                        gender: e.gender!,
-                        onEdit: () {
-                          Get.toNamed(RouteHelper.getPatientOverviewPage(),
-                              arguments: e);
-                        },
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...patients.map(
+                        (e) => InfoCardTile().buildInfoCard(
+                          shout: true,
+                          name: e.name!,
+                          age: calculateAge(e.dateOfBirth),
+                          gender: e.gender!,
+                          onShout: () {
+                            Get.toNamed(RouteHelper.getPatientShoutPage(),
+                                arguments: e);
+                          },
+                          onEdit: () {
+                            Get.toNamed(RouteHelper.getPatientOverviewPage(),
+                                arguments: e);
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
       ),

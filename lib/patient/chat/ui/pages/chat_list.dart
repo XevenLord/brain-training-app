@@ -110,7 +110,10 @@ class _ChatListState extends State<ChatList> {
                                     NetworkImage(physio!.profilePic ?? ""),
                               ),
                               title: Text(data['targetName'] ?? ""),
-                              subtitle: Text(data['msg'] ?? ""),
+                              subtitle: Text(data['msg'].toString().startsWith(
+                                      "https://firebasestorage.googleapis.com")
+                                  ? "[Image]"
+                                  : data['msg'] ?? ""),
                               onTap: () => {
                                     Get.to(Chat(
                                         targetName: data['targetName'],

@@ -15,7 +15,9 @@ class InfoCardTile implements InfoCardInterface {
       bool hasCheckIcon = false,
       EdgeInsetsGeometry? margin = const EdgeInsets.only(bottom: 16),
       bool isView = false,
+      bool shout = false,
       Function()? onEdit,
+      Function()? onShout,
       Function()? onCheck}) {
     return Container(
       margin: margin,
@@ -117,20 +119,38 @@ class InfoCardTile implements InfoCardInterface {
                       ]),
                 ],
               ),
-              if (hasEditIcon || hasCheckIcon)
+              if (hasEditIcon || hasCheckIcon || shout)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    shout
+                        ? Column(
+                          children: [
+                            InkWell(
+                                onTap: () => {if (onShout != null) onShout()},
+                                child: Container(
+                                    width: 50.w,
+                                    height: 50.w,
+                                    child: const Icon(Icons.contactless,
+                                        color: Colors.blue)),
+                              ),
+                            SizedBox(height: 8.w),
+                          ],
+                        )
+                        : Container(),
                     hasEditIcon
                         ? InkWell(
                             onTap: () => {if (onEdit != null) onEdit()},
                             child: Container(
                                 width: 50.w,
                                 height: 50.w,
-                                decoration: isView ? null : BoxDecoration(
-                                    color: AppColors.lightBlue,
-                                    borderRadius: BorderRadius.circular(10.w)),
+                                decoration: isView
+                                    ? null
+                                    : BoxDecoration(
+                                        color: AppColors.lightBlue,
+                                        borderRadius:
+                                            BorderRadius.circular(10.w)),
                                 child: isView
                                     ? Text("View",
                                         style: AppTextStyle.h3.merge(
