@@ -23,7 +23,11 @@ class ChatViewModel extends GetxController {
   Future<void> takeImageFromCamera() async {
     XFile? image =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
-    imagefile = File(image!.path);
+    if (image != null) {
+      imagefile = File(image.path);
+    } else {
+      print('Image capture failed.');
+    }
   }
 
   Future<void> takeImageFromGallery() async {
@@ -38,46 +42,34 @@ class ChatViewModel extends GetxController {
 
   Future<void> uploadFile() async {
     String fileName = Uuid().v1();
-    int status = 1;
 
     if (imagefile == null) return;
+    print("Uploading file step");
     final storageRef = FirebaseStorage.instance.ref();
+    print(storageRef ?? "not found for storage ref");
     final chatImgRef = storageRef.child(
         '${FirebaseAuth.instance.currentUser?.uid}/photos/${fileName}.jpg');
 
-    chatImgRef.putFile(imagefile!).snapshotEvents.listen((taskSnapshot) async {
-      switch (taskSnapshot.state) {
-        case TaskState.running:
-          break;
-        case TaskState.paused:
-          break;
-        case TaskState.success:
-          await chatImgRef
-              .getDownloadURL()
-              .then((value) => _chatImgUrl = value);
-          break;
-        case TaskState.error:
-          break;
-        case TaskState.canceled:
-          break;
-      }
+    await chatImgRef.putFile(imagefile!).whenComplete(() async {
+      _chatImgUrl = await chatImgRef.getDownloadURL();
     });
   }
 
-  Future<bool> sendMessage(MessageChat chat) async {
-    // maybe change to string type for this method
-    print("got enter here chat vmodel");
-    bool res = await ChatService.sendChatMessage(chat);
+  Future<bool> sendTextMessage(MessageChat chat) async {
+    bool res = await Get.find<ChatService>().sendChatMessage(chat);
     return res;
   }
 
   Future<bool> sendImageMessage(MessageChat chat) async {
+    print("Got enter initially");
     bool res = false;
     await uploadFile();
+    print("Hehhh" + _chatImgUrl.toString());
     if (_chatImgUrl != null) {
-      print("got enter here vmodel");
       chat.setMsg(_chatImgUrl);
-      res = await ChatService.sendChatMessage(chat);
+      print("Image url in vmodel" + chat.getMsg!);
+      res = await Get.find<ChatService>().sendChatMessage(chat);
+      _chatImgUrl = null;
     }
 
     return res;

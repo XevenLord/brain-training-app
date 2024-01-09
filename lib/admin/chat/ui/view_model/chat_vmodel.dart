@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:brain_training_app/common/domain/entity/message_chat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class AdminChatViewModel extends GetxController {
   var currentUser = FirebaseAuth.instance.currentUser?.uid;
@@ -15,30 +17,41 @@ class AdminChatViewModel extends GetxController {
   final ImagePicker _picker = ImagePicker();
 
   File? imagefile;
-  var _profilePicUrl;
+  var _chatImgUrl;
 
-  void takeImageFromCamera() async {
+  Future<void> takeImageFromCamera() async {
     XFile? image =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     imagefile = File(image!.path);
   }
 
-  void _uploadFile() {
+  Future<void> takeImageFromGallery() async {
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    if (image != null) {
+      imagefile = File(image.path);
+    } else {
+      print('Image capture failed.');
+    }
+  }
+
+  Future<void> uploadFile() async {
+    String fileName = Uuid().v1();
     if (imagefile == null) return;
     final storageRef = FirebaseStorage.instance.ref();
-    final profileImagesRef = storageRef
-        .child('${FirebaseAuth.instance.currentUser?.uid}/photos/profile.jpg');
+    final chatImgRef = storageRef.child(
+        '${FirebaseAuth.instance.currentUser?.uid}/photos/${fileName}.jpg');
 
-    profileImagesRef.putFile(imagefile!).snapshotEvents.listen((taskSnapshot) {
+    chatImgRef.putFile(imagefile!).snapshotEvents.listen((taskSnapshot) async {
       switch (taskSnapshot.state) {
         case TaskState.running:
           break;
         case TaskState.paused:
           break;
         case TaskState.success:
-          profileImagesRef
+          await chatImgRef
               .getDownloadURL()
-              .then((value) => _profilePicUrl = value);
+              .then((value) => _chatImgUrl = value);
           break;
         case TaskState.error:
           break;

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class ChatService extends GetxService {
-  static Future<bool> sendChatMessage(MessageChat chat) async {
+  Future<bool> sendChatMessage(MessageChat chat) async {
     print("got enter chat service");
     final appUser = Get.find<AppUser>();
     try {

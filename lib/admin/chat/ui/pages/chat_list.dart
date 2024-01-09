@@ -16,10 +16,13 @@ class AdminChatList extends StatefulWidget {
 }
 
 class _AdminChatListState extends State<AdminChatList> {
+  TextEditingController _searchController = new TextEditingController();
   late ChatViewModel chatViewModel;
   late UserRepository userRepo;
   List<AppUser> users = [];
+  List<AppUser> filteredUsers = [];
   bool isLoading = true;
+  bool showSearchUsers = false;
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _AdminChatListState extends State<AdminChatList> {
     try {
       users = await UserRepository.fetchAllUsers();
       setState(() {
+        filteredUsers = users;
         isLoading = false;
       });
     } catch (e) {
@@ -61,32 +65,65 @@ class _AdminChatListState extends State<AdminChatList> {
                         child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: CupertinoSearchTextField(
-                        key: UniqueKey(),
-                        onChanged: (value) {},
-                        onSubmitted: (value) {},
+                        controller: _searchController,
+                        onTap: () {
+                          setState(() {
+                            showSearchUsers = !showSearchUsers;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            filteredUsers = users
+                                .where((element) => element.name!
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
+                          });
+                        },
                       ),
                     )),
-                    Obx(() => SliverList(
-                            delegate: SliverChildListDelegate(chatViewModel
-                                .messages.values
-                                .toList()
-                                .map((data) {
-                          var user = users.firstWhereOrNull(
-                              (e) => e.name == data['targetName']);
-                          return CupertinoListTile(
-                              padding: EdgeInsets.zero,
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(user!.profilePic ?? ""),
-                              ),
-                              title: Text(data['targetName'] ?? ""),
-                              subtitle: Text(data['msg'].toString().startsWith("https://firebasestorage.googleapis.com") ? "[Image]" :data['msg'] ?? ""),
-                              onTap: () => {
-                                    Get.to(Chat(
-                                        targetName: data['targetName'],
-                                        targetUid: user.uid))
-                                  });
-                        }).toList())))
+                    showSearchUsers
+                        ? SliverList(
+                            delegate: SliverChildListDelegate(
+                                filteredUsers.map((user) {
+                              return CupertinoListTile(
+                                  padding: EdgeInsets.zero,
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(user.profilePic ?? ""),
+                                  ),
+                                  title: Text(user.name ?? ""),
+                                  onTap: () => {
+                                        Get.to(Chat(
+                                            targetName: user.name,
+                                            targetUid: user.uid))
+                                      });
+                            }).toList()),
+                          )
+                        : Obx(() => SliverList(
+                                delegate: SliverChildListDelegate(chatViewModel
+                                    .messages.values
+                                    .toList()
+                                    .map((data) {
+                              var user = users.firstWhereOrNull(
+                                  (e) => e.name == data['targetName']);
+                              return CupertinoListTile(
+                                  padding: EdgeInsets.zero,
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(user!.profilePic ?? ""),
+                                  ),
+                                  title: Text(data['targetName'] ?? ""),
+                                  subtitle: Text(data['msg'].toString().startsWith(
+                                          "https://firebasestorage.googleapis.com")
+                                      ? "[Image]"
+                                      : data['msg'] ?? ""),
+                                  onTap: () => {
+                                        Get.to(Chat(
+                                            targetName: data['targetName'],
+                                            targetUid: user.uid))
+                                      });
+                            }).toList())))
                   ],
                 ),
         ),

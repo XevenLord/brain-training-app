@@ -66,7 +66,6 @@ class _ChatState extends State<Chat> {
   }
 
   void sendTextMessage(String msg, String? uid) {
-    print("Chat page enter send message process");
     if (msg.isEmpty) return;
     MessageChat chat = MessageChat(
         uid: chatDocId,
@@ -74,7 +73,9 @@ class _ChatState extends State<Chat> {
         msg: msg,
         type: TypeMessage.text);
 
-    chatViewModel.sendMessage(chat).then((value) => _textController.clear());
+    chatViewModel
+        .sendTextMessage(chat)
+        .then((value) => _textController.clear());
   }
 
   void sendImageMessage(String? uid) {
