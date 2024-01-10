@@ -103,47 +103,50 @@ class _HomePageState extends State<HomePage> {
   Widget currentScreen() {
     switch (_selectedIndex) {
       case 0:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10.h),
-            TextButton(
-                child: Text("Update your mental status?"),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return QuestionCard();
+        return SingleChildScrollView(
+          key: const PageStorageKey("home"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10.h),
+              TextButton(
+                  child: Text("Update your mental status?"),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return StatefulBuilder(builder: (context, setState) {
+                            return QuestionCard();
+                          });
                         });
-                      });
-                }),
-            SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(
-                  categories.length,
-                  (index) => PillButton(
-                    text: categories[index],
-                    margin: const EdgeInsets.only(right: 10),
-                    onTap: () {
-                      print("Category tapped");
-                    },
+                  }),
+              SingleChildScrollView(
+                padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(
+                    categories.length,
+                    (index) => PillButton(
+                      text: categories[index],
+                      margin: const EdgeInsets.only(right: 10),
+                      onTap: () {
+                        print("Category tapped");
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: 10.h),
-            ...List.generate(games.length, (index) {
-              return GameCard(
-                img: games[index]["img"],
-                title: games[index]["name"],
-                description: games[index]["description"],
-                onTap: games[index]["onTap"],
-              );
-            }),
-          ],
+              SizedBox(height: 10.h),
+              ...List.generate(games.length, (index) {
+                return GameCard(
+                  img: games[index]["img"],
+                  title: games[index]["name"],
+                  description: games[index]["description"],
+                  onTap: games[index]["onTap"],
+                );
+              }),
+            ],
+          ),
         );
       case 1:
         return ChatList();
@@ -163,12 +166,13 @@ class _HomePageState extends State<HomePage> {
             ? "Chats"
             : _selectedIndex == 2
                 ? "Appointments"
-                : "Profile";
+                : "Your Profile";
   }
 
   @override
   Widget build(BuildContext context) {
     return Screen(
+      useSingleChildScrollView: false,
       hasHorizontalPadding: _selectedIndex != 0 ? true : false,
       appBar: AppBar(
         title: Text(

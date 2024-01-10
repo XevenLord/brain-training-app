@@ -21,7 +21,7 @@ class Screen extends StatelessWidget {
   final ScrollController? scrollController;
   final bool bodyCenter;
   final bool hasTopPadding;
-
+  final bool useSingleChildScrollView;
 
   Screen({
     super.key,
@@ -41,6 +41,7 @@ class Screen extends StatelessWidget {
     this.bottomNavigationBar,
     this.bodyCenter = false,
     this.hasTopPadding = true,
+    this.useSingleChildScrollView = true,
   });
 
   double topPadding() {
@@ -53,6 +54,36 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget content = Expanded(
+      child: bodyCenter
+          ? Center(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: (hasHorizontalPadding) ? 30.w : 0,
+                  right: (hasHorizontalPadding) ? 30.w : 0,
+                  top: noBackBtn ? 0 : topPadding(),
+                  bottom: 30.h,
+                ),
+                child: body,
+              ),
+            )
+          : Padding(
+              padding: EdgeInsets.only(
+                left: (hasHorizontalPadding) ? 30.w : 0,
+                right: (hasHorizontalPadding) ? 30.w : 0,
+                top: noBackBtn ? 0 : topPadding(),
+                bottom: 30.h,
+              ),
+              child: body,
+            ),
+    );
+
+    if (useSingleChildScrollView) {
+      content = SingleChildScrollView(
+        controller: scrollController,
+        child: content,
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar,
@@ -70,30 +101,7 @@ class Screen extends StatelessWidget {
                     onPressed: onPressed,
                   )
                 : Container(),
-            Expanded(
-              child: bodyCenter
-                  ? Center(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                            padding: EdgeInsets.only(
-                                left: (hasHorizontalPadding) ? 30.w : 0,
-                                right: (hasHorizontalPadding) ? 30.w : 0,
-                                top: noBackBtn ? 0 : topPadding(),
-                                bottom: 30.h),
-                            child: body),
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      controller: scrollController,
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: (hasHorizontalPadding) ? 30.w : 0,
-                              right: (hasHorizontalPadding) ? 30.w : 0,
-                              top: noBackBtn ? 0 : topPadding(),
-                              bottom: 30.h),
-                          child: body),
-                    ),
-            ),
+            content,
             Container(
               child: (bottomWidget == null)
                   ? const SizedBox.shrink()

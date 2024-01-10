@@ -41,8 +41,6 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("About Yourself",
-                style: AppTextStyle.h2.merge(AppTextStyle.brandBlueTextStyle)),
             SizedBox(
               height: 12.h,
             ),

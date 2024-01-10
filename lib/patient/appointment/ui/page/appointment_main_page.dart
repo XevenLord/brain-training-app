@@ -37,6 +37,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
             ),
           )
         : SingleChildScrollView(
+            key: PageStorageKey("appts"),
             child: Column(
               children: [
                 Text("Select a practitioner", style: AppTextStyle.h3),
@@ -46,7 +47,8 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                     childAspectRatio: 0.75,
                     crossAxisSpacing: 16.w,
                     shrinkWrap: true, // Add this line
-                    physics: const NeverScrollableScrollPhysics(), // Add this line
+                    physics:
+                        const NeverScrollableScrollPhysics(), // Add this line
                     children: [
                       ...List.generate(
                         physiotherapists.length,

@@ -56,6 +56,7 @@ class _ChatListState extends State<ChatList> {
               alignment: Alignment.topCenter,
               child: CircularProgressIndicator())
           : CustomScrollView(
+              key: PageStorageKey("chatList"),
               slivers: [
                 SliverToBoxAdapter(
                     child: Padding(
