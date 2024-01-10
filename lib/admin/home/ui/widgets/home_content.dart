@@ -56,6 +56,11 @@ class _HomeContentState extends State<HomeContent> {
       "icon": Icons.edit_document,
       "onTap": () {},
     },
+     {
+      "category": "Inspirational Message",
+      "icon": Icons.edit_document,
+      "onTap": () {},
+    },
   ];
 
   @override

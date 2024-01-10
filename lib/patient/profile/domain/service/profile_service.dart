@@ -17,7 +17,6 @@ class ProfileService {
         if (value == "") deleteDataInProfile(key);
       });
       await FirebaseAuthRepository.getUserDetails(appUser.uid!);
-      print("See profileeee");
       return res;
     } catch (e) {
       return Future.value(false);

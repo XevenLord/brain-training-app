@@ -17,19 +17,10 @@ class AppointmentService {
       await appointmentDocRef.set(
           appointment.toJson(), SetOptions(merge: true));
 
-      // Return the UID of the document created/updated
       return appointmentDocRef.id;
     } on FirebaseException catch (e) {
-      return null; // Return null in case of an error
+      return null;
     }
-  }
-
-  static Future<List<Physiotherapist>> getPhysiotherapistList() {
-    return FirebaseFirestore.instance.collection("physiotherapists").get().then(
-          (value) => value.docs
-              .map((e) => Physiotherapist.fromJson(e.data()))
-              .toList(),
-        );
   }
 
   static Future<List<Appointment>> getAppointmentList() async {

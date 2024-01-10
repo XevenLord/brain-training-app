@@ -34,8 +34,8 @@ class _ChatState extends State<Chat> {
   _ChatState(this.targetName, this.targetUid);
   @override
   void initState() {
-    chatViewModel = Get.find<ChatViewModel>();
     checkUser();
+    chatViewModel = Get.find<ChatViewModel>();
     super.initState();
   }
 
@@ -59,10 +59,11 @@ class _ChatState extends State<Chat> {
                 currentUserId: Get.find<AppUser>().name,
                 targetUid: targetName
               }
-            }).then((value) => chatDocId = value);
+            }).then((value) => chatDocId = value.id);
           }
         })
         .catchError((error) => print("Failed to get chats: $error"));
+    setState(() {});
   }
 
   void sendTextMessage(String msg, String? uid) {
@@ -99,7 +100,7 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return chatDocId == null
-        ? Center(child: CircularProgressIndicator())
+        ? const Material(child: Center(child: CircularProgressIndicator()))
         : Material(
             child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -126,7 +127,10 @@ class _ChatState extends State<Chat> {
                           middle: Text(targetName),
                           trailing: CupertinoButton(
                               padding: EdgeInsets.zero,
-                              onPressed: () {},
+                              onPressed: () {
+                                chatViewModel.refreshChatsForCurrentUser();
+                                Get.back();
+                              },
                               child: Icon(CupertinoIcons.phone))),
                       child: SafeArea(
                         child: Column(

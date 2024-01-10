@@ -5,10 +5,12 @@ import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_main_page.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_first_screen.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_screen.dart';
+import 'package:brain_training_app/admin/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/admin/games/common/ui/pages/games_result_categories.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_patient_list.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_score_overview.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
+import 'package:brain_training_app/admin/home/ui/widgets/home_content.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_appt.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
@@ -16,8 +18,10 @@ import 'package:brain_training_app/admin/patients/ui/pages/patient_overview.dart
 import 'package:brain_training_app/admin/admins/ui/pages/admin_overview.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_shout.dart';
 import 'package:brain_training_app/admin/profile/ui/pages/admin_edit_profile.dart';
+import 'package:brain_training_app/admin/profile/ui/pages/admin_profile.dart';
 import 'package:brain_training_app/common/domain/entity/math_ans.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
+import 'package:brain_training_app/patient/appointment/ui/page/appointment_calendar_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/my_appointment_page.dart';
 import 'package:brain_training_app/patient/authentification/signIn/ui/page/forget_password_page.dart';
@@ -73,6 +77,7 @@ class RouteHelper {
   static const String mathGame = '/math-game';
 
   static const String appointmentBookingPage = '/appointment-booking-page';
+  static const String appointmentCalendarPage = '/appointment-calendar-page';
   static const String appointmentEditPage = '/appointment-edit-page';
   static const String appointmentSuccessPage = '/appointment-success-page';
   static const String myAppointmentPage = '/my-appointment-page';
@@ -82,6 +87,8 @@ class RouteHelper {
   static const String adminSignUpSecondScreen = '/admin-signup-second-screen';
   static const String adminHome = '/admin-home';
   static const String adminRegister = '/admin-register';
+  static const String adminHomeContent = '/admin-home-content';
+  static const String adminProfile = '/admin-profile';
 
   // *Admin Appointment*
   static const String adminAppointmentPage = '/admin-appointment-page';
@@ -105,6 +112,9 @@ class RouteHelper {
   // *Admin maths*
   static const String mathPatientList = '/math-patient-list';
   static const String mathScoreOverview = '/math-score-overview';
+
+  // *Admin chat*
+  static const String adminChatList = '/admin-chat-list';
 
   // chat module
   static const String chatList = '/chat-list';
@@ -136,6 +146,7 @@ class RouteHelper {
   static String getMathGame() => mathGame;
 
   static String getAppointmentBookingPage() => appointmentBookingPage;
+  static String getAppointmentCalendarPage() => appointmentCalendarPage;
   static String getAppointmentEditPage() => appointmentEditPage;
   static String getAppointmentSuccessPage() => appointmentSuccessPage;
   static String getMyAppointmentPage() => myAppointmentPage;
@@ -150,6 +161,8 @@ class RouteHelper {
   static String getAdminSignUpSecondScreen() => adminSignUpSecondScreen;
   static String getAdminHome() => adminHome;
   static String getAdminRegister() => adminRegister;
+  static String getAdminHomeContent() => adminHomeContent;
+  static String getAdminProfile() => adminProfile;
 
   // *Admin Appointment*
   static String getAdminAppointmentPage() => adminAppointmentPage;
@@ -173,6 +186,9 @@ class RouteHelper {
   // *Admin maths*
   static String getMathPatientList() => mathPatientList;
   static String getMathScoreOverview() => mathScoreOverview;
+
+  // *Admin chat*
+  static String getAdminChatList() => adminChatList;
 
   static List<GetPage> routes = [
     GetPage(
@@ -290,6 +306,13 @@ class RouteHelper {
       },
     ),
     GetPage(
+      name: appointmentCalendarPage,
+      transition: Transition.fadeIn,
+      page: () {
+        return AppointmentCalendarPage();
+      },
+    ),
+    GetPage(
       name: appointmentEditPage,
       transition: Transition.fadeIn,
       page: () {
@@ -340,12 +363,27 @@ class RouteHelper {
     GetPage(
       name: adminHome,
       transition: Transition.fadeIn,
-      page: () => AdminHomePage(),
+      page: () {
+        int? pageIndex = Get.arguments;
+        return AdminHomePage(
+          pageIndex: pageIndex,
+        );
+      },
     ),
     GetPage(
       name: adminRegister,
       transition: Transition.fadeIn,
       page: () => const AdminRegisterPage(),
+    ),
+    GetPage(
+      name: adminHomeContent,
+      transition: Transition.fadeIn,
+      page: () => const HomeContent(),
+    ),
+    GetPage(
+      name: adminProfile,
+      transition: Transition.fadeIn,
+      page: () => const AdminProfile(),
     ),
     // *Admin Appointment*
     GetPage(
@@ -447,6 +485,12 @@ class RouteHelper {
           mathAns: mathAns,
         );
       },
+    ),
+    // *Admin chat*
+    GetPage(
+      name: adminChatList,
+      transition: Transition.fadeIn,
+      page: () => const AdminChatList(),
     ),
   ];
 }

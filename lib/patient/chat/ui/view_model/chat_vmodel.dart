@@ -44,9 +44,7 @@ class ChatViewModel extends GetxController {
     String fileName = Uuid().v1();
 
     if (imagefile == null) return;
-    print("Uploading file step");
     final storageRef = FirebaseStorage.instance.ref();
-    print(storageRef ?? "not found for storage ref");
     final chatImgRef = storageRef.child(
         '${FirebaseAuth.instance.currentUser?.uid}/photos/${fileName}.jpg');
 
@@ -61,13 +59,10 @@ class ChatViewModel extends GetxController {
   }
 
   Future<bool> sendImageMessage(MessageChat chat) async {
-    print("Got enter initially");
     bool res = false;
     await uploadFile();
-    print("Hehhh" + _chatImgUrl.toString());
     if (_chatImgUrl != null) {
       chat.setMsg(_chatImgUrl);
-      print("Image url in vmodel" + chat.getMsg!);
       res = await Get.find<ChatService>().sendChatMessage(chat);
       _chatImgUrl = null;
     }
@@ -76,7 +71,6 @@ class ChatViewModel extends GetxController {
   }
 
   void refreshChatsForCurrentUser() {
-    print("Chat view model " + currentUser.toString());
     var chatDocuments = [];
     chats
         .where('users.$currentUser', isNull: true)
@@ -89,7 +83,7 @@ class ChatViewModel extends GetxController {
         return {'docid': doc.id, 'name': names.values.first};
       }).toList();
 
-      chatDocuments.forEach((doc) {
+      for (var doc in chatDocuments) {
         FirebaseFirestore.instance
             .collection('chats/${doc['docid']}/messages')
             .orderBy('createdOn', descending: true)
@@ -106,6 +100,13 @@ class ChatViewModel extends GetxController {
             };
           }
         });
+      }
+
+      // sort messages by the time
+      messages.values.toList().sort((a, b) {
+        DateTime timeA = a['time'].toDate();
+        DateTime timeB = b['time'].toDate();
+        return timeA.compareTo(timeB); // for descending order
       });
     });
   }

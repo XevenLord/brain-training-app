@@ -3,6 +3,7 @@ import 'package:brain_training_app/patient/appointment/ui/widget/doctor_card.dar
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -45,7 +46,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                     childAspectRatio: 0.75,
                     crossAxisSpacing: 16.w,
                     shrinkWrap: true, // Add this line
-                    // physics: NeverScrollableScrollPhysics(), // Add this line
+                    physics: const NeverScrollableScrollPhysics(), // Add this line
                     children: [
                       ...List.generate(
                         physiotherapists.length,
@@ -60,21 +61,18 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                             );
                             Get.toNamed(
                                 RouteHelper.getAppointmentBookingPage());
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => AppointmentBookingPage(
-                            //       practitionerName: physiotherapists[index].name!,
-                            //       imgUrl: physiotherapists[index].imgUrl!,
-                            //     ),
-                            //   ),
-                            // );
                           },
                         ),
                       ),
                     ]),
                 SizedBox(height: 32.h),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.brandBlue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
                   onPressed: () =>
                       Get.toNamed(RouteHelper.getMyAppointmentPage()),
                   child: Text("My Appointment"),

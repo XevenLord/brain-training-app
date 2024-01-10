@@ -19,13 +19,13 @@ class AdminProfile extends StatefulWidget {
 
 class _AdminProfileState extends State<AdminProfile> {
   late AdminProfileViewModel profileVM;
-  late AppUser appUser;
+  AppUser appUser = Get.find<AppUser>();
 
   @override
   void initState() {
+    super.initState();
     profileVM = Get.find<AdminProfileViewModel>();
     appUser = Get.find<AppUser>();
-    super.initState();
   }
 
   @override

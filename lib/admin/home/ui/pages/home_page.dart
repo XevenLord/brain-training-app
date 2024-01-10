@@ -1,11 +1,14 @@
 import 'package:brain_training_app/admin/chat/ui/pages/chat_list.dart';
+import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/admin/home/ui/widgets/home_content.dart';
 import 'package:brain_training_app/admin/profile/ui/pages/admin_profile.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AdminHomePage extends StatefulWidget {
-  AdminHomePage({Key? key}) : super(key: key);
+  int? pageIndex;
+  AdminHomePage({Key? key, this.pageIndex}) : super(key: key);
 
   @override
   State<AdminHomePage> createState() => _AdminHomePageState();
@@ -14,10 +17,21 @@ class AdminHomePage extends StatefulWidget {
 class _AdminHomePageState extends State<AdminHomePage> {
   int _currentIndex = 1;
 
+  AdminHomeViewModel homeViewModel = Get.find<AdminHomeViewModel>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.pageIndex != null) {
+      _currentIndex = widget.pageIndex!;
+    }
+  }
+
   final List<Widget> pages = [
-    AdminChatList(), // Your ChatList widget
-    HomeContent(), // Your Home content (you can rename it as needed)
-    AdminProfile(), // Your Profile widget
+    AdminChatList(), // Route name for Chat
+    HomeContent(), // Route name for Home
+    AdminProfile(), // Route name for Profile
   ];
 
   @override

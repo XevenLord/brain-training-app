@@ -91,6 +91,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
       time: time,
       reason: reason,
       physiotherapistID: chosenPhysiotherapist!.uid,
+      status: "pending",
     );
     apptRef = await AppointmentService.onSubmitAppointmentDetails(appointment);
 

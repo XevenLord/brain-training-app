@@ -26,7 +26,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
   @override
   void initState() {
     setState(() {
-      timeSlots = timeSlotsTemplate;
+      updateTimeSlots();
     });
     _appointmentViewModel = Get.find<AppointmentViewModel>();
     _appointmentViewModel.getAppointmentsByPhysiotherapistID().then((value) {
@@ -38,8 +38,8 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay = DateTime.now();
+  DateTime _focusedDay = DateTime.now().add(const Duration(days: 1));
+  DateTime _selectedDay = DateTime.now().add(const Duration(days: 1));
   String storedTimeSlot = "";
   int timeSlotIndex = -1;
 
@@ -70,27 +70,73 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
     setState(() {});
   }
 
+  List<dynamic> checkCurrentDateWithTimeSlot(
+      {required List<dynamic> timeSlots}) {
+    if (DateFormat('yyyy-MM-dd').format(_selectedDay) ==
+        DateFormat('yyyy-MM-dd').format(DateTime.now())) {
+      final currentTime = DateTime.now();
+      final currentHour = currentTime.hour;
+      final currentMinute = currentTime.minute;
+      List<dynamic> slots = List.from(timeSlots);
+      for (int i = 0; i < slots.length; i++) {
+        final timeParts = slots[i].split(' ');
+        final time = timeParts[0];
+        final period = timeParts[1];
+
+        final hourMinute = time.split(':');
+        var hour = int.parse(hourMinute[0]);
+        final minute = int.parse(hourMinute[1]);
+
+        // Adjust hour for PM time slots
+        if (period == 'PM' && hour != 12) {
+          hour += 12;
+        }
+
+        if (hour < currentHour) {
+          timeSlots.remove(slots[i]);
+        } else if (hour == currentHour && minute < currentMinute) {
+          timeSlots.remove(slots[i]);
+        }
+      }
+    }
+    return timeSlots;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          // shadowColor: AppColors.white,
-          foregroundColor: AppColors.brandBlue,
-          backgroundColor: AppColors.white,
-          centerTitle: true,
-          title: Text(
-            'New Appointment',
-            style: AppTextStyle.h2,
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        // shadowColor: AppColors.white,
+        foregroundColor: AppColors.brandBlue,
+        backgroundColor: AppColors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'New Appointment',
+          style: AppTextStyle.h2,
         ),
-        body: Padding(
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TableCalendar(
+                  headerStyle: HeaderStyle(
+                    titleTextStyle: AppTextStyle.h3,
+                    formatButtonVisible: false,
+                    leftChevronIcon: const Icon(
+                      Icons.chevron_left,
+                      color: AppColors.brandBlue,
+                    ),
+                    rightChevronIcon: const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.brandBlue,
+                    ),
+                  ),
                   firstDay: DateTime.utc(2022, 10, 16),
                   lastDay: DateTime.utc(2030, 3, 14),
                   focusedDay: _focusedDay,
@@ -101,8 +147,31 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                     setState(() {
                       timeSlots = timeSlotsTemplate;
                       if (selectedDay.compareTo(DateTime.now()
-                              .subtract(const Duration(days: 1))) <
-                          0) return;
+                              .subtract(const Duration(days: 0))) <
+                          0) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  "Invalid Date",
+                                  style: AppTextStyle.h2,
+                                ),
+                                content: Text(
+                                  "Please select a valid date",
+                                  style: AppTextStyle.h3,
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      child: const Text("OK"))
+                                ],
+                              );
+                            });
+                        return;
+                      }
                       _selectedDay = selectedDay;
                       _focusedDay =
                           focusedDay; // update `_focusedDay` here as well
@@ -122,7 +191,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                     });
                   },
                   calendarStyle: CalendarStyle(
-                    isTodayHighlighted: true,
+                    isTodayHighlighted: false,
                     selectedDecoration: const BoxDecoration(
                       color: AppColors.brandBlue,
                       shape: BoxShape.circle,
@@ -188,18 +257,35 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                   maxLines: null,
                   style: AppTextStyle.h3.merge(AppTextStyle.lightGreyTextStyle),
                 ),
-                EmptyBox(
-                  margin:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.brandBlue,
-                    borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                  ),
                   child: InkWell(
                     onTap: () async {
-                      if (storedTimeSlot.isEmpty) return;
+                      if (storedTimeSlot.isEmpty) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  "No time slot is picked!",
+                                  style: AppTextStyle.h2,
+                                ),
+                                content: Text(
+                                  "Please select a time slot",
+                                  style: AppTextStyle.h3,
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      child: const Text("OK"))
+                                ],
+                              );
+                            });
+                        return;
+                      }
                       await _appointmentViewModel.setAppointment(
                         date: _selectedDay,
                         time: storedTimeSlot,
@@ -220,9 +306,19 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                         );
                       }
                     },
-                    child: Text(
-                      "Set Appointment",
-                      style: AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
+                    child: EmptyBox(
+                      margin: EdgeInsets.zero,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 16.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.brandBlue,
+                        borderRadius: BorderRadius.all(Radius.circular(10.r)),
+                      ),
+                      child: Text(
+                        "Set Appointment",
+                        style:
+                            AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
+                      ),
                     ),
                   ),
                 ),

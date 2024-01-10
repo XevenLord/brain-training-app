@@ -7,18 +7,18 @@ class Appointment {
   String? date;
   String? time;
   String? reason;
-  Physiotherapist? physiotherapistInCharge;
   String? physiotherapistID;
+  String? status;
 
   Appointment(
       {this.appointmentID,
       this.date,
       this.time,
       this.reason,
-      this.physiotherapistInCharge,
       this.patient,
       this.patientID,
-      this.physiotherapistID});
+      this.physiotherapistID,
+      this.status});
 
   Appointment.fromJson(Map<String, dynamic> json) {
     appointmentID = json['appointmentID'];
@@ -27,10 +27,8 @@ class Appointment {
     date = json['date'];
     time = json['time'];
     reason = json['reason'];
-    physiotherapistInCharge = json['physiotherapistInCharge'] != null
-        ? new Physiotherapist.fromJson(json['physiotherapistInCharge'])
-        : null;
     physiotherapistID = json['physiotherapistID'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -42,9 +40,7 @@ class Appointment {
     data['time'] = this.time;
     data['reason'] = this.reason;
     data['physiotherapistID'] = this.physiotherapistID;
-    if (this.physiotherapistInCharge != null) {
-      data['physiotherapistInCharge'] = this.physiotherapistInCharge!.toJson();
-    }
+    data['status'] = this.status;
     return data;
   }
 

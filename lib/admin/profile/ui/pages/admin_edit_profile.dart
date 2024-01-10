@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/profile/ui/view_model/profile_vmodel.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,17 +45,21 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
     emailController.text = widget.appUser.email!;
     phoneController.text = widget.appUser.phoneNumber!;
     genderController.text = widget.appUser.gender!;
-    dobController.text = DateFormat("yyyy-MM-dd").format(widget.appUser.dateOfBirth!);
-    if (widget.appUser.aboutMe != null) introController.text = widget.appUser.aboutMe!;
+    dobController.text =
+        DateFormat("yyyy-MM-dd").format(widget.appUser.dateOfBirth!);
+    if (widget.appUser.aboutMe != null) {
+      introController.text = widget.appUser.aboutMe!;
+    }
   }
 
   void updateProfile() async {
-    if (introController.text == null)
+    if (introController.text == null) {
       _fbKey.currentState!.fields["aboutMe"]!.didChange(null);
+    }
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
       await profileVModel.updateProfile(_fbKey.currentState!.value);
-      Get.back();
+      Get.offNamed(RouteHelper.getAdminHome(), arguments: 2);
     }
   }
 
@@ -155,7 +160,8 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                                         ),
                                       ),
                                     );
-                                  } else if (widget.appUser.profilePic != null) {
+                                  } else if (widget.appUser.profilePic !=
+                                      null) {
                                     // If no new image is available but appUser has a profilePic,
                                     // load the image from appUser.profilePic
                                     return CircleAvatar(
@@ -164,8 +170,8 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                                         borderRadius:
                                             BorderRadius.circular(69.r),
                                         child: Image(
-                                          image:
-                                              NetworkImage(widget.appUser.profilePic!),
+                                          image: NetworkImage(
+                                              widget.appUser.profilePic!),
                                           width: 100,
                                           height: 100,
                                           fit: BoxFit.fill,

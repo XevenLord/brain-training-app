@@ -29,6 +29,7 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   List<AdminAppointment>? filteredAppointments;
   List<AdminAppointment>? filteredMeAppointments;
   List<AdminAppointment>? filteredMeAppointmentsByDay;
+  List<AdminAppointment>? pendingAppointments;
   List<AppUser>? patients;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
@@ -51,6 +52,9 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
     appointments = await _appointmentViewModel.getAppointmentList();
     filterAppointmentByDay();
     filteredMeAppointments = _appointmentViewModel.filterAppointmentByMe();
+    pendingAppointments = filteredAppointments!
+        .where((element) => element.status == "pending")
+        .toList();
     filterMeAppointmentByDay();
     setState(() {});
   }
@@ -187,6 +191,7 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                     Expanded(
                       child: TabBarView(
                         children: [
+                          // All tab
                           Column(
                             children: <Widget>[
                               Expanded(
@@ -224,8 +229,49 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                               )
                             ],
                           ),
+                          // My tab
                           Column(
                             children: <Widget>[
+                              Stack(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      side: const BorderSide(
+                                        color: AppColors.brandBlue,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Appointment Requests",
+                                      style: AppTextStyle.h4.merge(
+                                          AppTextStyle.brandBlueTextStyle),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0, // Adjust the top position as needed
+                                    right:
+                                        0, // Adjust the right position as needed
+                                    child: Container(
+                                      padding: EdgeInsets.all(
+                                          6), // Adjust the padding as needed
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text(
+                                        "2",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Expanded(
                                 child: ListView(
                                   children: <Widget>[

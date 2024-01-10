@@ -45,6 +45,7 @@ Future<void> init() async {
   Get.lazyPut(() => MentalQuizViewModel());
   Get.lazyPut(() => MathGameViewModel(), fenix: true);
   Get.lazyPut(() => ManagePatientViewModel(), fenix: true);
+  Get.lazyPut(() => AdminHomeViewModel());
 
   // *Admin*
   // Admin Service

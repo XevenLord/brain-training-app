@@ -128,7 +128,10 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
+                              initialDate: widget.appointment.date! == ""
+                                  ? DateTime.now()
+                                  : DateTime.parse(
+                                      widget.appointment.date!),
                               firstDate: DateTime(1950),
                               lastDate: DateTime(2100));
 

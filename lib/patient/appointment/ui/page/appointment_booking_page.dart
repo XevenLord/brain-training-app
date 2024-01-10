@@ -1,10 +1,9 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
 import 'package:brain_training_app/common/ui/widget/icon_box.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
-import 'package:brain_training_app/patient/appointment/ui/page/appointment_calendar_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -147,22 +146,17 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
           )
         ],
       ),
-      bottomWidget: EmptyBox(
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        decoration: BoxDecoration(
-          color: AppColors.brandBlue,
-          borderRadius: BorderRadius.all(Radius.circular(10.r)),
-        ),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AppointmentCalendarPage(),
-              ),
-            );
-          },
+      bottomWidget: InkWell(
+        onTap: () {
+          Get.toNamed(RouteHelper.getAppointmentCalendarPage());
+        },
+        child: EmptyBox(
+          margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          decoration: BoxDecoration(
+            color: AppColors.brandBlue,
+            borderRadius: BorderRadius.all(Radius.circular(10.r)),
+          ),
           child: Text(
             "Book Appointment",
             style: AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),

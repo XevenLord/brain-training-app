@@ -91,6 +91,7 @@ class CategoryCard implements CategoryCardInterface {
                         fontSize: fontSize,
                         fontWeight: FontWeight.bold,
                       ).merge(AppTextStyle.h3),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 )),

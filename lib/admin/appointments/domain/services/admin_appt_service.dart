@@ -1,5 +1,4 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
-import 'package:brain_training_app/admin/appointments/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,13 +67,5 @@ class AdminAppointmentService {
     } on FirebaseException catch (e) {
       return false;
     }
-  }
-
-  static Future<List<Physiotherapist>> getPhysiotherapistList() {
-    return FirebaseFirestore.instance.collection("physiotherapists").get().then(
-          (value) => value.docs
-              .map((e) => Physiotherapist.fromJson(e.data()))
-              .toList(),
-        );
   }
 }

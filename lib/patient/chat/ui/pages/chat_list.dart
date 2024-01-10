@@ -116,6 +116,7 @@ class _ChatListState extends State<ChatList> {
                                   : data['msg'] ?? ""),
                               onTap: () => {
                                     Get.to(Chat(
+                                        key: UniqueKey(),
                                         targetName: data['targetName'],
                                         targetUid: physio.uid))
                                   });

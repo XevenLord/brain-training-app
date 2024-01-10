@@ -74,7 +74,7 @@ class AdminChatViewModel extends GetxController {
         return {'docid': doc.id, 'name': names.values.first};
       }).toList();
 
-      chatDocuments.forEach((doc) {
+      for (var doc in chatDocuments) {
         FirebaseFirestore.instance
             .collection('chats/${doc['docid']}/messages')
             .orderBy('createdOn', descending: true)
@@ -90,7 +90,7 @@ class AdminChatViewModel extends GetxController {
             };
           }
         });
-      });
+      }
     });
   }
 }

@@ -15,12 +15,14 @@ class AdminProfileViewModel extends GetxController implements GetxService {
   Future<bool> updateProfile(Map<String, dynamic> data) async {
     bool isUpdated = false;
     Map<String, dynamic> newData = {};
-    data.forEach((key, value) {
+    data.forEach((key, value) async {
       if (value != "") newData[key] = value;
+      if (key == "name") {
+        await AdminProfileService.updateNameInChats(value);
+      }
     });
     if (_profilePicUrl != null) newData['profilePic'] = _profilePicUrl;
     isUpdated = await AdminProfileService.onUpdateProfileDetails(newData);
-
     update();
     return isUpdated;
   }
@@ -47,33 +49,14 @@ class AdminProfileViewModel extends GetxController implements GetxService {
     }
   }
 
-  void _uploadFile() {
-    if (imagefile == null) return;
+  Future<void> _uploadFile() async {
+    if (imagefile.value == null) return;
     final storageRef = FirebaseStorage.instance.ref();
     final profileImagesRef = storageRef
         .child('${FirebaseAuth.instance.currentUser?.uid}/photos/profile.jpg');
 
-    profileImagesRef
-        .putFile(imagefile.value!)
-        .snapshotEvents
-        .listen((taskSnapshot) {
-      switch (taskSnapshot.state) {
-        case TaskState.running:
-          break;
-        case TaskState.paused:
-          break;
-        case TaskState.success:
-          profileImagesRef.getDownloadURL().then((value) {
-            _profilePicUrl = value;
-            update();
-            print(_profilePicUrl + ": updated profile pic url");
-          });
-          break;
-        case TaskState.error:
-          break;
-        case TaskState.canceled:
-          break;
-      }
+    await profileImagesRef.putFile(imagefile.value!).whenComplete(() async {
+      _profilePicUrl = await profileImagesRef.getDownloadURL();
     });
   }
 }

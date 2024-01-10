@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 
 class AdminHomeViewModel extends GetxController implements GetxService {
   AdminHomeViewModel();
-
   void signOutUser(BuildContext context) async {
     showDialog(
       context: context,

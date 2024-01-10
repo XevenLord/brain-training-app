@@ -20,7 +20,7 @@ class AppointmentSuccessPage extends StatelessWidget {
             children: [
               Center(child: Image.asset(AppConstant.APPOINTMENT_SUCCESS, width: 100.w)),
               SizedBox(height: 30.h),
-              Text("Appointment made successfully!", style: AppTextStyle.h2,
+              Text("Appointment request is sent! Please wait for the confirmation.", style: AppTextStyle.h2,
                   textAlign: TextAlign.center,),
               SizedBox(height: 50.h),
               ElevatedButton(

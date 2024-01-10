@@ -14,6 +14,7 @@ class AppointmentTile extends StatefulWidget {
   AppointmentTileType type;
   String? img;
   String time;
+  String? status;
   String doctorName;
 
   AppointmentTile(
@@ -22,6 +23,7 @@ class AppointmentTile extends StatefulWidget {
       this.onEdit,
       this.onDelete,
       this.img,
+      this.status,
       required this.time,
       required this.doctorName,
       required this.type});
@@ -65,7 +67,7 @@ class _AppointmentTileState extends State<AppointmentTile> {
                     style: AppTextStyle.c2.merge(AppTextStyle.greyTextStyle),
                     children: [
                       TextSpan(
-                        text: "In Charge By: ",
+                        text: "Consult with ",
                       ),
                       TextSpan(
                         text: widget.doctorName,
@@ -82,6 +84,22 @@ class _AppointmentTileState extends State<AppointmentTile> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                SizedBox(height: 10.h),
+                RichText(
+                  text: TextSpan(
+                    style: AppTextStyle.c2.merge(AppTextStyle.greyTextStyle),
+                    children: [
+                      TextSpan(
+                        text: "Status: ",
+                        style: AppTextStyle.c3,
+                      ),
+                      TextSpan(
+                        text: widget.status ?? "unknown",
+                        style: AppTextStyle.h4,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
             Column(
@@ -91,9 +109,11 @@ class _AppointmentTileState extends State<AppointmentTile> {
                     onTap: widget.onEdit,
                     child:
                         Icon(Icons.edit, size: 20.sp, color: AppColors.grey)),
+                SizedBox(height: 10.h),
                 InkWell(
                     onTap: widget.onDelete,
-                    child: Icon(Icons.delete, size: 20.sp, color: Colors.red)),
+                    child: Icon(Icons.delete,
+                        size: 20.sp, color: Color.fromARGB(255, 172, 39, 29))),
               ],
             )
           ],

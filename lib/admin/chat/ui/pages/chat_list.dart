@@ -120,6 +120,7 @@ class _AdminChatListState extends State<AdminChatList> {
                                       : data['msg'] ?? ""),
                                   onTap: () => {
                                         Get.to(Chat(
+                                            key: UniqueKey(),
                                             targetName: data['targetName'],
                                             targetUid: user.uid))
                                       });
