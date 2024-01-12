@@ -136,6 +136,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
                 labelStyle:
                     AppTextStyle.c2.merge(AppTextStyle.lightGreyTextStyle),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
+                floatingLabelAlignment: FloatingLabelAlignment.start,
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                 enabledBorder: OutlineInputBorder(

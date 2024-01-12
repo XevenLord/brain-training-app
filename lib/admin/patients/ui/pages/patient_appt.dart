@@ -73,7 +73,7 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
           child: appointments == null
               ? displayLoadingData()
               : appointments!.isEmpty
-                  ? displayEmptyDataLoaded("No appointment found", () {
+                  ? displayEmptyDataLoaded("No appointment found", onBack: () {
                       Get.back();
                     })
                   : SingleChildScrollView(

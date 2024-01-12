@@ -1,3 +1,5 @@
+import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -18,11 +20,16 @@ class PatientList extends StatefulWidget {
 class _PatientListState extends State<PatientList> {
   late UserRepository userRepo;
   late List<AppUser> patients;
+  late AdminAppointmentViewModel adminAppointmentViewModel;
+  List<AdminAppointment> appointments = [];
+
   bool isLoading = true;
 
   @override
   void initState() {
     userRepo = Get.find<UserRepository>();
+    adminAppointmentViewModel = Get.find<AdminAppointmentViewModel>();
+    appointments = adminAppointmentViewModel.appointments;
     fetchPatients();
     super.initState();
   }
@@ -85,8 +92,24 @@ class _PatientListState extends State<PatientList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...patients.map(
-                        (e) => InfoCardTile().buildInfoCard(
+                      ...patients.map((e) {
+                        AdminAppointment appt;
+
+                        try {
+                          appt = appointments
+                              .where((element) =>
+                                  element.patientID == e.uid &&
+                                  element.remark != null &&
+                                  element.remark!.isNotEmpty)
+                              .reduce((current, next) =>
+                                  DateTime.parse(current.date!)
+                                          .isAfter(DateTime.parse(next.date!))
+                                      ? current
+                                      : next);
+                        } catch (e) {
+                          appt = AdminAppointment();
+                        }
+                        return InfoCardTile().buildInfoCard(
                           shout: true,
                           name: e.name!,
                           age: calculateAge(e.dateOfBirth),
@@ -97,10 +120,10 @@ class _PatientListState extends State<PatientList> {
                           },
                           onEdit: () {
                             Get.toNamed(RouteHelper.getPatientOverviewPage(),
-                                arguments: e);
+                                arguments: [e, appt]);
                           },
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
                 ),

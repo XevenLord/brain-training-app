@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_page.dart';
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
@@ -24,7 +26,6 @@ class AdminAppointmentMainPage extends StatefulWidget {
 
 class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   late AdminAppointmentViewModel _appointmentViewModel;
-  late UserRepository? _userRepo;
   List<AdminAppointment>? appointments;
   List<AdminAppointment>? filteredAppointments;
   List<AdminAppointment>? filteredMeAppointments;
@@ -34,6 +35,9 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
+
+  bool showAll = false;
+  bool showMyAll = false;
 
   @override
   void initState() {
@@ -52,7 +56,7 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
     appointments = await _appointmentViewModel.getAppointmentList();
     filterAppointmentByDay();
     filteredMeAppointments = _appointmentViewModel.filterAppointmentByMe();
-    pendingAppointments = filteredAppointments!
+    pendingAppointments = filteredMeAppointments!
         .where((element) => element.status == "pending")
         .toList();
     filterMeAppointmentByDay();
@@ -68,6 +72,15 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   void filterAppointmentByDay() {
     filteredAppointments = _appointmentViewModel.filterAppointmentByDay(
         day: _selectedDay, appts: appointments!);
+    if (filteredAppointments == null || filteredAppointments!.isEmpty) {
+      filteredAppointments = [];
+      return;
+    }
+    filteredAppointments = filteredAppointments!.where(
+      (element) {
+        return element.status == "approved" || element.status == "completed";
+      },
+    ).toList();
     filteredAppointments = filteredAppointments!.reversed.toList();
     setState(() {});
   }
@@ -75,6 +88,16 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   void filterMeAppointmentByDay() {
     filteredMeAppointmentsByDay = _appointmentViewModel.filterAppointmentByDay(
         day: _selectedDay, appts: filteredMeAppointments!);
+    if (filteredMeAppointmentsByDay == null ||
+        filteredMeAppointmentsByDay!.isEmpty) {
+      filteredMeAppointmentsByDay = [];
+      return;
+    }
+    filteredMeAppointmentsByDay = filteredMeAppointmentsByDay!.where(
+      (element) {
+        return element.status == "approved" || element.status == "completed";
+      },
+    ).toList();
     filteredMeAppointmentsByDay =
         filteredMeAppointmentsByDay!.reversed.toList();
     setState(() {});
@@ -98,15 +121,22 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
     return age.toString();
   }
 
-  void navigateToEditPage(AdminAppointment appointment) async {
-    final result = await Get.to(
-      AdminAppointmentEditPage(appointment: appointment),
-    );
+  void navigateToEditPage(AdminAppointment appointment, AppUser patient) async {
+    final result = await Get.toNamed(RouteHelper.getAdminAppointmentEditPage(),
+        arguments: {
+          "appointment": appointment,
+          "patient": patient,
+        });
 
-    // Check if the result is true (operation was successful)
     if (result == true) {
-      getAppointmentList(); // Fetch updated data
+      getAppointmentList();
     }
+  }
+
+  void onCompleteAppointment(AdminAppointment appointment) {
+    _appointmentViewModel.completeAppointment(appointment: appointment);
+    appointment.status = "completed";
+    setState(() {});
   }
 
   @override
@@ -212,7 +242,9 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                                           time: appt.time!,
                                           appointment: appt,
                                           onEdit: () =>
-                                              navigateToEditPage(appt),
+                                              navigateToEditPage(appt, patient),
+                                          onComplete: () =>
+                                              onCompleteAppointment(appt),
                                         );
                                       }).toList(),
                                     if (filteredAppointments!.isEmpty)
@@ -232,46 +264,58 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                           // My tab
                           Column(
                             children: <Widget>[
-                              Stack(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: const BorderSide(
-                                        color: AppColors.brandBlue,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      "Appointment Requests",
-                                      style: AppTextStyle.h4.merge(
-                                          AppTextStyle.brandBlueTextStyle),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 0, // Adjust the top position as needed
-                                    right:
-                                        0, // Adjust the right position as needed
-                                    child: Container(
-                                      padding: EdgeInsets.all(
-                                          6), // Adjust the padding as needed
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        shape: BoxShape.circle,
+                              SizedBox(height: 10.w),
+                              if (pendingAppointments!.isNotEmpty)
+                                Stack(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Get.toNamed(
+                                            RouteHelper
+                                                .getAdminAppointmentViewRequests(),
+                                            arguments: [
+                                              pendingAppointments,
+                                              patients
+                                            ]);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        side: const BorderSide(
+                                          color: AppColors.brandBlue,
+                                          width: 1,
+                                        ),
                                       ),
                                       child: Text(
-                                        "2",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+                                        "Appointment Requests",
+                                        style: AppTextStyle.h4.merge(
+                                            AppTextStyle.brandBlueTextStyle),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top:
+                                          0, // Adjust the top position as needed
+                                      right:
+                                          0, // Adjust the right position as needed
+                                      child: Container(
+                                        padding: const EdgeInsets.all(
+                                            6), // Adjust the padding as needed
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Text(
+                                          pendingAppointments!.length
+                                              .toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
                               Expanded(
                                 child: ListView(
                                   children: <Widget>[
@@ -291,7 +335,9 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                                           time: appt.time!,
                                           appointment: appt,
                                           onEdit: () =>
-                                              navigateToEditPage(appt),
+                                              navigateToEditPage(appt, patient),
+                                          onComplete: () =>
+                                              onCompleteAppointment(appt),
                                         );
                                       }).toList(),
                                     if (filteredMeAppointmentsByDay!.isEmpty)
@@ -327,6 +373,7 @@ class AppointmentCard extends StatelessWidget {
   final String time;
   AdminAppointment appointment;
   Function()? onEdit;
+  Function()? onComplete;
 
   AppointmentCard({
     required this.name,
@@ -336,6 +383,7 @@ class AppointmentCard extends StatelessWidget {
     required this.time,
     required this.appointment,
     this.onEdit,
+    this.onComplete,
   });
 
   @override
@@ -359,12 +407,15 @@ class AppointmentCard extends StatelessWidget {
             ],
           ),
           CardWidget(
-              name: name,
-              age: age,
-              gender: gender,
-              reason: reason,
-              appointment: appointment,
-              onEdit: onEdit),
+            name: name,
+            age: age,
+            gender: gender,
+            reason: reason,
+            status: appointment.status!,
+            appointment: appointment,
+            onEdit: onEdit,
+            onComplete: onComplete,
+          ),
         ],
       ),
     );
@@ -376,21 +427,24 @@ class CardWidget extends StatelessWidget {
   final String age;
   final String gender;
   final String reason;
+  final String status;
   AdminAppointment appointment;
   Function()? onEdit;
+  Function()? onComplete;
 
   CardWidget({
     required this.name,
     required this.age,
     required this.gender,
     required this.reason,
+    required this.status,
     required this.appointment,
     this.onEdit,
+    this.onComplete,
   });
 
   @override
   Widget build(BuildContext context) {
-    DateTime apptDate = DateFormat('yyyy-MM-dd').parse(appointment.date!);
     return Container(
       margin: const EdgeInsets.only(top: 8.0),
       padding: const EdgeInsets.all(16.0),
@@ -417,10 +471,12 @@ class CardWidget extends StatelessWidget {
           ),
           SizedBox(height: 8.w),
           InformationRow(title: 'Age', value: age),
-          SizedBox(height: 4.w),
+          SizedBox(height: 2.w),
           InformationRow(title: 'Gender', value: gender),
-          SizedBox(height: 4.w),
+          SizedBox(height: 2.w),
           InformationRow(title: 'Reason', value: reason),
+          SizedBox(height: 2.w),
+          InformationRow(title: 'Status', value: status),
           SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -435,17 +491,33 @@ class CardWidget extends StatelessWidget {
                       onPressed: onEdit,
                       icon: const Icon(Icons.edit, color: Colors.blue))),
               Container(
-                  width: 50.w,
                   height: 50.w,
+                  width: appointment.status == "completed" ? 50.w : 120.w,
                   decoration: BoxDecoration(
-                      color: apptDate.isBefore(DateTime.now())
+                      color: appointment.status == "completed"
                           ? Colors.green
                           : AppColors.lightBlue,
-                      borderRadius: BorderRadius.circular(10.w)),
-                  child: Icon(Icons.check,
-                      color: apptDate.isBefore(DateTime.now())
-                          ? Colors.white
-                          : Colors.blue)),
+                      borderRadius: BorderRadius.circular(20.w)),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: appointment.status == "completed"
+                          ? Colors.green
+                          : AppColors.lightBlue,
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: onComplete,
+                    child: appointment.status == "completed"
+                        ? const Icon(Icons.check, color: Colors.white)
+                        : Text(
+                            "Complete",
+                            style: AppTextStyle.h3
+                                .merge(AppTextStyle.brandBlueTextStyle),
+                          ),
+                    // Icon(Icons.check,
+                    //     color: appointment.status == "completed"
+                    //         ? Colors.white
+                    //         : Colors.blue),
+                  )),
             ],
           ),
         ],

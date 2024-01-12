@@ -198,6 +198,13 @@ class _HomePageState extends State<HomePage> {
       ),
       noBackBtn: true,
       body: currentScreen(),
+      floatingActionButton: _selectedIndex == 2
+          ? FloatingActionButton.extended(
+              backgroundColor: AppColors.brandBlue,
+              onPressed: () => Get.toNamed(RouteHelper.getMyAppointmentPage()),
+              label: Text("My Appointment", style: AppTextStyle.h4),
+            )
+          : null,
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         backgroundColor: AppColors.white,

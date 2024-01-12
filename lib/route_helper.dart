@@ -3,6 +3,7 @@ import 'package:brain_training_app/admin/admins/ui/pages/admin_register.dart';
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_edit_page.dart';
 import 'package:brain_training_app/admin/appointments/ui/pages/appointment_main_page.dart';
+import 'package:brain_training_app/admin/appointments/ui/pages/appointment_view_requests.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_first_screen.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_screen.dart';
 import 'package:brain_training_app/admin/chat/ui/pages/chat_list.dart';
@@ -11,6 +12,7 @@ import 'package:brain_training_app/admin/games/maths/ui/math_patient_list.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_score_overview.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
 import 'package:brain_training_app/admin/home/ui/widgets/home_content.dart';
+import 'package:brain_training_app/admin/insMssg/ui/pages/ins_mssg_general_home.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_appt.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
@@ -93,6 +95,8 @@ class RouteHelper {
   // *Admin Appointment*
   static const String adminAppointmentPage = '/admin-appointment-page';
   static const String adminAppointmentEditPage = '/admin-appointment-edit-page';
+  static const String adminAppointmentViewRequests =
+      '/admin-appointment-view-requests';
 
   // *Admin List*
   static const String adminListPage = '/admin-list-page';
@@ -115,6 +119,9 @@ class RouteHelper {
 
   // *Admin chat*
   static const String adminChatList = '/admin-chat-list';
+
+  // *Admin Inspirational Message*
+  static const String adminInsMssg = '/admin-ins-mssg';
 
   // chat module
   static const String chatList = '/chat-list';
@@ -167,6 +174,8 @@ class RouteHelper {
   // *Admin Appointment*
   static String getAdminAppointmentPage() => adminAppointmentPage;
   static String getAdminAppointmentEditPage() => adminAppointmentEditPage;
+  static String getAdminAppointmentViewRequests() =>
+      adminAppointmentViewRequests;
 
   // *Admin List*
   static String getAdminListPage() => adminListPage;
@@ -189,6 +198,9 @@ class RouteHelper {
 
   // *Admin chat*
   static String getAdminChatList() => adminChatList;
+
+  // *Admin Inspirational Message*
+  static String getAdminInsMssg() => adminInsMssg;
 
   static List<GetPage> routes = [
     GetPage(
@@ -395,9 +407,23 @@ class RouteHelper {
       name: adminAppointmentEditPage,
       transition: Transition.fadeIn,
       page: () {
-        AdminAppointment appointment = Get.arguments;
+        AdminAppointment appointment = Get.arguments["appointment"];
+        AppUser patient = Get.arguments["patient"];
         return AdminAppointmentEditPage(
           appointment: appointment,
+          patient: patient,
+        );
+      },
+    ),
+    GetPage(
+      name: adminAppointmentViewRequests,
+      transition: Transition.fadeIn,
+      page: () {
+        List<AdminAppointment> appointments = Get.arguments[0];
+        List<AppUser> patients = Get.arguments[1];
+        return AppointmentViewRequests(
+          appointments: appointments,
+          patients: patients,
         );
       },
     ),
@@ -434,8 +460,9 @@ class RouteHelper {
       name: patientOverviewPage,
       transition: Transition.fadeIn,
       page: () {
-        AppUser patient = Get.arguments;
-        return PatientOverview(patient: patient);
+        AppUser patient = Get.arguments[0];
+        AdminAppointment appointment = Get.arguments[1];
+        return PatientOverview(patient: patient, appointment: appointment);
       },
     ),
     GetPage(
@@ -491,6 +518,12 @@ class RouteHelper {
       name: adminChatList,
       transition: Transition.fadeIn,
       page: () => const AdminChatList(),
+    ),
+    // *Admin Inspirational Message*
+    GetPage(
+      name: adminInsMssg,
+      transition: Transition.fadeIn,
+      page: () => const InspirationalMssgGeneralHome(),
     ),
   ];
 }

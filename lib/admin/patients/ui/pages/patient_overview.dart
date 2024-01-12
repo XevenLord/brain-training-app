@@ -1,8 +1,8 @@
+import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
 import 'package:brain_training_app/common/ui/widget/information_row.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
-import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +11,10 @@ import 'package:get/get.dart';
 
 class PatientOverview extends StatefulWidget {
   AppUser patient;
+  AdminAppointment appointment;
 
-  PatientOverview({required this.patient, super.key});
+  PatientOverview(
+      {required this.patient, required this.appointment, super.key});
 
   @override
   State<PatientOverview> createState() => _PatientOverviewState();
@@ -113,115 +115,94 @@ class _PatientOverviewState extends State<PatientOverview> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Column(children: [
-          CircleAvatar(
-            radius: 60.r,
-            child: widget.patient.profilePic != null &&
-                    widget.patient.profilePic!.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(60.r),
-                    child: Image(
-                      image: NetworkImage(widget.patient.profilePic! as String),
+        child: SingleChildScrollView(
+          child: Column(children: [
+            CircleAvatar(
+              radius: 60.r,
+              child: widget.patient.profilePic != null &&
+                      widget.patient.profilePic!.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(60.r),
+                      child: Image(
+                        image:
+                            NetworkImage(widget.patient.profilePic! as String),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fill,
+                      ))
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(50),
+                      ),
                       width: 100,
                       height: 100,
-                      fit: BoxFit.fill,
-                    ))
-                : Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    width: 100,
-                    height: 100,
-                    child: Icon(
-                      Icons.camera_alt,
-                      color: Colors.grey[800],
-                    )),
-          ),
-          SizedBox(height: 10.w),
-          Text(widget.patient.name!, style: AppTextStyle.h2),
-          InformationRow(
-              title: "Age",
-              value: calculateAge(widget.patient.dateOfBirth),
-              padding: EdgeInsets.only(top: 10.w)),
-          InformationRow(
-              title: "Gender",
-              value: widget.patient.gender!,
-              padding: EdgeInsets.only(top: 8.w)),
-          InformationRow(
-              title: "Phone Number",
-              value: widget.patient.phoneNumber!,
-              padding: EdgeInsets.only(top: 8.w)),
-          InformationRow(
-              title: "Email",
-              value: widget.patient.email!,
-              padding: EdgeInsets.only(top: 8.w, bottom: 16.w)),
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(4),
-          //   child: SizedBox(
-          //     height: 40.w,
-          //     child: Stack(
-          //       children: <Widget>[
-          //         Positioned.fill(
-          //           child: Container(
-          //             decoration: const BoxDecoration(
-          //               gradient: LinearGradient(
-          //                 colors: <Color>[
-          //                   Color(0xFF0D47A1),
-          //                   Color(0xFF1976D2),
-          //                   Color(0xFF42A5F5),
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //         TextButton(
-          //           style: TextButton.styleFrom(
-          //             foregroundColor: Colors.white,
-          //             padding: const EdgeInsets.symmetric(
-          //                 vertical: 4, horizontal: 16.0),
-          //             textStyle: const TextStyle(fontSize: 14),
-          //           ),
-          //           onPressed: () {},
-          //           child: const Text('Edit Patient Profile'),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          SizedBox(height: 20.w),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("History Records", style: AppTextStyle.h2),
-              // TextButton(
-              //   onPressed: () {},
-              //   child: Text("PDF"),
-              // ),
-            ],
-          ),
-          SizedBox(height: 20.w),
-          Expanded(
-            child: SingleChildScrollView(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: historyCategories.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: CategoryCard().buildCategoryCard(
-                      category: historyCategories[index]["category"],
-                      icon: historyCategories[index]["icon"],
-                      gradient: historyCategories[index]["gradient"],
-                      onTap: historyCategories[index]["onTap"],
-                    ),
-                  );
-                },
-              ),
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.grey[800],
+                      )),
             ),
-          ),
-        ]),
+            SizedBox(height: 10.w),
+            Text(widget.patient.name!, style: AppTextStyle.h2),
+            InformationRow(
+                title: "Age",
+                value: calculateAge(widget.patient.dateOfBirth),
+                padding: EdgeInsets.only(top: 10.w)),
+            InformationRow(
+                title: "Gender",
+                value: widget.patient.gender!,
+                padding: EdgeInsets.only(top: 8.w)),
+            InformationRow(
+                title: "Phone Number",
+                value: widget.patient.phoneNumber!,
+                padding: EdgeInsets.only(top: 8.w)),
+            InformationRow(
+                title: "Email",
+                value: widget.patient.email!,
+                padding: EdgeInsets.only(top: 8.w)),
+            InformationRow(
+                title: "Stroke Level",
+                value: widget.patient.strokeType!,
+                padding: EdgeInsets.only(top: 8.w, bottom: 16.w)),
+            SizedBox(height: 20.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("Latest Remark", style: AppTextStyle.h2),
+                SizedBox(height: 10.w),
+                Text(
+                  widget.appointment.remark ?? "No remark yet",
+                  style: AppTextStyle.c2,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            SizedBox(height: 20.w),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("History Records", style: AppTextStyle.h2),
+              ],
+            ),
+            SizedBox(height: 20.w),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: historyCategories.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: CategoryCard().buildCategoryCard(
+                    category: historyCategories[index]["category"],
+                    icon: historyCategories[index]["icon"],
+                    gradient: historyCategories[index]["gradient"],
+                    onTap: historyCategories[index]["onTap"],
+                  ),
+                );
+              },
+            ),
+          ]),
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -56,12 +57,33 @@ class _HomeContentState extends State<HomeContent> {
       "icon": Icons.edit_document,
       "onTap": () {},
     },
-     {
+    {
       "category": "Inspirational Message",
-      "icon": Icons.edit_document,
+      "icon": Icons.note,
+      "onTap": () {
+        Get.toNamed(RouteHelper.getAdminInsMssg());
+      },
+    },
+    {
+      "category": "Feedback",
+      "icon": Icons.feedback,
       "onTap": () {},
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAppointments();
+  }
+
+  void fetchAppointments() async {
+    try {
+      await Get.find<AdminAppointmentViewModel>().getAppointmentList();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

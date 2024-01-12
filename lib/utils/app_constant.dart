@@ -78,7 +78,9 @@ displayLoadingData() {
   );
 }
 
-displayEmptyDataLoaded(String message, Function()? onBack) {
+displayEmptyDataLoaded(String message,
+    {bool? showBackArrow = true, Function()? onBack}) {
+  onBack ??= () => Get.back();
   return Stack(
     children: [
       Center(
@@ -91,16 +93,18 @@ displayEmptyDataLoaded(String message, Function()? onBack) {
               width: 200,
             ),
             SizedBox(height: 20.h),
-            Text(message, style: AppTextStyle.h1),
+            Text(message, style: AppTextStyle.h1, textAlign: TextAlign.center,),
           ],
         ),
       ),
-      Positioned(
-        child: IconButton(
-          onPressed: onBack ?? () => Get.back(),
-          icon: Icon(Icons.arrow_back),
-        ),
-      ),
+      showBackArrow!
+          ? Positioned(
+              child: IconButton(
+                onPressed: onBack,
+                icon: const Icon(Icons.arrow_back),
+              ),
+            )
+          : Container(),
     ],
   );
 }

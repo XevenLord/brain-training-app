@@ -3,7 +3,6 @@ import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
 import 'package:brain_training_app/patient/appointment/domain/service/appointment_service.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
-import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,6 +11,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
   AppointmentViewModel();
   List<AppUser> physiotherapistList = [];
   List<Appointment> appointments = [];
+  List<Appointment> appointmentsByID = [];
   AppUser? chosenPhysiotherapist;
 
   String? apptRef;

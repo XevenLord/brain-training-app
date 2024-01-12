@@ -22,6 +22,7 @@ class Screen extends StatelessWidget {
   final bool bodyCenter;
   final bool hasTopPadding;
   final bool useSingleChildScrollView;
+  Widget? floatingActionButton;
 
   Screen({
     super.key,
@@ -42,6 +43,7 @@ class Screen extends StatelessWidget {
     this.bodyCenter = false,
     this.hasTopPadding = true,
     this.useSingleChildScrollView = true,
+    this.floatingActionButton,
   });
 
   double topPadding() {
@@ -62,7 +64,6 @@ class Screen extends StatelessWidget {
                   left: (hasHorizontalPadding) ? 30.w : 0,
                   right: (hasHorizontalPadding) ? 30.w : 0,
                   top: noBackBtn ? 0 : topPadding(),
-                  bottom: 30.h,
                 ),
                 child: body,
               ),
@@ -72,7 +73,6 @@ class Screen extends StatelessWidget {
                 left: (hasHorizontalPadding) ? 30.w : 0,
                 right: (hasHorizontalPadding) ? 30.w : 0,
                 top: noBackBtn ? 0 : topPadding(),
-                bottom: 30.h,
               ),
               child: body,
             ),
@@ -111,6 +111,7 @@ class Screen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: floatingActionButton,
     );
   }
 }

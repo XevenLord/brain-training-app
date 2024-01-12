@@ -12,6 +12,7 @@ import 'package:table_calendar/table_calendar.dart';
 class AdminAppointmentViewModel extends GetxController implements GetxService {
   List<AdminAppointment> appointments = [];
   List<AppUser> physiotherapistList = [];
+  List<AppUser> patientList = [];
   bool isAppointmentSet = false;
 
   Future<List<AdminAppointment>> getAppointmentList() async {
@@ -51,6 +52,11 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
     return physiotherapistList;
   }
 
+  Future<List<AppUser>> getPatientList() async {
+    patientList = await UserRepository.fetchAllPatients();
+    return patientList;
+  }
+
   List<AdminAppointment> filterAppointmentByMe() {
     return appointments
         .where(
@@ -72,11 +78,16 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
       {required AdminAppointment appointment,
       required String date,
       required String time,
-      required String reason}) async {
+      required String reason,
+      String? remark}) async {
     String oldDate = appointment.date!;
     appointment.date = date;
     appointment.time = time;
     appointment.reason = reason;
+    if (remark != null && remark.isNotEmpty) {
+      appointment.remark = remark;
+      await updateStatusAppointment(appointment: appointment);
+    }
     await AdminAppointmentService.updateAppointment(appointment, oldDate);
     AppUser physio = physiotherapistList
         .firstWhere((element) => element.uid == appointment.physiotherapistID);
@@ -91,6 +102,39 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
       scheduledDate: createDateWithTimeSlot(
           date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
     );
+  }
+
+  Future<void> updateStatusAppointment(
+      {required AdminAppointment appointment}) async {
+    if (appointment.remark != null && appointment.remark!.isNotEmpty) {
+      appointment.status = "completed";
+    }
+  }
+
+  Future<void> approveAppointment(
+      {required AdminAppointment appointment}) async {
+    await AdminAppointmentService.approveAppointment(appointment);
+    AppUser patient = patientList
+        .firstWhere((element) => element.uid == appointment.patientID);
+    DateTime newDate = DateFormat('yyyy-MM-dd').parse(appointment.date!);
+    NotificationAPI.showScheduledNotification(
+      id: appointment.appointmentID.hashCode,
+      title: "Appointment with ${patient.name}",
+      body: "Meet you on ${formatDateTime(newDate)}, ${appointment.time}",
+      payload: "This is the payload of the notification",
+      // scheduledDate:
+      //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
+      scheduledDate: createDateWithTimeSlot(
+          date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
+    );
+  }
+
+  Future<void> completeAppointment({required AdminAppointment appointment}) {
+    return AdminAppointmentService.completeAppointment(appointment);
+  }
+
+  Future<void> declineAppointment({required AdminAppointment appointment}) {
+    return AdminAppointmentService.declineAppointment(appointment);
   }
 
   Future<void> cancelAppointment(

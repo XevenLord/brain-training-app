@@ -68,4 +68,46 @@ class AdminAppointmentService {
       return false;
     }
   }
+
+  static Future<bool> approveAppointment(AdminAppointment appointment) async {
+    try {
+      await Future.wait([
+        FirebaseFirestore.instance
+            .collection("appointments")
+            .doc(appointment.appointmentID)
+            .set({"status": "approved"}, SetOptions(merge: true)),
+      ]);
+      return true;
+    } on FirebaseException catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> declineAppointment(AdminAppointment appointment) async {
+    try {
+      await Future.wait([
+        FirebaseFirestore.instance
+            .collection("appointments")
+            .doc(appointment.appointmentID)
+            .set({"status": "declined"}, SetOptions(merge: true)),
+      ]);
+      return true;
+    } on FirebaseException catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> completeAppointment(AdminAppointment appointment) async {
+    try {
+      await Future.wait([
+        FirebaseFirestore.instance
+            .collection("appointments")
+            .doc(appointment.appointmentID)
+            .set({"status": "completed"}, SetOptions(merge: true)),
+      ]);
+      return true;
+    } on FirebaseException catch (e) {
+      return false;
+    }
+  }
 }

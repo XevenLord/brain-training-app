@@ -9,16 +9,19 @@ class AdminAppointment {
   String? reason;
   String? physiotherapistID;
   String? status;
+  String? remark;
 
-  AdminAppointment(
-      {this.appointmentID,
-      this.date,
-      this.time,
-      this.reason,
-      this.patient,
-      this.patientID,
-      this.physiotherapistID,
-      this.status});
+  AdminAppointment({
+    this.appointmentID,
+    this.date,
+    this.time,
+    this.reason,
+    this.patient,
+    this.patientID,
+    this.physiotherapistID,
+    this.status,
+    this.remark,
+  });
 
   AdminAppointment.fromJson(Map<String, dynamic> json) {
     appointmentID = json['appointmentID'];
@@ -29,6 +32,7 @@ class AdminAppointment {
     reason = json['reason'];
     physiotherapistID = json['physiotherapistID'];
     status = json['status'];
+    remark = json['remark'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,12 +45,13 @@ class AdminAppointment {
     data['reason'] = this.reason;
     data['physiotherapistID'] = this.physiotherapistID;
     data['status'] = this.status;
+    data['remark'] = this.remark;
     return data;
   }
 
   static List<AdminAppointment> fromJsonList(List<dynamic> json) {
     List<AdminAppointment> appointments = [];
-    for(var element in json) {
+    for (var element in json) {
       appointments.add(AdminAppointment.fromJson(element));
     }
     return appointments;

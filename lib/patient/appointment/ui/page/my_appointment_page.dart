@@ -96,7 +96,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
             child: appointments == null
                 ? displayLoadingData()
                 : appointments!.isEmpty
-                    ? displayEmptyDataLoaded("No appointment found", () {
+                    ? displayEmptyDataLoaded("No appointment found",
+                        onBack: () {
                         Get.offAllNamed(RouteHelper.getPatientHome(),
                             arguments: 2);
                       })
@@ -117,14 +118,18 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               if (index - 1 != -1 &&
-                                                  pendingAppointments![index - 1]
+                                                  pendingAppointments![
+                                                              index - 1]
                                                           .date ==
-                                                      pendingAppointments![index].date)
+                                                      pendingAppointments![
+                                                              index]
+                                                          .date)
                                                 SizedBox()
                                               else
                                                 Text(
                                                     todayText(
-                                                        pendingAppointments![index]
+                                                        pendingAppointments![
+                                                                index]
                                                             .date!),
                                                     style: AppTextStyle.h2),
                                               AppointmentTile(
@@ -137,8 +142,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                           pendingAppointments![index]
                                                               .physiotherapistID!)
                                                       .name!,
-                                                  type: checkAppointmentTileType(
-                                                      DateTime.parse(pendingAppointments![index]
+                                                  type: checkAppointmentTileType(DateTime.parse(
+                                                      pendingAppointments![index]
                                                           .date!)),
                                                   status: pendingAppointments![index]
                                                       .status,
@@ -149,8 +154,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                           pendingAppointments![index]
                                                               .physiotherapistID!)
                                                       .profilePic!,
-                                                  onEdit: () =>
-                                                      Get.toNamed(RouteHelper.getAppointmentEditPage(), arguments: pendingAppointments![index]),
+                                                  onEdit: () => Get.toNamed(RouteHelper.getAppointmentEditPage(), arguments: pendingAppointments![index]),
                                                   onDelete: () => showDialog(
                                                         context: context,
                                                         builder: (context) =>

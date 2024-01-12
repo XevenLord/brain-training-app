@@ -68,17 +68,6 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                       ),
                     ]),
                 SizedBox(height: 32.h),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.brandBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  onPressed: () =>
-                      Get.toNamed(RouteHelper.getMyAppointmentPage()),
-                  child: Text("My Appointment"),
-                )
               ],
             ),
           );

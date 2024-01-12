@@ -1,7 +1,5 @@
 import 'package:brain_training_app/admin/patients/domain/entity/inspirational_mssg.dart';
-import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 
 class ManagePatientService {
   static Future<bool> onPushInspirationalMessage(

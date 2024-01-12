@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getPhysiotherapistList();
         if (Get.find<AppUser>().role == "admin") {
-          UserRepository.fetchAllPatients();
+          getPatientList();
         }
       });
       Get.offAllNamed(Get.find<AppUser>().role == "admin"
@@ -86,6 +86,10 @@ class _SplashScreenState extends State<SplashScreen>
   void getPhysiotherapistList() async {
     await appointmentViewModel.getPhysiotherapistList();
     await adminAppointmentViewModel.getPhysiotherapistList();
+  }
+
+  void getPatientList() async {
+    await adminAppointmentViewModel.getPatientList();
   }
 
   @override

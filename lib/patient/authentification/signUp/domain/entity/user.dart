@@ -15,6 +15,8 @@ class AppUser {
   String? role;
   String? position;
   DateTime? mentalQuiz;
+  String? lastOnline;
+  String? strokeType;
 
   AppUser({
     this.uid,
@@ -29,6 +31,8 @@ class AppUser {
     this.role,
     this.position,
     this.mentalQuiz,
+    this.lastOnline,
+    this.strokeType,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -49,6 +53,8 @@ class AppUser {
       mentalQuiz: json["mentalQuiz"] != null
           ? DateTime.parse(json["mentalQuiz"])
           : null,
+      lastOnline: json["lastOnline"],
+      strokeType: json["strokeType"],
     );
   }
 
@@ -68,6 +74,8 @@ class AppUser {
       'role': role,
       'position': position,
       'mentalQuiz': mentalQuiz != null ? Timestamp.fromDate(mentalQuiz!) : null,
+      'lastOnline': lastOnline,
+      'strokeType': strokeType,
     };
   }
 
@@ -84,6 +92,8 @@ class AppUser {
     String? role,
     String? position,
     DateTime? mentalQuiz,
+    String? lastOnline,
+    String? strokeType,
   }) {
     this.uid = uid;
     this.name = name;
@@ -97,6 +107,8 @@ class AppUser {
     this.role = role;
     this.position = position;
     this.mentalQuiz = mentalQuiz;
+    this.lastOnline = lastOnline;
+    this.strokeType = strokeType;
   }
 
   void clear() {
@@ -112,5 +124,7 @@ class AppUser {
     role = null;
     position = null;
     mentalQuiz = null;
+    lastOnline = null;
+    strokeType = null;
   }
 }

@@ -13,7 +13,9 @@ import 'package:intl/intl.dart';
 
 class AdminAppointmentEditPage extends StatefulWidget {
   AdminAppointment appointment;
-  AdminAppointmentEditPage({super.key, required this.appointment});
+  AppUser patient;
+  AdminAppointmentEditPage(
+      {super.key, required this.appointment, required this.patient});
 
   @override
   State<AdminAppointmentEditPage> createState() =>
@@ -24,7 +26,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late AdminAppointmentViewModel appointmentVModel;
   String? time;
-  late AppUser physiotherapist;
+  late AppUser patient;
 
   List<String> timeSlots = [
     "09:00 AM",
@@ -40,13 +42,13 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
 
   TextEditingController dateController = TextEditingController();
   TextEditingController reasonController = TextEditingController();
+  TextEditingController remarkController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     appointmentVModel = Get.find<AdminAppointmentViewModel>();
-    physiotherapist = appointmentVModel.physiotherapistList.firstWhere(
-        (element) => element.uid == widget.appointment.physiotherapistID);
+    patient = widget.patient;
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason!;
     time = widget.appointment.time!;
@@ -58,6 +60,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
         appointment: widget.appointment,
         date: dateController.text,
         reason: reasonController.text,
+        remark: remarkController.text,
         time: time!,
       );
     }
@@ -91,23 +94,17 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                               CircleAvatar(
                                 radius: 70.r,
                                 backgroundImage: NetworkImage(
-                                  physiotherapist.profilePic!,
+                                  patient.profilePic!,
                                 ),
                               ),
                               SizedBox(height: 16.h),
                               Text(
-                                physiotherapist.name!,
+                                patient.name!,
                                 style: AppTextStyle.h2,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
                               SizedBox(height: 8.h),
-                              Text(
-                                physiotherapist.position!,
-                                style: AppTextStyle.c1,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
                             ],
                           ),
                         ),
@@ -162,6 +159,14 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                         label: "Tell us about your reason for appointment",
                         textEditingController: reasonController,
                         maxLines: null,
+                      ),
+                      InputTextFormField(
+                        name: "remark",
+                        promptText: "Remark (Fill if appointment is completed)",
+                        label:
+                            "Write the condition of the patient throuhout the appointment",
+                        textEditingController: remarkController,
+                        maxLines: 25,
                       ),
                       SizedBox(height: 30.h),
                       Row(
