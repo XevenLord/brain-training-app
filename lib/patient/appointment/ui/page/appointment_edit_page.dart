@@ -5,6 +5,7 @@ import 'package:brain_training_app/patient/appointment/domain/entity/appointment
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -94,9 +95,13 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                             children: [
                               CircleAvatar(
                                 radius: 70.r,
-                                backgroundImage: NetworkImage(
-                                  physiotherapist.profilePic!,
-                                ),
+                                backgroundImage: (physiotherapist.profilePic ==
+                                            null ||
+                                        physiotherapist.profilePic!.isEmpty)
+                                    ? const AssetImage(
+                                        AppConstant.NO_PROFILE_PIC,
+                                      ) as ImageProvider
+                                    : NetworkImage(physiotherapist.profilePic!),
                               ),
                               SizedBox(height: 16.h),
                               Text(
@@ -129,8 +134,7 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                               context: context,
                               initialDate: widget.appointment.date! == ""
                                   ? DateTime.now()
-                                  : DateTime.parse(
-                                      widget.appointment.date!),
+                                  : DateTime.parse(widget.appointment.date!),
                               firstDate: DateTime(1950),
                               lastDate: DateTime(2100));
 

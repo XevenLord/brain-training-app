@@ -3,6 +3,7 @@ import 'package:brain_training_app/patient/authentification/signUp/domain/entity
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -89,8 +90,13 @@ class _AdminChatListState extends State<AdminChatList> {
                               return CupertinoListTile(
                                   padding: EdgeInsets.zero,
                                   leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(user.profilePic ?? ""),
+                                    backgroundColor: AppColors.lightBlue,
+                                    backgroundImage: (user.profilePic == null ||
+                                            user.profilePic!.isEmpty)
+                                        ? const AssetImage(
+                                            AppConstant.NO_PROFILE_PIC,
+                                          ) as ImageProvider
+                                        : NetworkImage(user.profilePic ?? ""),
                                   ),
                                   title: Text(user.name ?? ""),
                                   onTap: () => {
@@ -110,8 +116,14 @@ class _AdminChatListState extends State<AdminChatList> {
                               return CupertinoListTile(
                                   padding: EdgeInsets.zero,
                                   leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(user!.profilePic ?? ""),
+                                    backgroundColor: AppColors.lightBlue,
+                                    backgroundImage: (user?.profilePic ==
+                                                null ||
+                                            user!.profilePic!.isEmpty)
+                                        ? const AssetImage(
+                                            AppConstant.NO_PROFILE_PIC,
+                                          ) as ImageProvider
+                                        : NetworkImage(user.profilePic!),
                                   ),
                                   title: Text(data['targetName'] ?? ""),
                                   subtitle: Text(data['msg'].toString().startsWith(
@@ -122,7 +134,7 @@ class _AdminChatListState extends State<AdminChatList> {
                                         Get.to(Chat(
                                             key: UniqueKey(),
                                             targetName: data['targetName'],
-                                            targetUid: user.uid))
+                                            targetUid: user?.uid))
                                       });
                             }).toList())))
                   ],

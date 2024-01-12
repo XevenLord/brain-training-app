@@ -2,6 +2,7 @@ import 'package:brain_training_app/admin/appointments/domain/entity/appointment.
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -93,9 +94,14 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                             children: [
                               CircleAvatar(
                                 radius: 70.r,
-                                backgroundImage: NetworkImage(
-                                  patient.profilePic!,
-                                ),
+                                backgroundImage: patient.profilePic == null ||
+                                        patient.profilePic!.isEmpty
+                                    ? const AssetImage(
+                                        AppConstant.NO_PROFILE_PIC,
+                                      ) as ImageProvider
+                                    : NetworkImage(
+                                        patient.profilePic!,
+                                      ),
                               ),
                               SizedBox(height: 16.h),
                               Text(

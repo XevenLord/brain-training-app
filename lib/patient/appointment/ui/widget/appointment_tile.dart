@@ -1,4 +1,5 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +61,11 @@ class _AppointmentTileState extends State<AppointmentTile> {
           children: [
             CircleAvatar(
               radius: 45.r,
-              backgroundImage: NetworkImage(
-                widget.img!,
-              ),
+              backgroundImage: (widget.img == null || widget.img!.isEmpty)
+                  ? const AssetImage(
+                      AppConstant.NO_PROFILE_PIC,
+                    ) as ImageProvider
+                  : NetworkImage(widget.img!),
             ),
             SizedBox(width: 10.w),
             Column(

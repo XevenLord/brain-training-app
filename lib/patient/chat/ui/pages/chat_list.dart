@@ -86,8 +86,12 @@ class _ChatListState extends State<ChatList> {
                           return CupertinoListTile(
                               padding: EdgeInsets.zero,
                               leading: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(user.profilePic ?? ""),
+                                backgroundImage: (user.profilePic == null ||
+                                        user.profilePic!.isEmpty)
+                                    ? const AssetImage(
+                                        AppConstant.NO_PROFILE_PIC,
+                                      ) as ImageProvider
+                                    : NetworkImage(user.profilePic!),
                               ),
                               title: Text(user.name ?? ""),
                               onTap: () => {
@@ -108,7 +112,11 @@ class _ChatListState extends State<ChatList> {
                               padding: EdgeInsets.zero,
                               leading: CircleAvatar(
                                 backgroundImage:
-                                    NetworkImage(physio!.profilePic ?? ""),
+                                    (physio?.profilePic == null || physio!.profilePic!.isEmpty)
+                                        ? const AssetImage(
+                                            AppConstant.NO_PROFILE_PIC,
+                                          ) as ImageProvider
+                                        : NetworkImage(physio.profilePic!),
                               ),
                               title: Text(data['targetName'] ?? ""),
                               subtitle: Text(data['msg'].toString().startsWith(
@@ -119,7 +127,7 @@ class _ChatListState extends State<ChatList> {
                                     Get.to(Chat(
                                         key: UniqueKey(),
                                         targetName: data['targetName'],
-                                        targetUid: physio.uid))
+                                        targetUid: physio!.uid))
                                   });
                         }).toList())))
               ],

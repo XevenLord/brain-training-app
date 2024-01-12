@@ -33,7 +33,6 @@ class ProfileService {
           .then((value) => true)
           .catchError((error) => false);
       await FirebaseAuthRepository.getUserDetails(appUser.uid!);
-      print("See profileeee");
       return res;
     } catch (e) {
       return Future.value(false);

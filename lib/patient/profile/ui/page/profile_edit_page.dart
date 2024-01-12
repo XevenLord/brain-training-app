@@ -148,36 +148,31 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                                     // If the image is available, display it
                                     return CircleAvatar(
                                       radius: 60,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Image.file(
-                                          snapshot.data!,
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
+                                      backgroundImage:
+                                          Image.file(snapshot.data!).image,
+                                      // child: ClipRRect(
+                                      //   borderRadius: BorderRadius.circular(50),
+                                      //   child: Image.file(
+                                      //     snapshot.data!,
+                                      //     width: 100,
+                                      //     height: 100,
+                                      //     fit: BoxFit.fill,
+                                      //   ),
+                                      // ),
                                     );
-                                  } else if (appUser.profilePic != null) {
+                                  } else if (appUser.profilePic != null &&
+                                      appUser.profilePic!.isNotEmpty) {
                                     // If no new image is available but appUser has a profilePic,
                                     // load the image from appUser.profilePic
                                     return CircleAvatar(
                                       radius: 70.r,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(69.r),
-                                        child: Image(
-                                          image:
-                                              NetworkImage(appUser.profilePic!),
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
+                                      backgroundImage:
+                                          NetworkImage(appUser.profilePic!),
                                     );
                                   } else {
                                     // If no image is available, display a default image or icon
                                     return CircleAvatar(
+                                      backgroundColor: AppColors.brandBlue,
                                       radius: 60,
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -207,6 +202,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     promptText: "Name",
                     textEditingController: nameController,
                     label: "Enter Your Full Name",
+                    readOnly: true,
                     keyboardType: TextInputType.name,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(
@@ -221,6 +217,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     promptText: "IC Number",
                     textEditingController: icController,
                     keyboardType: TextInputType.number,
+                    readOnly: true,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(
                         errorText: "Please enter your IC number",
@@ -254,26 +251,27 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     textEditingController: dobController,
                     label: "DD/MM/YYYY",
                     keyboardType: TextInputType.datetime,
+                    readOnly: true,
                     onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2100));
+                      // DateTime? pickedDate = await showDatePicker(
+                      //     context: context,
+                      //     initialDate: DateTime.now(),
+                      //     firstDate: DateTime(1950),
+                      //     //DateTime.now() - not to allow to choose before today.
+                      //     lastDate: DateTime(2100));
 
-                      if (pickedDate != null) {
-                        print(
-                            pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
-                        print(
-                            formattedDate); //formatted date output using intl package =>  2021-03-16
-                        setState(() {
-                          dobController.text =
-                              formattedDate; //set output date to TextField value.
-                        });
-                      } else {}
+                      // if (pickedDate != null) {
+                      //   print(
+                      //       pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      //   String formattedDate =
+                      //       DateFormat('yyyy-MM-dd').format(pickedDate);
+                      //   print(
+                      //       formattedDate); //formatted date output using intl package =>  2021-03-16
+                      //   setState(() {
+                      //     dobController.text =
+                      //         formattedDate; //set output date to TextField value.
+                      //   });
+                      // } else {}
                     },
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(

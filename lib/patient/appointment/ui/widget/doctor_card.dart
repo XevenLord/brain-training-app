@@ -1,5 +1,7 @@
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -43,10 +45,13 @@ class DoctorCard extends StatelessWidget {
           children: [
             SizedBox(height: 10.h),
             CircleAvatar(
+              backgroundColor: AppColors.lightBlue,
               radius: 45.r,
-              backgroundImage: NetworkImage(
-                imgUrl,
-              ),
+              backgroundImage: (imgUrl.isEmpty)
+                  ? const AssetImage(
+                      AppConstant.NO_PROFILE_PIC,
+                    ) as ImageProvider
+                  : NetworkImage(imgUrl),
             ),
             SizedBox(height: 20.h),
             Text(

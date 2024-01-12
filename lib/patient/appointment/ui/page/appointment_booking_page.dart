@@ -5,6 +5,7 @@ import 'package:brain_training_app/patient/appointment/ui/view_model/appointment
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +59,12 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                   children: [
                     CircleAvatar(
                       radius: 70.r,
-                      backgroundImage: NetworkImage(
-                        physiotherapist.profilePic!,
-                      ),
+                      backgroundImage: (physiotherapist.profilePic == null ||
+                              physiotherapist.profilePic!.isEmpty)
+                          ? const AssetImage(
+                              AppConstant.NO_PROFILE_PIC,
+                            ) as ImageProvider
+                          : NetworkImage(physiotherapist.profilePic!),
                     ),
                     SizedBox(height: 16.h),
                     Text(
@@ -93,7 +97,8 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                           textStyle: AppTextStyle.brandBlueTextStyle,
                         ),
                         IconBox(
-                          icon: Icon(Icons.calendar_month, color: AppColors.brandBlue),
+                          icon: Icon(Icons.calendar_month,
+                              color: AppColors.brandBlue),
                           title: "Schedule",
                           boxColor: AppColors.lightBlue,
                           textStyle: AppTextStyle.brandBlueTextStyle,

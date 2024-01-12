@@ -25,13 +25,11 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
 
   @override
   void initState() {
-    setState(() {
-      updateTimeSlots();
-    });
     _appointmentViewModel = Get.find<AppointmentViewModel>();
     _appointmentViewModel.getAppointmentsByPhysiotherapistID().then((value) {
       setState(() {
         appts = value;
+        updateTimeSlots();
       });
     });
     super.initState();

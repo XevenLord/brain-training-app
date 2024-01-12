@@ -5,6 +5,7 @@ import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/profile/ui/view_model/profile_vmodel.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -166,17 +167,15 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                                     // load the image from appUser.profilePic
                                     return CircleAvatar(
                                       radius: 70.r,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(69.r),
-                                        child: Image(
-                                          image: NetworkImage(
-                                              widget.appUser.profilePic!),
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
+                                      backgroundImage:
+                                          (widget.appUser.profilePic == null ||
+                                                  widget.appUser.profilePic!
+                                                      .isEmpty)
+                                              ? const AssetImage(
+                                                  AppConstant.NO_PROFILE_PIC,
+                                                ) as ImageProvider
+                                              : NetworkImage(
+                                                  widget.appUser.profilePic!),
                                     );
                                   } else {
                                     // If no image is available, display a default image or icon

@@ -155,7 +155,7 @@ class _QuestionCardState extends State<QuestionCard> {
                                 return AlertDialog(
                                   title: const Text("Mental Health Check Up"),
                                   content: Container(
-                                    height: 160.w,
+                                    height: 190.w,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,

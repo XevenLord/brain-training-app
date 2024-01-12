@@ -3,6 +3,7 @@ import 'package:brain_training_app/patient/authentification/signUp/domain/entity
 import 'package:brain_training_app/patient/profile/ui/view_model/profile_vmodel.dart';
 import 'package:brain_training_app/patient/profile/ui/widget/info_tile.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -47,27 +48,15 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
             Center(
               child: CircleAvatar(
                 radius: 70.r,
-                child: appUser.profilePic != null &&
-                        appUser.profilePic!.isNotEmpty
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(69.r),
-                        child: Image(
-                          image: NetworkImage(appUser.profilePic! as String),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.fill,
-                        ))
-                    : Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        width: 100,
-                        height: 100,
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Colors.grey[800],
-                        )),
+                backgroundColor: AppColors.lightBlue,
+                backgroundImage:
+                    appUser.profilePic != null && appUser.profilePic!.isNotEmpty
+                        ? NetworkImage(
+                            appUser.profilePic!,
+                          )
+                        : const AssetImage(
+                            AppConstant.NO_PROFILE_PIC,
+                          ) as ImageProvider,
               ),
             ),
             SizedBox(

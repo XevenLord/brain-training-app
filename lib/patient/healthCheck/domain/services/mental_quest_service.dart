@@ -8,9 +8,6 @@ class MentalQuestService {
       Map<String, String> answers) async {
     final appUser = Get.find<AppUser>();
     try {
-      print(answers);
-      print("Mental Quest Service: Submitting mental quiz");
-      print("app user id: ${appUser.uid}");
       await FirebaseFirestore.instance
           .collection("mentals")
           .doc(appUser.uid)

@@ -17,7 +17,7 @@ class AppConstant {
   static const String DONE_CHECK = 'assets/images/signup_completed.png';
   static const String WRONG_MARK = 'assets/images/wrongmark.png';
   static const String EMPTY_DATA = 'assets/images/no-data.png';
-  static const String NO_PROFILE_PIC = "assets/image/noProfilePic.jpg";
+  static const String NO_PROFILE_PIC = "assets/images/noProfilePic.png";
   static const String SUPPORTIVE_IMG = 'assets/images/supportive_img.png';
 
   // Game 1: Tic Tac Toe
