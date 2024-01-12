@@ -22,6 +22,8 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   late AppointmentViewModel appointmentViewModel;
   List<Appointment>? appointments;
   List<Appointment>? pendingAppointments;
+  List<Appointment>? declinedAppointments;
+  bool isPendingApptLoading = true;
 
   @override
   void initState() {
@@ -43,6 +45,10 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           pendingAppointments = appointments!
               .where((element) => element.status == "pending")
               .toList();
+          declinedAppointments = appointments!
+              .where((element) => element.status == "declined")
+              .toList();
+          isPendingApptLoading = false;
         })
       },
     );
@@ -69,14 +75,14 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
           bottom: const TabBar(
               unselectedLabelColor: AppColors.black,
               labelColor: AppColors.brandBlue,
-              tabs: [Tab(text: "Pending"), Tab(text: "Timeline")]),
+              tabs: [Tab(text: "Pending"), Tab(text: "Timeline"), Tab(text: "Declined")]),
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text("My Appointments",
@@ -104,102 +110,116 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                     : TabBarView(
                         children: [
                           SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                SizedBox(height: 16.h),
-                                ...List.generate(
-                                  pendingAppointments?.length ?? 0,
-                                  (index) => pendingAppointments == null
-                                      ? Container()
-                                      : Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              if (index - 1 != -1 &&
-                                                  pendingAppointments![
-                                                              index - 1]
-                                                          .date ==
-                                                      pendingAppointments![
-                                                              index]
-                                                          .date)
-                                                SizedBox()
-                                              else
-                                                Text(
-                                                    todayText(
-                                                        pendingAppointments![
-                                                                index]
-                                                            .date!),
-                                                    style: AppTextStyle.h2),
-                                              AppointmentTile(
-                                                  time: pendingAppointments![index]
-                                                      .time!,
-                                                  doctorName: appointmentViewModel
-                                                      .physiotherapistList
-                                                      .firstWhere((element) =>
-                                                          element.uid ==
-                                                          pendingAppointments![index]
-                                                              .physiotherapistID!)
-                                                      .name!,
-                                                  type: checkAppointmentTileType(DateTime.parse(
-                                                      pendingAppointments![index]
-                                                          .date!)),
-                                                  status: pendingAppointments![index]
-                                                      .status,
-                                                  img: appointmentViewModel
-                                                      .physiotherapistList
-                                                      .firstWhere((element) =>
-                                                          element.uid ==
-                                                          pendingAppointments![index]
-                                                              .physiotherapistID!)
-                                                      .profilePic!,
-                                                  onEdit: () => Get.toNamed(RouteHelper.getAppointmentEditPage(), arguments: pendingAppointments![index]),
-                                                  onDelete: () => showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            AlertDialog(
-                                                          title: Text(
-                                                              "Appointment Date ${pendingAppointments![index].date!} ${pendingAppointments![index].time!} with ${appointmentViewModel.physiotherapistList.firstWhere((element) => element.uid == pendingAppointments![index].physiotherapistID!).name!}",
-                                                              style:
-                                                                  AppTextStyle
-                                                                      .h3),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Get.back();
-                                                              },
-                                                              child: const Text(
-                                                                  'Cancel'),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                Get.back();
-                                                                await appointmentViewModel
-                                                                    .cancelAppointment(
-                                                                        appointment:
-                                                                            pendingAppointments![
-                                                                                index])
-                                                                    .then((value) =>
-                                                                        callDataInit());
-                                                                setState(() {});
-                                                              },
-                                                              child: Text(
-                                                                  'Delete'),
-                                                            ),
+                            child:
+                                (pendingAppointments == null ||
+                                        pendingAppointments!.isEmpty)
+                                    ? Center(
+                                        child: isPendingApptLoading
+                                            ? const CircularProgressIndicator()
+                                            : Padding(padding: EdgeInsets.only(top: 50.w), child:  displayEmptyDataLoaded(
+                                                "There is no pending appointment",
+                                                showBackArrow: false),)
+                                           
+                                      )
+                                    : Column(
+                                        children: [
+                                          SizedBox(height: 16.h),
+                                          ...List.generate(
+                                            pendingAppointments?.length ?? 0,
+                                            (index) =>
+                                                pendingAppointments == null
+                                                    ? Container()
+                                                    : Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            if (index - 1 !=
+                                                                    -1 &&
+                                                                pendingAppointments![
+                                                                            index -
+                                                                                1]
+                                                                        .date ==
+                                                                    pendingAppointments![
+                                                                            index]
+                                                                        .date)
+                                                              SizedBox()
+                                                            else
+                                                              Text(
+                                                                  todayText(pendingAppointments![
+                                                                          index]
+                                                                      .date!),
+                                                                  style:
+                                                                      AppTextStyle
+                                                                          .h2),
+                                                            AppointmentTile(
+                                                                time: pendingAppointments![index]
+                                                                    .time!,
+                                                                doctorName: appointmentViewModel
+                                                                    .physiotherapistList
+                                                                    .firstWhere((element) =>
+                                                                        element.uid ==
+                                                                        pendingAppointments![index]
+                                                                            .physiotherapistID!)
+                                                                    .name!,
+                                                                type: checkAppointmentTileType(DateTime.parse(
+                                                                    pendingAppointments![index]
+                                                                        .date!)),
+                                                                status: pendingAppointments![index]
+                                                                    .status,
+                                                                img: appointmentViewModel
+                                                                    .physiotherapistList
+                                                                    .firstWhere((element) =>
+                                                                        element.uid ==
+                                                                        pendingAppointments![index]
+                                                                            .physiotherapistID!)
+                                                                    .profilePic!,
+                                                                onEdit: () =>
+                                                                    Get.toNamed(RouteHelper.getAppointmentEditPage(), arguments: pendingAppointments![index]),
+                                                                onDelete: () => showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) =>
+                                                                              AlertDialog(
+                                                                        title: Text(
+                                                                            "Appointment Date ${pendingAppointments![index].date!} ${pendingAppointments![index].time!} with ${appointmentViewModel.physiotherapistList.firstWhere((element) => element.uid == pendingAppointments![index].physiotherapistID!).name!}",
+                                                                            style:
+                                                                                AppTextStyle.h3),
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Get.back();
+                                                                            },
+                                                                            child:
+                                                                                const Text('Cancel'),
+                                                                          ),
+                                                                          TextButton(
+                                                                            onPressed:
+                                                                                () async {
+                                                                              Get.back();
+                                                                              await appointmentViewModel.cancelAppointment(appointment: pendingAppointments![index]).then((value) => callDataInit());
+                                                                              setState(() {});
+                                                                            },
+                                                                            child:
+                                                                                Text('Delete'),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )),
                                                           ],
                                                         ),
-                                                      )),
-                                            ],
+                                                      ),
                                           ),
-                                        ),
-                                ),
-                              ],
-                            ),
+                                        ],
+                                      ),
                           ),
                           SingleChildScrollView(
-                            // check Future.delayed is useful for me or not
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -292,6 +312,116 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                 ),
                               ],
                             ),
+                          ),
+                          SingleChildScrollView(
+                            child:
+                                (declinedAppointments == null ||
+                                        declinedAppointments!.isEmpty)
+                                    ? Center(
+                                        child: isPendingApptLoading
+                                            ? const CircularProgressIndicator()
+                                            : Padding(padding: EdgeInsets.only(top: 50.w), child:  displayEmptyDataLoaded(
+                                                "There is no declined appointment",
+                                                showBackArrow: false),)
+                                           
+                                      )
+                                    : Column(
+                                        children: [
+                                          SizedBox(height: 16.h),
+                                          ...List.generate(
+                                            declinedAppointments?.length ?? 0,
+                                            (index) =>
+                                                declinedAppointments == null
+                                                    ? Container()
+                                                    : Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            if (index - 1 !=
+                                                                    -1 &&
+                                                                declinedAppointments![
+                                                                            index -
+                                                                                1]
+                                                                        .date ==
+                                                                    declinedAppointments![
+                                                                            index]
+                                                                        .date)
+                                                              SizedBox()
+                                                            else
+                                                              Text(
+                                                                  todayText(declinedAppointments![
+                                                                          index]
+                                                                      .date!),
+                                                                  style:
+                                                                      AppTextStyle
+                                                                          .h2),
+                                                            AppointmentTile(
+                                                                time: declinedAppointments![index]
+                                                                    .time!,
+                                                                doctorName: appointmentViewModel
+                                                                    .physiotherapistList
+                                                                    .firstWhere((element) =>
+                                                                        element.uid ==
+                                                                        declinedAppointments![index]
+                                                                            .physiotherapistID!)
+                                                                    .name!,
+                                                                type: checkAppointmentTileType(DateTime.parse(
+                                                                    declinedAppointments![index]
+                                                                        .date!)),
+                                                                status: declinedAppointments![index]
+                                                                    .status,
+                                                                img: appointmentViewModel
+                                                                    .physiotherapistList
+                                                                    .firstWhere((element) =>
+                                                                        element.uid ==
+                                                                        declinedAppointments![index]
+                                                                            .physiotherapistID!)
+                                                                    .profilePic!,
+                                                                onEdit: () =>
+                                                                    Get.toNamed(RouteHelper.getAppointmentEditPage(), arguments: declinedAppointments![index]),
+                                                                onDelete: () => showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) =>
+                                                                              AlertDialog(
+                                                                        title: Text(
+                                                                            "Appointment Date ${declinedAppointments![index].date!} ${declinedAppointments![index].time!} with ${appointmentViewModel.physiotherapistList.firstWhere((element) => element.uid == pendingAppointments![index].physiotherapistID!).name!}",
+                                                                            style:
+                                                                                AppTextStyle.h3),
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Get.back();
+                                                                            },
+                                                                            child:
+                                                                                const Text('Cancel'),
+                                                                          ),
+                                                                          TextButton(
+                                                                            onPressed:
+                                                                                () async {
+                                                                              Get.back();
+                                                                              await appointmentViewModel.cancelAppointment(appointment: pendingAppointments![index]).then((value) => callDataInit());
+                                                                              setState(() {});
+                                                                            },
+                                                                            child:
+                                                                                Text('Delete'),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )),
+                                                          ],
+                                                        ),
+                                                      ),
+                                          ),
+                                        ],
+                                      ),
                           ),
                         ],
                       ),

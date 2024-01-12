@@ -33,6 +33,12 @@ class AppointmentTile extends StatefulWidget {
 }
 
 class _AppointmentTileState extends State<AppointmentTile> {
+  bool isApprovedOrPending() {
+    return widget.status == "pending" ||
+        widget.status == "approved" ||
+        widget.status == "declined";
+  }
+
   @override
   Widget build(BuildContext context) {
     return EmptyBox(
@@ -106,14 +112,18 @@ class _AppointmentTileState extends State<AppointmentTile> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InkWell(
-                    onTap: widget.onEdit,
-                    child:
-                        Icon(Icons.edit, size: 20.sp, color: AppColors.grey)),
+                    onTap: isApprovedOrPending() ? widget.onEdit : null,
+                    child: Icon(Icons.edit,
+                        size: 20.sp,
+                        color: AppColors.grey
+                            .withOpacity(isApprovedOrPending() ? 1 : 0.2))),
                 SizedBox(height: 10.h),
                 InkWell(
-                    onTap: widget.onDelete,
+                    onTap: isApprovedOrPending() ? widget.onDelete : null,
                     child: Icon(Icons.delete,
-                        size: 20.sp, color: Color.fromARGB(255, 172, 39, 29))),
+                        size: 20.sp,
+                        color: Color.fromARGB(255, 172, 39, 29)
+                            .withOpacity(isApprovedOrPending() ? 1 : 0.2))),
               ],
             )
           ],

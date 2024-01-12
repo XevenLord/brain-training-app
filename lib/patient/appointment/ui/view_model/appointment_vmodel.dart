@@ -116,9 +116,15 @@ class AppointmentViewModel extends GetxController implements GetxService {
       required String time,
       required String reason}) async {
     String oldDate = appointment.date!;
+    bool isDateAndTimeChanged =
+        appointment.date != date || appointment.time != time;
+    if (isDateAndTimeChanged) {
+      appointment.status = "pending";
+    }
     appointment.date = date;
     appointment.time = time;
     appointment.reason = reason;
+
     await AppointmentService.updateAppointment(appointment, oldDate);
     AppUser physio = physiotherapistList
         .firstWhere((physio) => physio.uid == appointment.physiotherapistID);

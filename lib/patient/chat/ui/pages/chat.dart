@@ -120,18 +120,11 @@ class _ChatState extends State<Chat> {
                   }
 
                   if (snapshot.hasData) {
-                    var data;
+                    dynamic data;
                     return CupertinoPageScaffold(
                       navigationBar: CupertinoNavigationBar(
-                          previousPageTitle: "Back",
-                          middle: Text(targetName),
-                          trailing: CupertinoButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {
-                                chatViewModel.refreshChatsForCurrentUser();
-                                Get.back();
-                              },
-                              child: Icon(CupertinoIcons.phone))),
+                        middle: Text(targetName),
+                      ),
                       child: SafeArea(
                         child: Column(
                           children: [

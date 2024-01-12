@@ -3,6 +3,7 @@ import 'package:brain_training_app/common/ui/widget/icon_box.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -80,24 +81,30 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconBox(
+                          onPressed: () {
+                            Get.to(Chat(
+                              targetName: physiotherapist.name,
+                              targetUid: physiotherapist.uid,
+                            ));
+                          },
                           icon: Icon(Icons.message, color: AppColors.brandBlue),
                           title: "Messaging",
                           boxColor: AppColors.lightBlue,
                           textStyle: AppTextStyle.brandBlueTextStyle,
                         ),
                         IconBox(
-                          icon: Icon(Icons.phone, color: AppColors.brandBlue),
-                          title: "Audio Call",
+                          icon: Icon(Icons.calendar_month, color: AppColors.brandBlue),
+                          title: "Schedule",
                           boxColor: AppColors.lightBlue,
                           textStyle: AppTextStyle.brandBlueTextStyle,
                         ),
-                        IconBox(
-                          icon:
-                              Icon(Icons.videocam, color: AppColors.brandBlue),
-                          title: "Video Call",
-                          boxColor: AppColors.lightBlue,
-                          textStyle: AppTextStyle.brandBlueTextStyle,
-                        ),
+                        // IconBox(
+                        //   icon:
+                        //       Icon(Icons.videocam, color: AppColors.brandBlue),
+                        //   title: "Video Call",
+                        //   boxColor: AppColors.lightBlue,
+                        //   textStyle: AppTextStyle.brandBlueTextStyle,
+                        // ),
                       ],
                     ),
                     SizedBox(height: 20.h),

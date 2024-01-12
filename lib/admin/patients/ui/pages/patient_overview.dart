@@ -1,7 +1,9 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
+import 'package:brain_training_app/common/ui/widget/icon_box.dart';
 import 'package:brain_training_app/common/ui/widget/information_row.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -106,6 +108,17 @@ class _PatientOverviewState extends State<PatientOverview> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(Chat(
+                targetName: widget.patient.name,
+                targetUid: widget.patient.uid,
+              ));
+            },
+            icon: const Icon(Icons.message, color: AppColors.brandBlue),
+          ),
+        ],
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.brandBlue),
           onPressed: () => Get.back(), // Or Get.back() if using GetX
@@ -162,7 +175,7 @@ class _PatientOverviewState extends State<PatientOverview> {
                 padding: EdgeInsets.only(top: 8.w)),
             InformationRow(
                 title: "Stroke Level",
-                value: widget.patient.strokeType!,
+                value: widget.patient.strokeType ?? "N/A",
                 padding: EdgeInsets.only(top: 8.w, bottom: 16.w)),
             SizedBox(height: 20.w),
             Column(
@@ -171,8 +184,9 @@ class _PatientOverviewState extends State<PatientOverview> {
                 Text("Latest Remark", style: AppTextStyle.h2),
                 SizedBox(height: 10.w),
                 Text(
-                  widget.appointment.remark ?? "No remark yet",
-                  style: AppTextStyle.c2,
+                  widget.appointment.remark ?? "N/A",
+                  style: AppTextStyle.c2
+                      .merge(TextStyle(fontStyle: FontStyle.italic)),
                   textAlign: TextAlign.center,
                 ),
               ],

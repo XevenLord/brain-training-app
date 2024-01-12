@@ -374,6 +374,7 @@ class AppointmentCard extends StatelessWidget {
   AdminAppointment appointment;
   Function()? onEdit;
   Function()? onComplete;
+  Function()? onReject;
 
   AppointmentCard({
     required this.name,
@@ -384,6 +385,7 @@ class AppointmentCard extends StatelessWidget {
     required this.appointment,
     this.onEdit,
     this.onComplete,
+    this.onReject,
   });
 
   @override
@@ -415,6 +417,7 @@ class AppointmentCard extends StatelessWidget {
             appointment: appointment,
             onEdit: onEdit,
             onComplete: onComplete,
+            onReject: onReject,
           ),
         ],
       ),
@@ -431,6 +434,7 @@ class CardWidget extends StatelessWidget {
   AdminAppointment appointment;
   Function()? onEdit;
   Function()? onComplete;
+  Function()? onReject;
 
   CardWidget({
     required this.name,
@@ -441,6 +445,7 @@ class CardWidget extends StatelessWidget {
     required this.appointment,
     this.onEdit,
     this.onComplete,
+    this.onReject,
   });
 
   @override
@@ -490,6 +495,34 @@ class CardWidget extends StatelessWidget {
                   child: IconButton(
                       onPressed: onEdit,
                       icon: const Icon(Icons.edit, color: Colors.blue))),
+              Container(
+                  height: 50.w,
+                  width: appointment.status == "declined" ? 50.w : 120.w,
+                  decoration: BoxDecoration(
+                      color: appointment.status == "completed"
+                          ? Colors.red
+                          : AppColors.lightRed,
+                      borderRadius: BorderRadius.circular(20.w)),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: appointment.status == "completed"
+                          ? Colors.red
+                          : AppColors.lightRed,
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: onReject,
+                    child: appointment.status == "declined"
+                        ? const Icon(Icons.check, color: Colors.white)
+                        : Text(
+                            "Declined",
+                            style: AppTextStyle.h3
+                                .merge(AppTextStyle.brandRedTextStyle),
+                          ),
+                    // Icon(Icons.check,
+                    //     color: appointment.status == "completed"
+                    //         ? Colors.white
+                    //         : Colors.blue),
+                  )),
               Container(
                   height: 50.w,
                   width: appointment.status == "completed" ? 50.w : 120.w,

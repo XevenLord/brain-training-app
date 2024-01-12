@@ -66,24 +66,24 @@ class _GameCardState extends State<GameCard> {
                   topRight: Radius.circular(10),
                 ),
               ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 10.h,
-                    right: 10.w,
-                    child: Container(
-                      height: 30.h,
-                      width: 30.w,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child:
-                          const Icon(Icons.more_horiz, color: Colors.black87),
-                    ),
-                  ),
-                ],
-              ),
+              // child: Stack(
+              //   children: [
+              //     Positioned(
+              //       top: 10.h,
+              //       right: 10.w,
+              //       child: Container(
+              //         height: 30.h,
+              //         width: 30.w,
+              //         decoration: BoxDecoration(
+              //           color: Colors.white.withOpacity(0.8),
+              //           borderRadius: BorderRadius.circular(10),
+              //         ),
+              //         child:
+              //             const Icon(Icons.more_horiz, color: Colors.black87),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ),
             Container(
               padding: const EdgeInsets.all(16),
