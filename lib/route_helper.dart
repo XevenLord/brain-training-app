@@ -20,6 +20,7 @@ import 'package:brain_training_app/admin/home/ui/widgets/home_content.dart';
 import 'package:brain_training_app/admin/insMssg/ui/pages/ins_mssg_general_home.dart';
 import 'package:brain_training_app/admin/mmse/ui/pages/mmse_main_page.dart';
 import 'package:brain_training_app/admin/mmse/ui/pages/mmse_questionnaire.dart';
+import 'package:brain_training_app/admin/mmse/ui/pages/mmse_specific.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_appt.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
@@ -128,7 +129,6 @@ class RouteHelper {
   static const String flipCardPatientList = '/flip-card-patient-list';
   static const String flipCardResOverview = '/flip-card-res-overview';
 
-
   // *Admin chat*
   static const String adminChatList = '/admin-chat-list';
 
@@ -138,6 +138,7 @@ class RouteHelper {
   // *Admin MMSE*
   static const String mmseQuestionnaire = '/mmse-questionnaire';
   static const String mmseMainPage = '/mmse-main-page';
+  static const String mmseSpecificPage = '/mmse-specific-page';
 
   // *Admin Feedback*
   static const String adminFeedback = '/admin-feedback';
@@ -228,6 +229,7 @@ class RouteHelper {
   // *Admin MMSE*
   static String getMmseQuestionnaire() => mmseQuestionnaire;
   static String getMmseMainPage() => mmseMainPage;
+  static String getMmseSpecificPage() => mmseSpecificPage;
 
   // *Admin Feedback*
   static String getAdminFeedback() => adminFeedback;
@@ -590,6 +592,14 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () {
         return MMSEMainPage();
+      },
+    ),
+    GetPage(
+      name: mmseSpecificPage,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments;
+        return MMSESpecificPage(patient: patient);
       },
     ),
     // *Admin Feedback*

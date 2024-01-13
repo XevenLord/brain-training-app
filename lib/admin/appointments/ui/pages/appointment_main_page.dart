@@ -469,10 +469,7 @@ class CardWidget extends StatelessWidget {
         children: <Widget>[
           Text(
             name,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyle.h2,
           ),
           SizedBox(height: 8.w),
           InformationRow(title: 'Age', value: age),
@@ -546,13 +543,7 @@ class InformationRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(
-            '$title',
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black54,
-            ),
-          ),
+          Text('$title', style: AppTextStyle.h3),
           SizedBox(width: 10.w),
           Flexible(
             child: Container(
@@ -560,10 +551,7 @@ class InformationRow extends StatelessWidget {
               child: Text(
                 '$value',
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyle.h3,
                 softWrap: isWrapped,
               ),
             ),

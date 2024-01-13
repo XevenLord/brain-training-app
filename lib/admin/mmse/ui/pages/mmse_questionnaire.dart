@@ -43,6 +43,7 @@ class _MMSEQuestionnaireScreenState extends State<MMSEQuestionnaireScreen> {
 
   void _submitAnswers() async {
     await _mmseViewModel.submitAnswers(questions, widget.patient);
+    await _mmseViewModel.loadPatientResponses();
     await showDialog(
         context: context,
         builder: (context) {
@@ -54,8 +55,7 @@ class _MMSEQuestionnaireScreenState extends State<MMSEQuestionnaireScreen> {
                 Text("Answers submitted successfully!", style: AppTextStyle.h3),
             actions: [
               TextButton(
-                onPressed: () =>
-                    Get.back(),
+                onPressed: () => Get.back(),
                 child: Text(
                   "OK",
                   style: AppTextStyle.h3.merge(AppTextStyle.brandBlueTextStyle),
@@ -64,6 +64,7 @@ class _MMSEQuestionnaireScreenState extends State<MMSEQuestionnaireScreen> {
             ],
           );
         });
+    Get.back();
     Get.back();
   }
 

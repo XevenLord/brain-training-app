@@ -100,8 +100,9 @@ class _PatientOverviewState extends State<PatientOverview> {
           ],
         ),
         "onTap": () {
-          Get.toNamed(RouteHelper.getMmseQuestionnaire(),
+          Get.toNamed(RouteHelper.getMmseSpecificPage(),
               arguments: widget.patient);
+          
         },
       },
     ];

@@ -5,8 +5,6 @@ import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -135,7 +133,12 @@ class _FlipCardResultOverviewState extends State<FlipCardResultOverview> {
                                   ),
                                   Text(
                                     '${card.level.toUpperCase()}',
-                                    style: AppTextStyle.h3,
+                                    style: AppTextStyle.h3.merge(TextStyle(
+                                        color: card.level == 'Easy'
+                                            ? Colors.green
+                                            : card.level == 'Medium'
+                                                ? Colors.orange
+                                                : Colors.red)),
                                   ),
                                   Text(
                                     '${card.second.toString()} seconds',

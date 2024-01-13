@@ -2,6 +2,7 @@ import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/admin/mmse/domain/entity/patient_response.dart';
 import 'package:brain_training_app/admin/mmse/ui/view_model/mmse_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -111,6 +112,39 @@ class _MMSEMainPageState extends State<MMSEMainPage> {
                       );
                     },
                   ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.brandBlue,
+        onPressed: () async {
+          // Show a dialog or use another method to allow the user to select a patient.
+          final selectedPatient = await showDialog<AppUser?>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Select a Patient', style: AppTextStyle.h3),
+                content: DropdownButton<AppUser>(
+                  items: patients.map((patient) {
+                    return DropdownMenuItem<AppUser>(
+                      value: patient,
+                      child: Text(patient.name!, style: AppTextStyle.h3),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    Navigator.of(context).pop(
+                        value); // Close the dialog and return the selected patient
+                  },
+                ),
+              );
+            },
+          );
+
+          // If a patient was selected, navigate to the questionnaire page with the selected patient.
+          if (selectedPatient != null) {
+            Get.toNamed(RouteHelper.getMmseQuestionnaire(),
+                arguments: selectedPatient);
+          }
+        },
+        child: const Icon(Icons.file_open_rounded),
       ),
     );
   }

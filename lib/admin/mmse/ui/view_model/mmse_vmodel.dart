@@ -9,6 +9,7 @@ class MMSEViewModel extends GetxController {
   List<PatientResponse> patientResponses = [];
 
   Future<List<Question>> loadQuestions() async {
+    if (questions.isNotEmpty) return questions;
     questions = await MMSEService.loadQuestions();
     update();
     return questions;
@@ -40,6 +41,7 @@ class MMSEViewModel extends GetxController {
 
   Future<List<PatientResponse>> loadPatientResponses() async {
     try {
+      if (patientResponses.isNotEmpty) return patientResponses;
       patientResponses = await MMSEService.loadPatientResponses();
       return patientResponses;
     } catch (e) {

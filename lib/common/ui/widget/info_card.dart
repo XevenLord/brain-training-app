@@ -38,13 +38,7 @@ class InfoCardTile implements InfoCardInterface {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(name, style: AppTextStyle.h2),
           SizedBox(height: 10.w),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
