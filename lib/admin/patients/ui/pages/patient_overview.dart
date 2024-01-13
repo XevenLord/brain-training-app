@@ -57,7 +57,8 @@ class _PatientOverviewState extends State<PatientOverview> {
           ],
         ),
         "onTap": () {
-          Get.toNamed(RouteHelper.getAdminGameCategoriesPage());
+          Get.toNamed(RouteHelper.getAdminGameCategoriesPage(),
+              arguments: widget.patient);
         },
       },
       {
@@ -98,7 +99,10 @@ class _PatientOverviewState extends State<PatientOverview> {
             Color(0xFFFFCF68),
           ],
         ),
-        "onTap": () {},
+        "onTap": () {
+          Get.toNamed(RouteHelper.getMmseQuestionnaire(),
+              arguments: widget.patient);
+        },
       },
     ];
     super.initState();
@@ -133,6 +137,7 @@ class _PatientOverviewState extends State<PatientOverview> {
           child: Column(children: [
             CircleAvatar(
               radius: 60.r,
+              backgroundColor: AppColors.lightBlue,
               backgroundImage: (widget.patient.profilePic == null ||
                       widget.patient.profilePic!.isEmpty)
                   ? const AssetImage(

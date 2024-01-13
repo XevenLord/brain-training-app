@@ -38,4 +38,14 @@ class MathAnswer {
       'timestamp': timestamp,
     };
   }
+
+  static List<MathAnswer> fromJsonList(List<dynamic> json) {
+    List<MathAnswer> mathAnswers = [];
+    json.forEach((element) {
+      mathAnswers.add(MathAnswer.fromJson(element));
+    });
+    return mathAnswers;
+  }
+
+
 }

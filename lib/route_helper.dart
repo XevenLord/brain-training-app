@@ -7,12 +7,16 @@ import 'package:brain_training_app/admin/appointments/ui/pages/appointment_view_
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_first_screen.dart';
 import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_screen.dart';
 import 'package:brain_training_app/admin/chat/ui/pages/chat_list.dart';
+import 'package:brain_training_app/admin/feedback/ui/pages/feedback_main_page.dart';
 import 'package:brain_training_app/admin/games/common/ui/pages/games_result_categories.dart';
+import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_patient_list.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_score_overview.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
 import 'package:brain_training_app/admin/home/ui/widgets/home_content.dart';
 import 'package:brain_training_app/admin/insMssg/ui/pages/ins_mssg_general_home.dart';
+import 'package:brain_training_app/admin/mmse/ui/pages/mmse_main_page.dart';
+import 'package:brain_training_app/admin/mmse/ui/pages/mmse_questionnaire.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_appt.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_list.dart';
 import 'package:brain_training_app/admin/patients/ui/pages/patient_mental.dart';
@@ -123,6 +127,13 @@ class RouteHelper {
   // *Admin Inspirational Message*
   static const String adminInsMssg = '/admin-ins-mssg';
 
+  // *Admin MMSE*
+  static const String mmseQuestionnaire = '/mmse-questionnaire';
+  static const String mmseMainPage = '/mmse-main-page';
+
+  // *Admin Feedback*
+  static const String adminFeedback = '/admin-feedback';
+
   // chat module
   static const String chatList = '/chat-list';
   static const String chatPage = '/chat';
@@ -201,6 +212,13 @@ class RouteHelper {
 
   // *Admin Inspirational Message*
   static String getAdminInsMssg() => adminInsMssg;
+
+  // *Admin MMSE*
+  static String getMmseQuestionnaire() => mmseQuestionnaire;
+  static String getMmseMainPage() => mmseMainPage;
+
+  // *Admin Feedback*
+  static String getAdminFeedback() => adminFeedback;
 
   static List<GetPage> routes = [
     GetPage(
@@ -493,7 +511,10 @@ class RouteHelper {
     GetPage(
       name: adminGamePage,
       transition: Transition.fadeIn,
-      page: () => const GamesResultCategories(),
+      page: () {
+        AppUser? patient = Get.arguments;
+        return GamesResultCategories(patient: patient);
+      },
     ),
     // *Admin maths*
     GetPage(
@@ -506,10 +527,10 @@ class RouteHelper {
       transition: Transition.fadeIn,
       page: () {
         AppUser patient = Get.arguments[0];
-        List<MathAnswer> mathAns = Get.arguments[1];
+        List<MathSet> mathAns = Get.arguments[1];
         return MathScoreOverview(
           patient: patient,
-          mathAns: mathAns,
+          mathAns: mathAns!,
         );
       },
     ),
@@ -524,6 +545,28 @@ class RouteHelper {
       name: adminInsMssg,
       transition: Transition.fadeIn,
       page: () => const InspirationalMssgGeneralHome(),
+    ),
+    // *Admin MMSE*
+    GetPage(
+      name: mmseQuestionnaire,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments;
+        return MMSEQuestionnaireScreen(patient: patient);
+      },
+    ),
+    GetPage(
+      name: mmseMainPage,
+      transition: Transition.fadeIn,
+      page: () {
+        return MMSEMainPage();
+      },
+    ),
+    // *Admin Feedback*
+    GetPage(
+      name: adminFeedback,
+      transition: Transition.fadeIn,
+      page: () => const FeedbackMainPage(),
     ),
   ];
 }

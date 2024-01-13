@@ -89,7 +89,7 @@ class AppointmentViewModel extends GetxController implements GetxService {
           time,
       date: DateFormat("yyyy-MM-dd").format(date.toLocal()),
       time: time,
-      reason: reason,
+      reason: reason == null || reason.isEmpty ? "N/A" : reason,
       physiotherapistID: chosenPhysiotherapist!.uid,
       status: "pending",
     );

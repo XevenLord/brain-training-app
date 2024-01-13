@@ -21,11 +21,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
+    fetchAllPatients();
     if (widget.pageIndex != null) {
       _currentIndex = widget.pageIndex!;
     }
+    super.initState();
+  }
+
+  void fetchAllPatients() async {
+    await homeViewModel.fetchAllPatients();
+    setState(() {});
   }
 
   final List<Widget> pages = [

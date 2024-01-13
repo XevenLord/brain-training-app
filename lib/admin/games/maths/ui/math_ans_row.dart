@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MathAnsRow extends StatelessWidget {
-  int index;
+  int? index;
   MathAnswer mathAnswer;
   MathAnsRow({
     super.key,
@@ -15,7 +15,6 @@ class MathAnsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: index == 1 ? null : const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
@@ -26,13 +25,6 @@ class MathAnsRow extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [
-          SizedBox(
-            width: 64.w,
-            child: Text(
-              index.toString(),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-          ),
           Expanded(
             flex: 1,
             child: Text(
@@ -52,16 +44,24 @@ class MathAnsRow extends StatelessWidget {
                         : Colors.red),
           ),
           SizedBox(
+            width: 50.w,
+            child: Text(
+              mathAnswer.userAnswer ?? "",
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: mathAnswer.isUserCorrect!
+                      ? AppColors.brandGreen
+                      : AppColors.brandRed),
+              textAlign: TextAlign.end,
+            ),
+          ),
+          SizedBox(
             width: 24.w,
           ),
-          Text(
-            mathAnswer.isUserCorrect.toString().toUpperCase(),
-            style: TextStyle(
-                fontSize: 12,
-                color: mathAnswer.isUserCorrect!
-                    ? AppColors.brandGreen
-                    : AppColors.brandRed),
-          ),
+          mathAnswer.isUserCorrect!
+              ? Icon(Icons.check, color: AppColors.brandGreen)
+              : Icon(Icons.close, color: AppColors.brandRed),
         ]),
       ),
     );

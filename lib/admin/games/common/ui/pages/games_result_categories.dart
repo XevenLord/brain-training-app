@@ -1,4 +1,6 @@
+import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -6,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GamesResultCategories extends StatefulWidget {
-  const GamesResultCategories({super.key});
+  AppUser? patient;
+  GamesResultCategories({super.key, this.patient});
 
   @override
   State<GamesResultCategories> createState() => _GamesResultCategoriesState();
@@ -27,8 +30,16 @@ class _GamesResultCategoriesState extends State<GamesResultCategories> {
             Color(0xFFFF484C),
           ],
         ),
-        "onTap": () {
-          Get.toNamed(RouteHelper.getMathPatientList());
+        "onTap": () async {
+          if (widget.patient != null) {
+            dynamic mathAns = await Get.find<MathResultViewModel>()
+                .getMathAnswersByUserId(widget.patient!.uid!);
+            setState(() {});
+            Get.toNamed(RouteHelper.getMathScoreOverview(),
+                arguments: [widget.patient, mathAns]);
+          } else {
+            Get.toNamed(RouteHelper.getMathPatientList());
+          }
         },
       },
       {

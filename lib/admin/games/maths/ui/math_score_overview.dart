@@ -1,3 +1,4 @@
+import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_ans_row.dart';
 import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
 import 'package:brain_training_app/common/domain/entity/math_ans.dart';
@@ -11,7 +12,7 @@ import 'package:get/get.dart';
 
 class MathScoreOverview extends StatefulWidget {
   AppUser patient;
-  List<MathAnswer>? mathAns;
+  List<MathSet>? mathAns;
   MathScoreOverview({super.key, required this.patient, this.mathAns});
 
   @override
@@ -21,13 +22,14 @@ class MathScoreOverview extends StatefulWidget {
 class _MathScoreOverviewState extends State<MathScoreOverview> {
   late MathResultViewModel mathResultViewModel =
       Get.find<MathResultViewModel>();
-  List<MathAnswer> mathAnswers = [];
+  List<MathSet> mathAnswers = [];
   int index = 1;
 
   @override
   void initState() {
-    mathAnswers = widget.mathAns ?? [];
-    mathAnswers.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
+    print("Math score overview param: " + widget.mathAns.toString());
+    mathAnswers = widget.mathAns!;
+    // mathAnswers.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
     setState(() {});
     print("Math Answers: " + mathResultViewModel.mathAnswers.toString());
     super.initState();
@@ -58,8 +60,14 @@ class _MathScoreOverviewState extends State<MathScoreOverview> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: AppColors.brandBlue,
-        title: const Text('Maths Score Overview'),
+        title: Text('Maths Score Overview', style: AppTextStyle.h2),
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Get.back();
+          },
+        ),
       ),
       body: SafeArea(
         child: mathAnswers.isEmpty
@@ -77,59 +85,53 @@ class _MathScoreOverviewState extends State<MathScoreOverview> {
                               .merge(AppTextStyle.brandBlueTextStyle))
                     ]),
               )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(children: [
-                  SizedBox(height: 10.h),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignments.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 32.r,
-                        child: widget.patient.profilePic != null &&
-                                widget.patient.profilePic!.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(32.r),
-                                child: Image(
-                                  image:
-                                      NetworkImage(widget.patient.profilePic!),
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.fill,
-                                ))
-                            : Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                width: 100,
-                                height: 100,
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.grey[800],
-                                )),
-                      ),
-                      SizedBox(width: 10.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(widget.patient.name!, style: AppTextStyle.h2),
-                          Text("Age: ${calculateAge(widget.patient.dateOfBirth)}",
-                              style: AppTextStyle.h3),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  ...mathAnswers.map((mathAns) {
-                    MathAnsRow row = MathAnsRow(
-                      mathAnswer: mathAns,
-                      index: index++,
-                    );
-                    return row;
-                  }).toList(),
-                ]),
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(children: [
+                    SizedBox(height: 10.h),
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignments.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 32.r,
+                          backgroundColor: AppColors.lightBlue,
+                          backgroundImage: (widget.patient.profilePic == null ||
+                                  widget.patient.profilePic!.isEmpty)
+                              ? const AssetImage(
+                                  AppConstant.NO_PROFILE_PIC,
+                                ) as ImageProvider
+                              : NetworkImage(widget.patient.profilePic!),
+                        ),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.patient.name!, style: AppTextStyle.h2),
+                            Text(
+                                "Age: ${calculateAge(widget.patient.dateOfBirth)}",
+                                style: AppTextStyle.h3),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    ...mathAnswers.map((mathAns) {
+                      return ExpansionTile(
+                        title: Text(
+                            mathAns.id ?? "", style: AppTextStyle.h3), // Assuming 'id' is a property of MathAnswer
+                        children: mathAns.maths!.map((math) {
+                          MathAnsRow row = MathAnsRow(
+                            mathAnswer: math,
+                            index: index++,
+                          );
+                          return row;
+                        }).toList(),
+                      );
+                    }).toList(),
+                  ]),
+                ),
               ),
       ),
     );

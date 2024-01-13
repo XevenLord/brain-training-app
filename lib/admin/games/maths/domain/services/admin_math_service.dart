@@ -1,11 +1,12 @@
+import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/common/domain/entity/math_ans.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminMathService {
-  Future<List<MathAnswer>> getMathAnswersByUserId(String userId) async {
+  Future<List<MathSet>> getMathAnswersByUserId(String userId) async {
     try {
-      List<MathAnswer> mathAnswers = [];
+      List<MathSet> mathAnswers = [];
       var querySnapshot = await FirebaseFirestore.instance
           .collection('games')
           .doc("MathGame")
@@ -14,9 +15,11 @@ class AdminMathService {
           .collection("answers")
           .get();
 
-      mathAnswers = querySnapshot.docs.map((doc) {
-        return MathAnswer.fromJson(doc.data() as Map<String, dynamic>);
-      }).toList();
+      mathAnswers = querySnapshot.docs
+          .map((doc) => MathSet.fromJson(doc.data(), doc.id))
+          .toList();
+
+      print(mathAnswers.toString());
       return mathAnswers;
     } catch (e) {
       print("Error Admin Math Service: " + e.toString());

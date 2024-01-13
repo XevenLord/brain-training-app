@@ -47,12 +47,13 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
 
   @override
   void initState() {
-    super.initState();
     appointmentVModel = Get.find<AdminAppointmentViewModel>();
     patient = widget.patient;
     dateController.text = widget.appointment.date!;
-    reasonController.text = widget.appointment.reason!;
+    reasonController.text = widget.appointment.reason ?? "";
+    remarkController.text = widget.appointment.remark ?? "";
     time = widget.appointment.time!;
+    super.initState();
   }
 
   void updateAppointment() async {
@@ -71,6 +72,10 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   void deleteAppointment() async {
     await appointmentVModel.cancelAppointment(appointment: widget.appointment);
     Get.back(result: true);
+  }
+
+  bool isAfterToday(DateTime date) {
+    return date.isAfter(DateTime.now());
   }
 
   @override
@@ -94,6 +99,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                             children: [
                               CircleAvatar(
                                 radius: 70.r,
+                                backgroundColor: AppColors.lightBlue,
                                 backgroundImage: patient.profilePic == null ||
                                         patient.profilePic!.isEmpty
                                     ? const AssetImage(
@@ -123,21 +129,26 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                         label: "DD/MM/YYYY",
                         keyboardType: TextInputType.datetime,
                         textAlign: TextAlign.center,
+                        readOnly: !isAfterToday(
+                            DateTime.parse(widget.appointment.date!)),
                         onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime(2100));
+                          if (isAfterToday(
+                              DateTime.parse(widget.appointment.date!))) {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1950),
+                                lastDate: DateTime(2100));
 
-                          if (pickedDate != null) {
-                            String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
-                            setState(() {
-                              dateController.text =
-                                  formattedDate; //set output date to TextField value.
-                            });
-                          } else {}
+                            if (pickedDate != null) {
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                              setState(() {
+                                dateController.text =
+                                    formattedDate; //set output date to TextField value.
+                              });
+                            } else {}
+                          }
                         },
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(
@@ -153,10 +164,15 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                         items: timeSlots,
                         label: "Select your appointment time",
                         initialValue: widget.appointment.time,
+                        readOnly: !isAfterToday(
+                            DateTime.parse(widget.appointment.date!)),
                         onChanged: (value) {
-                          setState(() {
-                            time = value;
-                          });
+                          if (isAfterToday(
+                              DateTime.parse(widget.appointment.date!))) {
+                            setState(() {
+                              time = value;
+                            });
+                          }
                         },
                       ),
                       InputTextFormField(
@@ -172,7 +188,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                         label:
                             "Write the condition of the patient throuhout the appointment",
                         textEditingController: remarkController,
-                        maxLines: 25,
+                        maxLines: 15,
                       ),
                       SizedBox(height: 30.h),
                       Row(

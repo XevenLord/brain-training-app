@@ -114,61 +114,61 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
                         value: item,
                         child: Text(item)))
                     .toList(),
-                onChanged: widget.onChanged)
+                onChanged: widget.onChanged,
+                enabled: !widget.readOnly,
+              )
             : FormBuilderTextField(
-              expands: widget.expands ?? false,
-              readOnly: widget.readOnly,
-              name: widget.name,
-              keyboardType: widget.keyboardType,
-              maxLines: widget.maxLines,
-              obscureText: widget.obscureText,
-              controller: widget.textEditingController,
-              textAlign: widget.textAlign ?? TextAlign.start,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color(0xFFD9D9D9).withOpacity(0.3),
-                label: widget.label != null
-                    ? Text(
-                        widget.label!,
-                        style: AppTextStyle.h4,
-                      )
-                    : null,
-                labelStyle:
-                    AppTextStyle.c2.merge(AppTextStyle.lightGreyTextStyle),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                floatingLabelAlignment: FloatingLabelAlignment.start,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: AppColors.white),
-                    borderRadius: BorderRadius.circular(10),
-                    gapPadding: 0),
-                disabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: AppColors.white),
-                    borderRadius: BorderRadius.circular(10),
-                    gapPadding: 0),
-                focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: AppColors.brandBlue),
-                    borderRadius: BorderRadius.circular(10),
-                    gapPadding: 0),
-                focusedErrorBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(width: 2, color: Colors.red),
-                    borderRadius: BorderRadius.circular(10),
-                    gapPadding: 0),
-                errorBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.red),
-                    borderRadius: BorderRadius.circular(10),
-                    gapPadding: 0),
-                suffixIcon: widget.suffixIcon,
-                suffixStyle: widget.suffixStyle,
-                prefixIcon: widget.prefixIcon,
-                prefixStyle: widget.prefixStyle,
+                expands: widget.expands ?? false,
+                readOnly: widget.readOnly,
+                name: widget.name,
+                keyboardType: widget.keyboardType,
+                maxLines: widget.maxLines,
+                obscureText: widget.obscureText,
+                controller: widget.textEditingController,
+                textAlign: widget.textAlign ?? TextAlign.start,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xFFD9D9D9).withOpacity(0.3),
+                  label: widget.label != null
+                      ? Text(
+                          widget.label!,
+                          style: AppTextStyle.h4,
+                        )
+                      : null,
+                  labelStyle:
+                      AppTextStyle.c2.merge(AppTextStyle.lightGreyTextStyle),
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  floatingLabelAlignment: FloatingLabelAlignment.start,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: AppColors.white),
+                      borderRadius: BorderRadius.circular(10),
+                      gapPadding: 0),
+                  disabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: AppColors.white),
+                      borderRadius: BorderRadius.circular(10),
+                      gapPadding: 0),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: AppColors.brandBlue),
+                      borderRadius: BorderRadius.circular(10),
+                      gapPadding: 0),
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(width: 2, color: Colors.red),
+                      borderRadius: BorderRadius.circular(10),
+                      gapPadding: 0),
+                  errorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red),
+                      borderRadius: BorderRadius.circular(10),
+                      gapPadding: 0),
+                  suffixIcon: widget.suffixIcon,
+                  suffixStyle: widget.suffixStyle,
+                  prefixIcon: widget.prefixIcon,
+                  prefixStyle: widget.prefixStyle,
+                ),
+                validator: widget.validator,
+                onTap: widget.onTap,
               ),
-              validator: widget.validator,
-              onTap: widget.onTap,
-            ),
         SizedBox(height: 10.h),
       ],
     );

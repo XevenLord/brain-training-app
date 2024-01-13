@@ -53,9 +53,13 @@ class _HomeContentState extends State<HomeContent> {
       }
     },
     {
-      "category": "Survey",
+      "category": "MMSE Screening",
       "icon": Icons.edit_document,
-      "onTap": () {},
+      "onTap": () {
+        Get.toNamed(
+          RouteHelper.getMmseMainPage(),
+        );
+      },
     },
     {
       "category": "Inspirational Message",
@@ -67,7 +71,9 @@ class _HomeContentState extends State<HomeContent> {
     {
       "category": "Feedback",
       "icon": Icons.feedback,
-      "onTap": () {},
+      "onTap": () {
+        Get.toNamed(RouteHelper.getAdminFeedback());
+      },
     },
   ];
 

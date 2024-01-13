@@ -1,4 +1,5 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
+import 'package:intl/intl.dart';
 
 class AdminAppointment {
   String? appointmentID;
@@ -55,5 +56,16 @@ class AdminAppointment {
       appointments.add(AdminAppointment.fromJson(element));
     }
     return appointments;
+  }
+
+  bool get isExpired {
+    DateTime appointmentDate = DateFormat('yyyy-MM-dd').parse(date!);
+    return appointmentDate.isBefore(DateTime.now());
+  }
+
+  void updateStatusIfExpired() {
+    if (status == "approved" && isExpired) {
+      status = "expired";
+    }
   }
 }

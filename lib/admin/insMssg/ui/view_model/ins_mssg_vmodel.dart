@@ -12,14 +12,14 @@ class InspirationalMssgViewModel extends GetxController implements GetxService {
     }
   }
 
-  void addInspirationalMessage(
+  Future<void> addInspirationalMessage(
       InspirationalMessage inspirationalMessage) async {
     await InspirationalMssgService.onPushGeneralInspirationalMessage(
         inspirationalMessage);
     insMssgs.add(inspirationalMessage);
   }
 
-  void deleteInspirationalMessage(
+  Future<void> deleteInspirationalMessage(
       InspirationalMessage inspirationalMessage) async {
     await InspirationalMssgService.onDeleteGeneralInspirationalMessage(
         inspirationalMessage);

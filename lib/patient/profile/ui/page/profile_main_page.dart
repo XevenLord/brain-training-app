@@ -32,78 +32,74 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
   @override
   Widget build(BuildContext context) {
     // Use Future Builder
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          height: 20,
-        ),
-        // Circle Avatar Picture
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 12.h,
-            ),
-            Center(
-              child: CircleAvatar(
-                radius: 70.r,
-                backgroundColor: AppColors.lightBlue,
-                backgroundImage:
-                    appUser.profilePic != null && appUser.profilePic!.isNotEmpty
-                        ? NetworkImage(
-                            appUser.profilePic!,
-                          )
-                        : const AssetImage(
-                            AppConstant.NO_PROFILE_PIC,
-                          ) as ImageProvider,
-              ),
-            ),
-            SizedBox(
-              height: 12.h,
-            ),
-            appUser.aboutMe != null && appUser.aboutMe!.isNotEmpty
-                ? EmptyBox(
-                    decoration: BoxDecoration(
-                        color: AppColors.brandBlue.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10.r)),
-                    child:
-                        Text('"${appUser.aboutMe!}"', style: AppTextStyle.h3))
-                : EmptyBox(
-                    decoration: BoxDecoration(
-                        color: AppColors.lightBlue.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(10.r)),
-                    child: Text('Edit to add self-description',
-                        style: AppTextStyle.h3)),
-          ],
-        ),
-        SizedBox(height: 20.h),
-        InfoTile(title: "Name", label: appUser.name!),
-        InfoTile(title: "IC Number", label: appUser.icNumber!),
-        InfoTile(title: "Email", label: appUser.email!),
-        InfoTile(title: "Phone", label: appUser.phoneNumber!),
-        InfoTile(title: "Gender", label: appUser.gender!),
-        InfoTile(
-            title: "Date Of Birth",
-            label: DateFormat('yyyy-MM-dd').format(appUser.dateOfBirth!)),
-        const SizedBox(
-          height: 20,
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: CircleAvatar(
-            radius: 30.r,
-            backgroundColor: AppColors.lightBlue,
-            child: IconButton(
-              color: AppColors.white,
-              onPressed: () {
-                Get.toNamed(RouteHelper.getProfileEditPage());
-              },
-              icon: const Icon(Icons.edit, color: AppColors.brandBlue),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          // Circle Avatar Picture
+          SizedBox(
+            height: 12.h,
+          ),
+          Center(
+            child: CircleAvatar(
+              radius: 70.r,
+              backgroundColor: AppColors.lightBlue,
+              backgroundImage:
+                  appUser.profilePic != null && appUser.profilePic!.isNotEmpty
+                      ? NetworkImage(
+                          appUser.profilePic!,
+                        )
+                      : const AssetImage(
+                          AppConstant.NO_PROFILE_PIC,
+                        ) as ImageProvider,
             ),
           ),
-        )
-      ],
+          SizedBox(
+            height: 12.h,
+          ),
+          appUser.aboutMe != null && appUser.aboutMe!.isNotEmpty
+              ? EmptyBox(
+                  decoration: BoxDecoration(
+                      color: AppColors.brandBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10.r)),
+                  child: Text('"${appUser.aboutMe!}"', style: AppTextStyle.h3))
+              : EmptyBox(
+                  decoration: BoxDecoration(
+                      color: AppColors.lightBlue.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(10.r)),
+                  child: Text('Edit to add self-description',
+                      style: AppTextStyle.h3)),
+          SizedBox(height: 20.h),
+          InfoTile(title: "Name", label: appUser.name!),
+          InfoTile(title: "IC Number", label: appUser.icNumber!),
+          InfoTile(title: "Email", label: appUser.email!),
+          InfoTile(title: "Phone", label: appUser.phoneNumber!),
+          InfoTile(title: "Gender", label: appUser.gender!),
+          InfoTile(
+              title: "Date Of Birth",
+              label: DateFormat('yyyy-MM-dd').format(appUser.dateOfBirth!)),
+          const SizedBox(
+            height: 20,
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: CircleAvatar(
+              radius: 30.r,
+              backgroundColor: AppColors.lightBlue,
+              child: IconButton(
+                color: AppColors.white,
+                onPressed: () {
+                  Get.toNamed(RouteHelper.getProfileEditPage());
+                },
+                icon: const Icon(Icons.edit, color: AppColors.brandBlue),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

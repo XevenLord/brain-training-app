@@ -6,11 +6,13 @@ import 'package:brain_training_app/patient/appointment/ui/view_model/appointment
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/healthCheck/ui/widgets/question_card.dart';
+import 'package:brain_training_app/patient/home/ui/view_model/feedback_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/patient/home/ui/widget/game_card.dart';
 import 'package:brain_training_app/common/ui/widget/screen.dart';
 import 'package:brain_training_app/patient/profile/ui/page/profile_main_page.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   HomeViewModel homeVModel = Get.find<HomeViewModel>();
   AppointmentViewModel appointmentVModel = Get.find<AppointmentViewModel>();
+  late FeedbackViewModel feedbackVModel;
+
+  final TextEditingController feedbackController = TextEditingController();
+
   // ChatViewModel chatVModel = Get.find<ChatViewModel>();
 
   int _selectedIndex = 0;
@@ -83,7 +89,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final appUser = Get.find<AppUser>();
+    feedbackVModel = Get.find<FeedbackViewModel>();
     // chatVModel.initUsersListener();
     onTapNav(widget.pageIndex ?? 0);
   }
@@ -169,6 +175,13 @@ class _HomePageState extends State<HomePage> {
                 : "Your Profile";
   }
 
+  void submitFeedback() async {
+    await feedbackVModel.submitFeedback(feedbackController.text);
+    feedbackController.clear();
+    setState(() {});
+    Get.back();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Screen(
@@ -204,7 +217,64 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => Get.toNamed(RouteHelper.getMyAppointmentPage()),
               label: Text("My Appointment", style: AppTextStyle.h4),
             )
-          : null,
+          : _selectedIndex == 3
+              ? FloatingActionButton.extended(
+                  backgroundColor: AppColors.brandBlue,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Feedback',
+                            style: AppTextStyle.h2
+                                .merge(AppTextStyle.brandBlueTextStyle)),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                AppConstant.FEEDBACK_IMG,
+                                height: 200.h,
+                                width: 200.w,
+                              ),
+                            ),
+                            SizedBox(height: 10.w),
+                            Text(
+                                'Your feedback to our application is highly appreciated!:',
+                                style: AppTextStyle.c1),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              controller: feedbackController,
+                              style: AppTextStyle.h4,
+                              maxLines: 5,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Enter your feedback here...',
+                                  hintStyle: AppTextStyle.h4),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.brandBlue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                            ),
+                            onPressed: () {
+                              submitFeedback();
+                            },
+                            child:
+                                Text('Submit Feedback', style: AppTextStyle.h3),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  label: Text("Feedback", style: AppTextStyle.h4),
+                )
+              : null,
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         backgroundColor: AppColors.white,

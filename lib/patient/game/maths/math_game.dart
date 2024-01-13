@@ -53,8 +53,8 @@ class _MathGameState extends State<MathGame> {
     setLevel();
     // Create a new question with a random operator
     operator = getRandomOperator();
-    numberA = randomNumber.nextInt(level);
-    numberB = randomNumber.nextInt(level);
+    numberA = randomNumber.nextInt(level) + increment();
+    numberB = randomNumber.nextInt(level) + increment();
 
     // Modify the questionText based on the random operator
     if (operator == '-') {
@@ -66,12 +66,12 @@ class _MathGameState extends State<MathGame> {
       }
     } else if (operator == '*') {
       // Limit the multiplication result to a reasonable range
-      numberA = randomNumber.nextInt(level);
-      numberB = randomNumber.nextInt(10);
+      numberA = randomNumber.nextInt(level) + increment();
+      numberB = randomNumber.nextInt(10) + 1;
     } else if (operator == '/') {
       // Ensure numberA is divisible by numberB for division
-      numberB = randomNumber.nextInt(9) + 1;
-      numberA = numberB * (randomNumber.nextInt(level) + 1);
+      numberB = randomNumber.nextInt(10) + 1;
+      numberA = numberB * (randomNumber.nextInt(level) + increment());
     }
 
     final operatorStr = operator == '*'
@@ -86,18 +86,26 @@ class _MathGameState extends State<MathGame> {
   }
 
   void setLevel() {
-    print("in set Level");
     if (widget.level == Level.Easy) {
-      print(widget.level.toString());
-      level = 10;
+      level = 11;
     } else if (widget.level == Level.Medium) {
-      print(widget.level.toString());
       level = 50;
     } else if (widget.level == Level.Hard) {
-      print(widget.level.toString());
-      level = 100;
+      level = 151;
     }
     setState(() {});
+  }
+
+  int increment() {
+    if (widget.level == Level.Easy) {
+      return 0;
+    } else if (widget.level == Level.Medium) {
+      return 11;
+    } else if (widget.level == Level.Hard) {
+      return 50;
+    } else {
+      return 0;
+    }
   }
 
   // user tapped a button
@@ -197,8 +205,8 @@ class _MathGameState extends State<MathGame> {
 
     // create a new question
     operator = getRandomOperator();
-    numberA = randomNumber.nextInt(level);
-    numberB = randomNumber.nextInt(level);
+    numberA = randomNumber.nextInt(level) + increment();
+    numberB = randomNumber.nextInt(level) + increment();
 
     if (operator == '-') {
       // Ensure numberA is greater than numberB for subtraction
@@ -209,12 +217,12 @@ class _MathGameState extends State<MathGame> {
       }
     } else if (operator == '*') {
       // Limit the multiplication result to a reasonable range
-      numberA = randomNumber.nextInt(level);
-      numberB = randomNumber.nextInt(10);
+      numberA = randomNumber.nextInt(level) + increment();
+      numberB = randomNumber.nextInt(10) + 1;
     } else if (operator == '/') {
       // Ensure numberA is divisible by numberB for division
-      numberB = randomNumber.nextInt(9) + 1;
-      numberA = numberB * (randomNumber.nextInt(level) + 1);
+      numberB = randomNumber.nextInt(10) + 1;
+      numberA = numberB * (randomNumber.nextInt(level) + increment());
     }
 
     final operatorStr = operator == '*'

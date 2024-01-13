@@ -2,6 +2,7 @@ import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_v
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -80,7 +81,7 @@ class _MathPatientListState extends State<MathPatientList> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: AppColors.brandBlue,
-        title: const Text('Mathematics Game'),
+        title: Text('Mathematics Game', style: AppTextStyle.h2),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),

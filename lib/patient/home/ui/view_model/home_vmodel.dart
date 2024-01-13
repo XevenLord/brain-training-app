@@ -13,7 +13,7 @@ class HomeViewModel extends GetxController implements GetxService {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Do you want to log out?', style: AppTextStyle.h2),
+        title: Text('Do you want to log out?', style: AppTextStyle.h3),
         actions: <Widget>[
           TextButton(
             onPressed: () {

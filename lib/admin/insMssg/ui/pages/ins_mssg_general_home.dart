@@ -16,10 +16,10 @@ class _InspirationalMssgGeneralHomeState
     extends State<InspirationalMssgGeneralHome> {
   List<InspirationalMessage> messages = [];
   late InspirationalMssgViewModel inspirationalMssgViewModel;
+  TextEditingController _textFieldController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     inspirationalMssgViewModel = Get.find<InspirationalMssgViewModel>();
     callDataInit();
     super.initState();
@@ -47,14 +47,11 @@ class _InspirationalMssgGeneralHomeState
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(messages[index].getMessage ?? ''),
-              subtitle: Text('Sender: ${messages[index].getSender ?? ''}'),
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  // Remove the message when the delete button is pressed.
-                  setState(() {
-                    messages.removeAt(index);
-                  });
+                  deleteMessage(index);
+                  setState(() {});
                 },
               ),
             );
@@ -63,7 +60,6 @@ class _InspirationalMssgGeneralHomeState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add a new message when the add button is pressed.
           _addMessage();
         },
         child: Icon(Icons.add),
@@ -71,13 +67,39 @@ class _InspirationalMssgGeneralHomeState
     );
   }
 
+  void addMssg() async {
+    InspirationalMessage inspirationalMessage = InspirationalMessage(
+        message: _textFieldController.text, createdAt: DateTime.now());
+    _textFieldController.clear();
+    // messages.add(inspirationalMessage);
+    await inspirationalMssgViewModel
+        .addInspirationalMessage(inspirationalMessage);
+    Get.back();
+    setState(() {});
+  }
+
   _addMessage() {
     // Push a new message to the messages list.
     setState(() {
-      messages.add(InspirationalMessage(
-          message: 'Hello World',
-          sender: 'Flutter',
-          createdAt: DateTime.now()));
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Add Message'),
+                content: TextField(
+                  controller: _textFieldController,
+                  onChanged: (value) {},
+                ),
+                actions: [TextButton(onPressed: addMssg, child: Text('Add'))],
+              ));
     });
+  }
+
+  void deleteMessage(int index) async {
+    // Remove the me  ssage when the delete button is pressed.
+
+    await inspirationalMssgViewModel
+        .deleteInspirationalMessage(messages[index]);
+    messages.removeAt(index);
+    setState(() {});
   }
 }

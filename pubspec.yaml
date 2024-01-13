@@ -79,6 +79,7 @@ dependencies:
   path_provider: ^2.1.1
   http: ^0.13.6
   firebase_admin: ^0.2.0
+  url_launcher: ^6.1.11
   
 flutter_icons:
   android: true

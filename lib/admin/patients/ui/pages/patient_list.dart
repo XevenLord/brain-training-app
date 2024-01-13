@@ -25,6 +25,9 @@ class _PatientListState extends State<PatientList> {
 
   bool isLoading = true;
 
+  String selectedGender = '';
+  int? selectedAge;
+
   @override
   void initState() {
     userRepo = Get.find<UserRepository>();
@@ -64,6 +67,28 @@ class _PatientListState extends State<PatientList> {
     }
 
     return age.toString();
+  }
+
+  void applyFilters() {
+    // Filter patients based on selectedGender and selectedAge
+    List<AppUser> filteredPatients = patients;
+
+    if (selectedGender.isNotEmpty) {
+      filteredPatients = filteredPatients
+          .where((patient) => patient.gender == selectedGender)
+          .toList();
+    }
+
+    if (selectedAge != null) {
+      filteredPatients = filteredPatients
+          .where((patient) =>
+              calculateAge(patient.dateOfBirth) == selectedAge.toString())
+          .toList();
+    }
+
+    setState(() {
+      patients = filteredPatients;
+    });
   }
 
   @override

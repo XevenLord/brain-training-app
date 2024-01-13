@@ -497,34 +497,6 @@ class CardWidget extends StatelessWidget {
                       icon: const Icon(Icons.edit, color: Colors.blue))),
               Container(
                   height: 50.w,
-                  width: appointment.status == "declined" ? 50.w : 120.w,
-                  decoration: BoxDecoration(
-                      color: appointment.status == "completed"
-                          ? Colors.red
-                          : AppColors.lightRed,
-                      borderRadius: BorderRadius.circular(20.w)),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: appointment.status == "completed"
-                          ? Colors.red
-                          : AppColors.lightRed,
-                      padding: EdgeInsets.zero,
-                    ),
-                    onPressed: onReject,
-                    child: appointment.status == "declined"
-                        ? const Icon(Icons.check, color: Colors.white)
-                        : Text(
-                            "Declined",
-                            style: AppTextStyle.h3
-                                .merge(AppTextStyle.brandRedTextStyle),
-                          ),
-                    // Icon(Icons.check,
-                    //     color: appointment.status == "completed"
-                    //         ? Colors.white
-                    //         : Colors.blue),
-                  )),
-              Container(
-                  height: 50.w,
                   width: appointment.status == "completed" ? 50.w : 120.w,
                   decoration: BoxDecoration(
                       color: appointment.status == "completed"
@@ -581,13 +553,20 @@ class InformationRow extends StatelessWidget {
               color: Colors.black54,
             ),
           ),
-          Text(
-            '$value',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          SizedBox(width: 10.w),
+          Flexible(
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: Text(
+                '$value',
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                softWrap: isWrapped,
+              ),
             ),
-            softWrap: isWrapped,
           ),
         ],
       ),
