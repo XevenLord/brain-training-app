@@ -34,8 +34,6 @@ class MathGameService {
           ]),
         });
       } else {
-        // If the document doesn't exist, create it with the answers array
-        print("part 3");
         await mathDoc.doc(customDocumentId).set({
           "answers": [
             {

@@ -9,6 +9,9 @@ import 'package:brain_training_app/admin/authentication/ui/pages/sign_up_second_
 import 'package:brain_training_app/admin/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/admin/feedback/ui/pages/feedback_main_page.dart';
 import 'package:brain_training_app/admin/games/common/ui/pages/games_result_categories.dart';
+import 'package:brain_training_app/admin/games/flipcard/domain/entity/flipcard_set.dart';
+import 'package:brain_training_app/admin/games/flipcard/ui/pages/flipcard_patient_list.dart';
+import 'package:brain_training_app/admin/games/flipcard/ui/pages/flipcard_res_overview.dart';
 import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_patient_list.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_score_overview.dart';
@@ -121,6 +124,11 @@ class RouteHelper {
   static const String mathPatientList = '/math-patient-list';
   static const String mathScoreOverview = '/math-score-overview';
 
+  // *Admin Flip Card*
+  static const String flipCardPatientList = '/flip-card-patient-list';
+  static const String flipCardResOverview = '/flip-card-res-overview';
+
+
   // *Admin chat*
   static const String adminChatList = '/admin-chat-list';
 
@@ -206,6 +214,10 @@ class RouteHelper {
   // *Admin maths*
   static String getMathPatientList() => mathPatientList;
   static String getMathScoreOverview() => mathScoreOverview;
+
+  // *Admin Flip Card*
+  static String getFlipCardPatientList() => flipCardPatientList;
+  static String getFlipCardResOverview() => flipCardResOverview;
 
   // *Admin chat*
   static String getAdminChatList() => adminChatList;
@@ -531,6 +543,24 @@ class RouteHelper {
         return MathScoreOverview(
           patient: patient,
           mathAns: mathAns!,
+        );
+      },
+    ),
+    // *Admin Flip Card*
+    GetPage(
+      name: flipCardPatientList,
+      transition: Transition.fadeIn,
+      page: () => const FlipCardPatientList(),
+    ),
+    GetPage(
+      name: flipCardResOverview,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments[0];
+        List<FlipCardSet> flipCardSet = Get.arguments[1];
+        return FlipCardResultOverview(
+          patient: patient,
+          flipCardSet: flipCardSet,
         );
       },
     ),

@@ -1,3 +1,4 @@
+import 'package:brain_training_app/admin/games/flipcard/ui/view_model/flipcard_vmodel.dart';
 import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -43,23 +44,12 @@ class _GamesResultCategoriesState extends State<GamesResultCategories> {
         },
       },
       {
-        "category": "Tic Tac Toe",
-        "icon": Icons.gamepad,
-        "gradient": const LinearGradient(
-          colors: <Color>[
-            Color(0xFF2753F3),
-            Color(0xFF765AFC),
-          ],
-        ),
-        "onTap": () {},
-      },
-      {
         "category": "2048 Game",
         "icon": Icons.gamepad,
         "gradient": const LinearGradient(
           colors: <Color>[
-            Color(0xFF2EA13A),
-            Color(0xFF41D73E),
+            Color(0xFFFE7F44),
+            Color(0xFFFFCF68),
           ],
         ),
         "onTap": () {},
@@ -69,11 +59,21 @@ class _GamesResultCategoriesState extends State<GamesResultCategories> {
         "icon": Icons.gamepad,
         "gradient": const LinearGradient(
           colors: <Color>[
-            Color(0xFFFE7F44),
-            Color(0xFFFFCF68),
+            Color(0xFF2753F3),
+            Color(0xFF765AFC),
           ],
         ),
-        "onTap": () {},
+        "onTap": () async {
+          if (widget.patient != null) {
+            dynamic flipCardSet = await Get.find<AdminFlipCardViewModel>()
+                .getFlipCardSetByUserId(widget.patient!.uid!);
+            setState(() {});
+            Get.toNamed(RouteHelper.getFlipCardResOverview(),
+                arguments: [widget.patient, flipCardSet]);
+          } else {
+            Get.toNamed(RouteHelper.getFlipCardPatientList());
+          }
+        },
       },
     ];
     super.initState();

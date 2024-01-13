@@ -1,5 +1,6 @@
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/admin/chat/ui/view_model/chat_vmodel.dart';
+import 'package:brain_training_app/admin/games/flipcard/ui/view_model/flipcard_vmodel.dart';
 import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
 import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
@@ -63,4 +64,5 @@ Future<void> init() async {
 
   // Admin Game Result
   Get.lazyPut(() => MathResultViewModel(), fenix: true);
+  Get.lazyPut(()=> AdminFlipCardViewModel(), fenix: true);
 }

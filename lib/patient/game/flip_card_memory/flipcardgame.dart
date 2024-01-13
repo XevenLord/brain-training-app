@@ -1,3 +1,7 @@
+import 'package:brain_training_app/patient/game/2048/components/countdown_timer.dart';
+import 'package:brain_training_app/patient/game/flip_card_memory/flip_card_service.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'data.dart';
@@ -24,6 +28,9 @@ class _FlipCardGameState extends State<FlipCardGame> {
   List<String>? _data;
   List<bool>? _cardFlips;
   List<GlobalKey<FlipCardState>>? _cardStateKeys;
+
+  late Timer _gameTimer;
+  int _gameTime = 0;
 
   @override
   void initState() {
@@ -57,6 +64,11 @@ class _FlipCardGameState extends State<FlipCardGame> {
     _time = 6;
     _left = (_data!.length ~/ 2);
     _isFinished = false;
+    _gameTime = 0;
+
+    if (_time == 0) {
+      startGameTimer();
+    }
 
     Future.delayed(const Duration(seconds: 6), () {
       setState(() {
@@ -70,6 +82,24 @@ class _FlipCardGameState extends State<FlipCardGame> {
     _timer = Timer.periodic(Duration(seconds: 1), (t) {
       setState(() {
         _time = _time - 1;
+        if (_time == 0) {
+          if (_time == 0) {
+            startGameTimer();
+          }
+        }
+      });
+    });
+  }
+
+  void startGameTimer() {
+    _gameTime = 0;
+    _gameTimer = Timer.periodic(Duration(seconds: 1), (t) {
+      // Check if _left becomes zero, and stop the game timer
+      setState(() {
+        _gameTime = _gameTime + 1;
+        if (_left == 0) {
+          _gameTimer.cancel();
+        }
       });
     });
   }
@@ -87,6 +117,13 @@ class _FlipCardGameState extends State<FlipCardGame> {
     }
     return _isFinished
         ? Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              foregroundColor: AppColors.brandBlue,
+              elevation: 0,
+              title: Text("Flip Card Game", style: AppTextStyle.h2),
+            ),
             body: Center(
               child: GestureDetector(
                 onTap: () {
@@ -114,6 +151,13 @@ class _FlipCardGameState extends State<FlipCardGame> {
             ),
           )
         : Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              foregroundColor: AppColors.brandBlue,
+              elevation: 0,
+              title: Text("Flip Card Game", style: AppTextStyle.h2),
+            ),
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
@@ -131,6 +175,13 @@ class _FlipCardGameState extends State<FlipCardGame> {
                             ),
                     ),
                     Padding(
+                      padding: const EdgeInsets.all(16.0), // Add padding
+                      child: Text(
+                        'Time taken: $_gameTime seconds', // Display game time
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: GridView.builder(
                         shrinkWrap: true,
@@ -141,7 +192,7 @@ class _FlipCardGameState extends State<FlipCardGame> {
                         itemBuilder: (context, index) => _start
                             ? FlipCard(
                                 key: _cardStateKeys![index],
-                                onFlip: () {
+                                onFlip: () async {
                                   if (!_flip) {
                                     _flip = true;
                                     _previousIndex = index;
@@ -182,6 +233,9 @@ class _FlipCardGameState extends State<FlipCardGame> {
                                         if (_cardFlips!
                                             .every((t) => t == false)) {
                                           print("Won");
+                                          await FlipCardService
+                                              .submitFlipCardRecord(
+                                                  _gameTime, _level);
                                           Future.delayed(
                                               const Duration(milliseconds: 160),
                                               () {

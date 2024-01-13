@@ -1,7 +1,6 @@
 import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_ans_row.dart';
 import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
-import 'package:brain_training_app/common/domain/entity/math_ans.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
