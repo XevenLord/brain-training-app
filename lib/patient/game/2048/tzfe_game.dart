@@ -64,6 +64,25 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
     curve: Curves.easeInOut,
   );
 
+  int getBoardSize(Level level) {
+    switch (level) {
+      case Level.Easy:
+        return 6;
+      case Level.Hard:
+        return 3;
+      case Level.Medium:
+        return 4;
+      default:
+        return 4;
+    }
+  }
+
+  void startNewGame() {
+    int boardSize = getBoardSize(widget.level!);
+    ref.read(boardManager.notifier).newGame(boardSize);
+    // Additional initialization based on board size
+  }
+
   @override
   void initState() {
     //Add an Observer for the Lifecycles of the App
@@ -168,11 +187,15 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
               ),
               Stack(
                 children: [
-                  const EmptyBoardWidget(),
+                  EmptyBoardWidget(
+                    gridSize: getBoardSize(widget.level!)
+                  ),
                   TileBoardWidget(
-                      moveAnimation: _moveAnimation,
-                      scaleAnimation: _scaleAnimation,
-                      level: widget.level!)
+                    moveAnimation: _moveAnimation,
+                    scaleAnimation: _scaleAnimation,
+                    level: widget.level!,
+                    gridSize: getBoardSize(widget.level!),
+                  )
                 ],
               )
             ],

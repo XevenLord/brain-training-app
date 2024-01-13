@@ -15,14 +15,19 @@ import 'round.dart';
 class BoardManager extends StateNotifier<Board> {
   // We will use this list to retrieve the right index when user swipes up/down
   // which will allow us to reuse most of the logic.
-  final verticalOrder = [12, 8, 4, 0, 13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3];
+  List<int> verticalOrder;
+  final int gridSize; // New variable for grid size
   List<int> valueList = [2];
   int benchmark = 200;
 
   final StateNotifierProviderRef ref;
-  BoardManager(this.ref)
-      : super(Board.newGame(0, [])) {
-    //Load the last saved state or start a new game.
+  BoardManager(this.ref, this.gridSize)
+      : verticalOrder = List.generate(gridSize * gridSize, (index) {
+          int row = index % gridSize;
+          int col = index ~/ gridSize;
+          return gridSize * col + row;
+        }),
+        super(Board.newGame(0, [])) {
     load();
   }
 
@@ -51,10 +56,12 @@ class BoardManager extends StateNotifier<Board> {
 
   // Check whether the indexes are in the same row or column in the board.
   bool _inRange(index, nextIndex) {
-    return index < 4 && nextIndex < 4 ||
-        index >= 4 && index < 8 && nextIndex >= 4 && nextIndex < 8 ||
-        index >= 8 && index < 12 && nextIndex >= 8 && nextIndex < 12 ||
-        index >= 12 && nextIndex >= 12;
+    int row = index ~/ gridSize;
+    int nextRow = nextIndex ~/ gridSize;
+    int col = index % gridSize;
+    int nextCol = nextIndex % gridSize;
+
+    return (row == nextRow) || (col == nextCol);
   }
 
   Tile _calculate(Tile tile, List<Tile> tiles, direction) {
@@ -144,12 +151,11 @@ class BoardManager extends StateNotifier<Board> {
 
   // Generates tiles at random place on the board
   Tile random(List<int> indexes) {
-    var i = 0;
     var rng = Random();
+    int i;
     do {
-      i = rng.nextInt(16);
+      i = rng.nextInt(gridSize * gridSize);
     } while (indexes.contains(i));
-
     return Tile(const Uuid().v4(), valueList[rng.nextInt(valueList.length)], i);
   }
 
@@ -205,7 +211,8 @@ class BoardManager extends StateNotifier<Board> {
 
   //Finish round, win or loose the game.
   void _endRound() {
-    var gameOver = true, gameWon = false;
+    var gameOver = state.tiles.length == gridSize * gridSize;
+    var gameWon = state.tiles.any((tile) => tile.value == 2048);
     List<Tile> tiles = [];
 
     //If there is no more empty place on the board
@@ -333,5 +340,5 @@ class BoardManager extends StateNotifier<Board> {
   }
 }
 dynamic boardManager = StateNotifierProvider<BoardManager, Board>((ref) {
-  return BoardManager(ref);
+  return BoardManager(ref, 6); // For a 3x3 board
 });

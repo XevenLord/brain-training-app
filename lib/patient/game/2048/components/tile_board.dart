@@ -10,15 +10,18 @@ import 'animated_tile.dart';
 import 'button.dart';
 
 class TileBoardWidget extends ConsumerWidget {
-  TileBoardWidget(
-      {super.key,
-      required this.moveAnimation,
-      required this.scaleAnimation,
-      this.level = Level.Easy});
-
   final CurvedAnimation moveAnimation;
   final CurvedAnimation scaleAnimation;
-  Level? level;
+  final Level level;
+  final int gridSize; // Add this line
+
+  TileBoardWidget({
+    super.key,
+    required this.moveAnimation,
+    required this.scaleAnimation,
+    this.level = Level.Easy,
+    this.gridSize = 4, // Default to 4x4
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,9 +34,9 @@ class TileBoardWidget extends ConsumerWidget {
             460.0));
 
     //Decide the size of the tile based on the size of the board minus the space between each tile.
-    final sizePerTile = (size / 4).floorToDouble();
-    final tileSize = sizePerTile - 12.0 - (12.0 / 4);
-    final boardSize = sizePerTile * 4;
+    final sizePerTile = (size / gridSize).floorToDouble();
+    final tileSize = sizePerTile - 12.0 - (12.0 / gridSize);
+    final boardSize = sizePerTile * gridSize;
     return SizedBox(
       width: boardSize,
       height: boardSize,

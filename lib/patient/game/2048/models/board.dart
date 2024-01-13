@@ -1,3 +1,4 @@
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../models/tile.dart';
@@ -19,15 +20,25 @@ class Board {
   //Keeps the previous round board state used for the undo functionality
   final Board? undo;
 
-  Board(this.score, this.best, this.tiles,
-      {this.over = false, this.won = false, this.undo});
+  Level? level;
+
+  Board(
+    this.score,
+    this.best,
+    this.tiles, {
+    this.over = false,
+    this.won = false,
+    this.undo,
+    this.level = Level.Easy,
+  });
 
   //Create a model for a new game.
   Board.newGame(this.best, this.tiles)
       : score = 0,
         over = false,
         won = false,
-        undo = null;
+        undo = null,
+        level = Level.Easy;
 
   //Create an immutable copy of the board
   Board copyWith(
@@ -36,11 +47,13 @@ class Board {
           List<Tile>? tiles,
           bool? over,
           bool? won,
-          Board? undo}) =>
+          Board? undo,
+          Level? level}) =>
       Board(score ?? this.score, best ?? this.best, tiles ?? this.tiles,
           over: over ?? this.over,
           won: won ?? this.won,
-          undo: undo ?? this.undo);
+          undo: undo ?? this.undo,
+          level: level ?? this.level);
 
   //Create a Board from json data
   factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);
