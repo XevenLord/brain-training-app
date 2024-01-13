@@ -59,4 +59,14 @@ class UserRepository extends GetxService {
       return [];
     }
   }
+
+  static Future<void> updateLastOnline(String userId) async {
+    try {
+      final userRef =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      await userRef.update({'lastOnline': FieldValue.serverTimestamp()});
+    } catch (e) {
+      throw e;
+    }
+  }
 }

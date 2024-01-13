@@ -5,6 +5,7 @@ import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class ChatList extends StatefulWidget {
@@ -101,35 +102,53 @@ class _ChatListState extends State<ChatList> {
                                   });
                         }).toList()),
                       )
-                    : Obx(() => SliverList(
-                            delegate: SliverChildListDelegate(chatViewModel
-                                .messages.values
-                                .toList()
-                                .map((data) {
-                          var physio = allAdmins.firstWhereOrNull(
-                              (e) => e.name == data['targetName']);
-                          return CupertinoListTile(
-                              padding: EdgeInsets.zero,
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    (physio?.profilePic == null || physio!.profilePic!.isEmpty)
-                                        ? const AssetImage(
-                                            AppConstant.NO_PROFILE_PIC,
-                                          ) as ImageProvider
-                                        : NetworkImage(physio.profilePic!),
-                              ),
-                              title: Text(data['targetName'] ?? ""),
-                              subtitle: Text(data['msg'].toString().startsWith(
-                                      "https://firebasestorage.googleapis.com")
-                                  ? "[Image]"
-                                  : data['msg'] ?? ""),
-                              onTap: () => {
-                                    Get.to(Chat(
-                                        key: UniqueKey(),
-                                        targetName: data['targetName'],
-                                        targetUid: physio!.uid))
-                                  });
-                        }).toList())))
+                    : Obx(
+                        () => SliverList(
+                          delegate: chatViewModel.messages.values
+                                  .toList()
+                                  .isEmpty
+                              ? SliverChildListDelegate([
+                                  SizedBox(height: 20.w),
+                                  displayEmptyDataLoaded("No chats found",
+                                      showBackArrow: false)
+                                ])
+                              : SliverChildListDelegate(
+                                  chatViewModel.messages.values
+                                      .toList()
+                                      .map((data) {
+                                    var physio = allAdmins.firstWhereOrNull(
+                                        (e) => e.name == data['targetName']);
+                                    return CupertinoListTile(
+                                        padding: EdgeInsets.zero,
+                                        leading: CircleAvatar(
+                                          backgroundImage: (physio
+                                                          ?.profilePic ==
+                                                      null ||
+                                                  physio!.profilePic!.isEmpty)
+                                              ? const AssetImage(
+                                                  AppConstant.NO_PROFILE_PIC,
+                                                ) as ImageProvider
+                                              : NetworkImage(
+                                                  physio.profilePic!),
+                                        ),
+                                        title: Text(data['targetName'] ?? ""),
+                                        subtitle: Text(data['msg']
+                                                .toString()
+                                                .startsWith(
+                                                    "https://firebasestorage.googleapis.com")
+                                            ? "[Image]"
+                                            : data['msg'] ?? ""),
+                                        onTap: () => {
+                                              Get.to(Chat(
+                                                  key: UniqueKey(),
+                                                  targetName:
+                                                      data['targetName'],
+                                                  targetUid: physio!.uid))
+                                            });
+                                  }).toList(),
+                                ),
+                        ),
+                      )
               ],
             ),
     );

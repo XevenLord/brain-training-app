@@ -55,7 +55,7 @@ Future<void> init() async {
   Get.lazyPut(() => AdminAppointmentViewModel());
   Get.lazyPut(() => InspirationalMssgViewModel());
   Get.lazyPut(() => MMSEViewModel(), fenix: true);
-  Get.lazyPut(() => FeedbackViewModel());
+  Get.lazyPut(() => FeedbackViewModel(), fenix: true);
 
   // *Admin*
   // Admin Service

@@ -93,6 +93,7 @@ class FirebaseAuthRepository extends GetxController {
       await storeCredentials(email, password);
       debugModePrint("entering getUserDetails");
       await getUserDetails(res.user!.uid);
+      print("successfully get user details");
       return res;
     } on FirebaseAuthException catch (e) {
       Get.back();
@@ -215,6 +216,16 @@ class FirebaseAuthRepository extends GetxController {
     }
   }
 
+  static Future<void> updateLastOnline(String userId) async {
+    try {
+      final userRef =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      await userRef.update({'lastOnline': FieldValue.serverTimestamp()});
+    } catch (e) {
+      throw e;
+    }
+  }
+
   static Future<bool> getUserDetails(String uid) async {
     final appUser = Get.find<AppUser>();
     try {
@@ -240,7 +251,12 @@ class FirebaseAuthRepository extends GetxController {
         profilePic: data["profilePic"],
         role: data["role"],
         position: data["position"],
-
+        lastOnline: data["lastOnline"] != null
+            ? (data["lastOnline"] as Timestamp).toDate()
+            : null,
+        lastInspired: data["lastInspired"] != null
+            ? (data["lastInspired"] as Timestamp).toDate()
+            : null,
         // Here got error at below 16/12/2023
         mentalQuiz: data["mentalQuiz"] != null
             ? DateTime.parse(data["mentalQuiz"])

@@ -5,6 +5,7 @@ class InspirationalMessage {
   String? receiverUid;
   DateTime? createdAt;
   String? imgUrl;
+  DateTime? readAt;
 
   InspirationalMessage({
     required this.message,
@@ -13,6 +14,7 @@ class InspirationalMessage {
     this.receiverUid,
     this.createdAt,
     this.imgUrl,
+    this.readAt,
   });
 
   factory InspirationalMessage.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class InspirationalMessage {
       receiverUid: json['receiverUid'],
       createdAt: json['createdAt'] != null ? json['createdAt'].toDate() : null,
       imgUrl: json['imgUrl'],
+      readAt: json['readAt'] != null ? json['readAt'].toDate() : null,
     );
   }
 
@@ -34,6 +37,7 @@ class InspirationalMessage {
       'receiverUid': receiverUid,
       'createdAt': createdAt,
       'imgUrl': imgUrl,
+      'readAt': readAt,
     };
   }
 
@@ -44,6 +48,7 @@ class InspirationalMessage {
   String? get getReceiverUid => receiverUid;
   DateTime? get getCreatedAt => createdAt;
   String? get getImgUrl => imgUrl;
+  DateTime? get getReadAt => readAt;
 
   set setId(String? id) => this.id = id;
   set setMessage(String? message) => this.message = message;
@@ -51,4 +56,5 @@ class InspirationalMessage {
   set setReceiverUid(String? receiverUid) => this.receiverUid = receiverUid;
   set setCreatedAt(DateTime? createdAt) => this.createdAt = createdAt;
   set setImgUrl(String? imgUrl) => this.imgUrl = imgUrl;
+  set setReadAt(DateTime? readAt) => this.readAt = readAt;
 }

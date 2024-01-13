@@ -5,14 +5,22 @@ class ManagePatientService {
   static Future<bool> onPushInspirationalMessage(
       InspirationalMessage inspirationalMssg) async {
     try {
-      DocumentReference ref = await FirebaseFirestore.instance
-          .collection('inspirationalMssg')
+      final insMssgCollectionRef =
+          FirebaseFirestore.instance.collection('inspirationalMssg');
+
+      insMssgCollectionRef
+          .doc(inspirationalMssg.receiverUid)
+          .set({'uid': inspirationalMssg.receiverUid});
+
+      final insMssgDocRef = insMssgCollectionRef
           .doc(inspirationalMssg.receiverUid)
           .collection('inspirationalMssg')
-          .add(inspirationalMssg.toJson());
+          .doc();
 
-      inspirationalMssg.id = ref.id;
-      await ref.update(inspirationalMssg.toJson());
+      insMssgDocRef.set(inspirationalMssg.toJson());
+
+      inspirationalMssg.id = insMssgDocRef.id;
+      insMssgDocRef.update(inspirationalMssg.toJson());
 
       return Future.value(true);
     } catch (e) {
@@ -48,11 +56,10 @@ class ManagePatientService {
           .collection('inspirationalMssg')
           .get();
 
-      final inspirationalMessages = snapshot.docs
-          .map((doc) {
-            print(doc.data());
-            return InspirationalMessage.fromJson(doc.data());})
-          .toList();
+      final inspirationalMessages = snapshot.docs.map((doc) {
+        print(doc.data());
+        return InspirationalMessage.fromJson(doc.data());
+      }).toList();
 
       return inspirationalMessages;
     } catch (e) {

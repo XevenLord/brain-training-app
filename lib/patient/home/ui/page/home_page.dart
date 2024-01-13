@@ -4,6 +4,7 @@ import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/healthCheck/ui/widgets/question_card.dart';
 import 'package:brain_training_app/patient/home/ui/view_model/feedback_vmodel.dart';
@@ -15,7 +16,9 @@ import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -31,6 +34,11 @@ class _HomePageState extends State<HomePage> {
   HomeViewModel homeVModel = Get.find<HomeViewModel>();
   AppointmentViewModel appointmentVModel = Get.find<AppointmentViewModel>();
   late FeedbackViewModel feedbackVModel;
+  DateTime? lastOnline;
+  DateTime? lastMentalTest;
+  DateTime? lastInspired;
+  bool dialogShown = false;
+  bool mentalTestShown = false;
 
   final TextEditingController feedbackController = TextEditingController();
 
@@ -88,10 +96,102 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
     feedbackVModel = Get.find<FeedbackViewModel>();
     // chatVModel.initUsersListener();
     onTapNav(widget.pageIndex ?? 0);
+    fetchInspirationalMessages();
+
+    if (Get.find<AppUser>().uid != null) {
+      print("got user");
+      lastOnline = Get.find<AppUser>().lastOnline;
+      lastMentalTest = Get.find<AppUser>().mentalQuiz;
+      lastInspired = Get.find<AppUser>().lastInspired;
+      updateLastOnline();
+
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!mentalTestShown) {
+          showMentalStatusQuiz();
+          mentalTestShown = true;
+        }
+        if (!dialogShown) {
+          showActiveGameDialog();
+          dialogShown = true;
+        }
+      });
+    }
+    super.initState();
+  }
+
+  void fetchInspirationalMessages() async {
+    await homeVModel.fetchGeneralInspirationalMessages();
+    await homeVModel.fetchInspirationalMessages();
+    setState(() {});
+    homeVModel.showPopUpInspirationalMessageDialog(lastInspired);
+  }
+
+  void updateLastOnline() async {
+    await FirebaseAuthRepository.updateLastOnline(Get.find<AppUser>().uid!);
+    setState(() {});
+  }
+
+  void showActiveGameDialog() async {
+    if (lastOnline == null) return;
+    if (lastOnline != null &&
+        DateTime.now().difference(lastOnline!).inHours <= 0) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Image.asset(AppConstant.NEUROFIT_LOGO_ONLY, height: 100.h),
+              content: Text(
+                  "Dear ${Get.find<AppUser>().name},\n\n" +
+                      "You have been away for ${DateTime.now().difference(lastOnline!).inHours} hours. Please play our games to keep your brain active!",
+                  style: AppTextStyle.h4),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text("I understand", style: AppTextStyle.h3),
+                ),
+              ],
+            );
+          });
+    }
+  }
+
+  void showMentalStatusQuiz() async {
+    if (lastMentalTest == null) return;
+    if (lastMentalTest != null &&
+        DateTime.now().difference(lastMentalTest!).inDays >= 7) {
+      print("lastMentalTest: ${lastMentalTest!.toIso8601String()}");
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Image.asset(AppConstant.NEUROFIT_LOGO_ONLY, height: 100.h),
+              content: Text(
+                  "Dear ${Get.find<AppUser>().name},\n\n" +
+                      "We would like to survey your current mental status.",
+                  style: AppTextStyle.h4),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return StatefulBuilder(builder: (context, setState) {
+                            return QuestionCard();
+                          });
+                        });
+                  },
+                  child: Text("Proceed", style: AppTextStyle.h3),
+                ),
+              ],
+            );
+          });
+    }
   }
 
   void onTapNav(int index) {
@@ -115,32 +215,38 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10.h),
-              TextButton(
-                  child: Text("Update your mental status?"),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return StatefulBuilder(builder: (context, setState) {
-                            return QuestionCard();
-                          });
-                        });
-                  }),
-              SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    categories.length,
-                    (index) => PillButton(
-                      text: categories[index],
-                      margin: const EdgeInsets.only(right: 10),
-                      onTap: () {
-                        print("Category tapped");
-                      },
-                    ),
-                  ),
-                ),
+              // TextButton(
+              //     child: Text("Update your mental status?"),
+              //     onPressed: () {
+              //       showDialog(
+              //           context: context,
+              //           builder: (context) {
+              //             return StatefulBuilder(builder: (context, setState) {
+              //               return QuestionCard();
+              //             });
+              //           });
+              //     }),
+              // SingleChildScrollView(
+              //   padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+              //   scrollDirection: Axis.horizontal,
+              //   child: Row(
+              //     children: List.generate(
+              //       categories.length,
+              //       (index) => PillButton(
+              //         text: categories[index],
+              //         margin: const EdgeInsets.only(right: 10),
+              //         onTap: () {
+              //           print("Category tapped");
+              //         },
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              Padding(
+                padding: EdgeInsets.only(left: 16.w),
+                child: Text("Pick A Game Below To Play!",
+                    style:
+                        AppTextStyle.h2.merge(AppTextStyle.brandBlueTextStyle)),
               ),
               SizedBox(height: 10.h),
               ...List.generate(games.length, (index) {

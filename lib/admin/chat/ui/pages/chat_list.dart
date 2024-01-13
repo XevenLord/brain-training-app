@@ -107,36 +107,47 @@ class _AdminChatListState extends State<AdminChatList> {
                             }).toList()),
                           )
                         : Obx(() => SliverList(
-                                delegate: SliverChildListDelegate(chatViewModel
+                            delegate: chatViewModel.messages.values
+                                    .toList()
+                                    .isEmpty
+                                ? SliverChildListDelegate([
+                                    SizedBox(height: 20.w),
+                                    displayEmptyDataLoaded("No chats found",
+                                        showBackArrow: false)
+                                  ])
+                                : SliverChildListDelegate(chatViewModel
                                     .messages.values
                                     .toList()
                                     .map((data) {
-                              var user = users.firstWhereOrNull(
-                                  (e) => e.name == data['targetName']);
-                              return CupertinoListTile(
-                                  padding: EdgeInsets.zero,
-                                  leading: CircleAvatar(
-                                    backgroundColor: AppColors.lightBlue,
-                                    backgroundImage: (user?.profilePic ==
-                                                null ||
-                                            user!.profilePic!.isEmpty)
-                                        ? const AssetImage(
-                                            AppConstant.NO_PROFILE_PIC,
-                                          ) as ImageProvider
-                                        : NetworkImage(user.profilePic!),
-                                  ),
-                                  title: Text(data['targetName'] ?? ""),
-                                  subtitle: Text(data['msg'].toString().startsWith(
-                                          "https://firebasestorage.googleapis.com")
-                                      ? "[Image]"
-                                      : data['msg'] ?? ""),
-                                  onTap: () => {
-                                        Get.to(Chat(
-                                            key: UniqueKey(),
-                                            targetName: data['targetName'],
-                                            targetUid: user?.uid))
-                                      });
-                            }).toList())))
+                                    var user = users.firstWhereOrNull(
+                                        (e) => e.name == data['targetName']);
+                                    return CupertinoListTile(
+                                        padding: EdgeInsets.zero,
+                                        leading: CircleAvatar(
+                                          backgroundColor: AppColors.lightBlue,
+                                          backgroundImage: (user?.profilePic ==
+                                                      null ||
+                                                  user!.profilePic!.isEmpty)
+                                              ? const AssetImage(
+                                                  AppConstant.NO_PROFILE_PIC,
+                                                ) as ImageProvider
+                                              : NetworkImage(user.profilePic!),
+                                        ),
+                                        title: Text(data['targetName'] ?? ""),
+                                        subtitle: Text(data['msg']
+                                                .toString()
+                                                .startsWith(
+                                                    "https://firebasestorage.googleapis.com")
+                                            ? "[Image]"
+                                            : data['msg'] ?? ""),
+                                        onTap: () => {
+                                              Get.to(Chat(
+                                                  key: UniqueKey(),
+                                                  targetName:
+                                                      data['targetName'],
+                                                  targetUid: user?.uid))
+                                            });
+                                  }).toList())))
                   ],
                 ),
         ),
