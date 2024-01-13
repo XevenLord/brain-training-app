@@ -15,6 +15,8 @@ import 'package:brain_training_app/admin/games/flipcard/ui/pages/flipcard_res_ov
 import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_patient_list.dart';
 import 'package:brain_training_app/admin/games/maths/ui/math_score_overview.dart';
+import 'package:brain_training_app/admin/games/tzfe/ui/pages/tzfe_patient_list.dart';
+import 'package:brain_training_app/admin/games/tzfe/ui/pages/tzfe_score_overview.dart';
 import 'package:brain_training_app/admin/home/ui/pages/home_page.dart';
 import 'package:brain_training_app/admin/home/ui/widgets/home_content.dart';
 import 'package:brain_training_app/admin/insMssg/ui/pages/ins_mssg_general_home.dart';
@@ -30,6 +32,7 @@ import 'package:brain_training_app/admin/patients/ui/pages/patient_shout.dart';
 import 'package:brain_training_app/admin/profile/ui/pages/admin_edit_profile.dart';
 import 'package:brain_training_app/admin/profile/ui/pages/admin_profile.dart';
 import 'package:brain_training_app/common/domain/entity/math_ans.dart';
+import 'package:brain_training_app/common/domain/entity/tzfe_score_set.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_booking_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_calendar_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_success_page.dart';
@@ -45,10 +48,13 @@ import 'package:brain_training_app/patient/chat/ui/pages/chat_list.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_difficulty_page.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_game.dart';
 import 'package:brain_training_app/patient/game/2048/tzfe_home.dart';
+import 'package:brain_training_app/patient/game/2048/tzfe_score_page.dart';
 import 'package:brain_training_app/patient/game/flip_card_memory/flip_card_home.dart';
+import 'package:brain_training_app/patient/game/flip_card_memory/flip_card_res_page.dart';
 import 'package:brain_training_app/patient/game/flip_card_memory/memory_game.dart';
 import 'package:brain_training_app/patient/game/maths/math_difficulty_page.dart';
 import 'package:brain_training_app/patient/game/maths/math_game.dart';
+import 'package:brain_training_app/patient/game/maths/math_score_page.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ai_game_settings.dart';
 import 'package:brain_training_app/patient/game/tic_tac_toe/ui/page/ttt_home.dart';
 import 'package:brain_training_app/patient/home/ui/page/home_page.dart';
@@ -85,6 +91,10 @@ class RouteHelper {
   static const String tZFEGame = '/TZFEGame';
   static const String memoryGame = '/memory-game';
   static const String mathGame = '/math-game';
+
+  static const String tZFEscorePage = '/tZFE-score-page';
+  static const String memoryResultPage = '/memory-result-page';
+  static const String mathScorePage = '/math-score-page';
 
   static const String appointmentBookingPage = '/appointment-booking-page';
   static const String appointmentCalendarPage = '/appointment-calendar-page';
@@ -129,6 +139,10 @@ class RouteHelper {
   static const String flipCardPatientList = '/flip-card-patient-list';
   static const String flipCardResOverview = '/flip-card-res-overview';
 
+  // *Admin 2048*
+  static const String tZFEPatientList = '/tZFE-patient-list';
+  static const String tZFEScoreOverview = '/tZFE-score-overview';
+
   // *Admin chat*
   static const String adminChatList = '/admin-chat-list';
 
@@ -171,6 +185,10 @@ class RouteHelper {
   static String getTZFEGame() => tZFEGame;
   static String getMemoryGame() => memoryGame;
   static String getMathGame() => mathGame;
+
+  static String getTZFEScorePage() => tZFEscorePage;
+  static String getMemoryResultPage() => memoryResultPage;
+  static String getMathScorePage() => mathScorePage;
 
   static String getAppointmentBookingPage() => appointmentBookingPage;
   static String getAppointmentCalendarPage() => appointmentCalendarPage;
@@ -219,6 +237,10 @@ class RouteHelper {
   // *Admin Flip Card*
   static String getFlipCardPatientList() => flipCardPatientList;
   static String getFlipCardResOverview() => flipCardResOverview;
+
+  // *Admin 2048*
+  static String getTZFEPatientList() => tZFEPatientList;
+  static String getTZFEScoreOverview() => tZFEScoreOverview;
 
   // *Admin chat*
   static String getAdminChatList() => adminChatList;
@@ -341,6 +363,23 @@ class RouteHelper {
       },
     ),
 
+    GetPage(
+      name: tZFEscorePage,
+      transition: Transition.fadeIn,
+      page: () => TZFEScorePage(),
+    ),
+    GetPage(
+      name: memoryResultPage,
+      transition: Transition.fadeIn,
+      page: () {
+        return FlipCardResultPage();
+      },
+    ),
+    GetPage(
+      name: mathScorePage,
+      transition: Transition.fadeIn,
+      page: () => MathScorePage(),
+    ),
     // Appointment
     GetPage(
       name: appointmentBookingPage,
@@ -563,6 +602,24 @@ class RouteHelper {
         return FlipCardResultOverview(
           patient: patient,
           flipCardSet: flipCardSet,
+        );
+      },
+    ),
+    // *Admin 2048*
+    GetPage(
+      name: tZFEPatientList,
+      transition: Transition.fadeIn,
+      page: () => const TZFEPatientList(),
+    ),
+    GetPage(
+      name: tZFEScoreOverview,
+      transition: Transition.fadeIn,
+      page: () {
+        AppUser patient = Get.arguments[0];
+        List<TZFEScoreSet> tzfeScoreSets = Get.arguments[1];
+        return TZFEScoreOverview(
+          patient: patient,
+          tzfeScoreSets: tzfeScoreSets,
         );
       },
     ),

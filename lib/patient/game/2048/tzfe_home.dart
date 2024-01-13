@@ -1,5 +1,6 @@
 import 'package:brain_training_app/patient/game/common/ui/game_intro.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,12 @@ class _TZFEHomeState extends State<TZFEHome> {
           gradient: AppColors.transparentRed,
           buttonColor: AppColors.lightRed,
           btnTextColor: AppColors.brandRed,
-          onTap: () => Get.toNamed(RouteHelper.getTZFEDifficultyPage()),
+          actions: IconButton(
+            onPressed: () => Get.toNamed(RouteHelper.getTZFEScorePage()),
+            icon: Icon(Icons.leaderboard),
+          ),
+          onTap: () =>
+              Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Easy),
         ),
       ),
     );

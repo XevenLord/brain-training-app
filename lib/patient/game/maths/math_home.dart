@@ -22,6 +22,10 @@ class _MathHomeState extends State<MathHome> {
           introduction:
               'You will be given a simple math question, answer it as fast as you can!',
           img: 'assets/images/mathematics_game.png',
+          actions: IconButton(
+            onPressed: () => Get.toNamed(RouteHelper.getMathScorePage()),
+            icon: Icon(Icons.leaderboard),
+          ),
           onTap: () => Get.toNamed(RouteHelper.getMathDifficultyPage()),
         ),
       ),

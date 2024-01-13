@@ -113,6 +113,7 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
                 child: CountdownTimer(
                   builder: (BuildContext context, void Function() startTimer) {
                     startGameTimer = startTimer;
+                    
                   },
                 ),
               ),

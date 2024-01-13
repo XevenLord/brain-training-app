@@ -11,6 +11,7 @@ class GameIntro extends StatelessWidget {
   LinearGradient? gradient;
   Color? buttonColor;
   Color? btnTextColor;
+  Widget? actions;
   Function() onTap;
 
   GameIntro(
@@ -19,6 +20,7 @@ class GameIntro extends StatelessWidget {
       required this.introduction,
       required this.onTap,
       required this.img,
+      this.actions,
       this.gradient = AppColors.transparentPurple,
       this.buttonColor = AppColors.brandYellow,
       this.btnTextColor = AppColors.white});
@@ -78,6 +80,7 @@ class GameIntro extends StatelessWidget {
                             Get.back();
                           },
                         ),
+                        if (actions != null) actions!,
                       ],
                     ),
                   ],

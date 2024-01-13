@@ -2,6 +2,7 @@ import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_
 import 'package:brain_training_app/admin/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/admin/games/flipcard/ui/view_model/flipcard_vmodel.dart';
 import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
+import 'package:brain_training_app/admin/games/tzfe/ui/view_model/tzfe_vmodel.dart';
 import 'package:brain_training_app/admin/home/domain/services/home_service.dart';
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/admin/insMssg/ui/view_model/ins_mssg_vmodel.dart';
@@ -14,6 +15,8 @@ import 'package:brain_training_app/patient/appointment/ui/view_model/appointment
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/patient/chat/domain/services/chat_service.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
+import 'package:brain_training_app/patient/game/2048/tzfe_vmodel.dart';
+import 'package:brain_training_app/patient/game/flip_card_memory/flip_card_vmodel.dart';
 import 'package:brain_training_app/patient/game/maths/math_vmodel.dart';
 import 'package:brain_training_app/patient/healthCheck/ui/view_model/mental_quiz_vmodel.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
@@ -64,5 +67,8 @@ Future<void> init() async {
 
   // Admin Game Result
   Get.lazyPut(() => MathResultViewModel(), fenix: true);
-  Get.lazyPut(()=> AdminFlipCardViewModel(), fenix: true);
+  Get.lazyPut(() => AdminFlipCardViewModel(), fenix: true);
+  Get.lazyPut(() => FlipCardViewModel(), fenix: true);
+  Get.lazyPut(() => TZFEViewModel(), fenix: true);
+  Get.lazyPut(() => AdminTZFEViewModel(), fenix: true);
 }

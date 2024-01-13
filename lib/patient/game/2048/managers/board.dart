@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:brain_training_app/patient/game/2048/services/tzfe_service.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,8 +21,7 @@ class BoardManager extends StateNotifier<Board> {
   int benchmark = 200;
 
   final StateNotifierProviderRef ref;
-  BoardManager(this.ref)
-      : super(Board.newGame(0, [])) {
+  BoardManager(this.ref) : super(Board.newGame(0, [])) {
     //Load the last saved state or start a new game.
     load();
   }
@@ -43,6 +43,7 @@ class BoardManager extends StateNotifier<Board> {
   }
 
   // Start New Game
+  // Can add service here to save the score to the database
   void newGame() {
     valueList = [2];
     benchmark = 200;
@@ -220,6 +221,7 @@ class BoardManager extends StateNotifier<Board> {
           gameWon = true;
           valueList = [2];
           benchmark = 200;
+          submitScore(state.score, gameWon, state.duration ?? Duration());
         }
 
         var x = (i - (((i + 1) / 4).ceil() * 4 - 4));
@@ -271,7 +273,19 @@ class BoardManager extends StateNotifier<Board> {
       }
     }
 
+    if (gameOver) {
+      submitScore(state.score, gameWon, state.duration ?? Duration());
+    }
+
     state = state.copyWith(tiles: tiles, won: gameWon, over: gameOver);
+  }
+
+  void submitScore(int score, bool status, Duration duration) async {
+    await TZFEService.submitScore(score, status ? 'win' : 'lose', duration);
+  }
+
+  void getDuration(Duration duration) {
+    state = state.copyWith(duration: duration);
   }
 
   //Mark the merged as false after the merge animation is complete.
@@ -332,6 +346,8 @@ class BoardManager extends StateNotifier<Board> {
     }
   }
 }
+
 dynamic boardManager = StateNotifierProvider<BoardManager, Board>((ref) {
   return BoardManager(ref);
 });
+

@@ -1,4 +1,4 @@
-import 'package:brain_training_app/admin/games/flipcard/ui/view_model/flipcard_vmodel.dart';
+import 'package:brain_training_app/admin/games/tzfe/ui/view_model/tzfe_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
 import 'package:brain_training_app/route_helper.dart';
@@ -9,24 +9,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-class FlipCardPatientList extends StatefulWidget {
-  const FlipCardPatientList({super.key});
+class TZFEPatientList extends StatefulWidget {
+  const TZFEPatientList({super.key});
 
   @override
-  State<FlipCardPatientList> createState() => _FlipCardPatientListState();
+  State<TZFEPatientList> createState() => _TZFEPatientListState();
 }
 
-class _FlipCardPatientListState extends State<FlipCardPatientList> {
+class _TZFEPatientListState extends State<TZFEPatientList> {
   late UserRepository userRepo;
-  late AdminFlipCardViewModel adminFlipCardViewModel;
+  late AdminTZFEViewModel adminTZFEViewModel;
   dynamic patients;
   bool isLoading = true;
 
   @override
   void initState() {
-    adminFlipCardViewModel = Get.find<AdminFlipCardViewModel>();
+    adminTZFEViewModel = Get.find<AdminTZFEViewModel>();
     userRepo = Get.find<UserRepository>();
-    adminFlipCardViewModel.getFlipCardUserIdList();
+    adminTZFEViewModel.getTZFEUserIdList();
     fetchPatients();
     super.initState();
   }
@@ -49,7 +49,7 @@ class _FlipCardPatientListState extends State<FlipCardPatientList> {
 
   void filterPatientByGame() {
     dynamic filteredPatients = patients!.where((element) =>
-        adminFlipCardViewModel.matchedUserIdList.contains(element.uid));
+        adminTZFEViewModel.matchedUserIdList.contains(element.uid));
     setState(() {
       patients = filteredPatients;
     });
@@ -82,7 +82,7 @@ class _FlipCardPatientListState extends State<FlipCardPatientList> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: AppColors.brandBlue,
-        title: Text('Flip Card Game', style: AppTextStyle.h2),
+        title: Text('2048 Game', style: AppTextStyle.h2),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -97,7 +97,7 @@ class _FlipCardPatientListState extends State<FlipCardPatientList> {
             : (patients == null || patients!.isEmpty)
                 ? Center(
                     child: displayEmptyDataLoaded(
-                      "There is no data of Flip Card Game yet.",
+                      "There is no data of 2048 Game yet.",
                       showBackArrow: false,
                     ),
                   )
@@ -113,11 +113,11 @@ class _FlipCardPatientListState extends State<FlipCardPatientList> {
                             gender: e.gender!,
                             isView: true,
                             onEdit: () async {
-                              dynamic cardSets = await adminFlipCardViewModel
-                                  .getFlipCardSetByUserId(e.uid!);
+                              dynamic tzfeSets = await adminTZFEViewModel
+                                  .getTZFEScoreSetByUserId(e.uid!);
                               setState(() {});
-                              Get.toNamed(RouteHelper.getFlipCardResOverview(),
-                                  arguments: [e, cardSets]);
+                              Get.toNamed(RouteHelper.getTZFEScoreOverview(),
+                                  arguments: [e, tzfeSets]);
                             },
                           ),
                         ),
