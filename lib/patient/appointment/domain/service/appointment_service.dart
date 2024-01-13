@@ -1,5 +1,4 @@
 import 'package:brain_training_app/patient/appointment/domain/entity/appointment.dart';
-import 'package:brain_training_app/patient/appointment/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';

@@ -53,11 +53,11 @@ class _SplashScreenState extends State<SplashScreen>
     resourceLoaded = await AppConstant.loadResources();
     NotificationAPI.init(initScheduled: true);
     listenNotifications();
+    appointmentViewModel = Get.find<AppointmentViewModel>();
+    adminAppointmentViewModel = Get.find<AdminAppointmentViewModel>();
+    // getPhysiotherapistList();
     if (resourceLoaded && FirebaseAuth.instance.currentUser != null) {
-      appointmentViewModel = Get.find<AppointmentViewModel>();
-      adminAppointmentViewModel = Get.find<AdminAppointmentViewModel>();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        getPhysiotherapistList();
         if (Get.find<AppUser>().role == "admin") {
           getPatientList();
         }
@@ -86,6 +86,7 @@ class _SplashScreenState extends State<SplashScreen>
   void getPhysiotherapistList() async {
     await appointmentViewModel.getPhysiotherapistList();
     await adminAppointmentViewModel.getPhysiotherapistList();
+    setState(() {});
   }
 
   void getPatientList() async {

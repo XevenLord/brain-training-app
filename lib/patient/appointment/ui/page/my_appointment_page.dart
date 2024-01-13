@@ -91,7 +91,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () =>
-                Get.offAllNamed(RouteHelper.getPatientHome(), arguments: 2),
+                Get.offNamed(RouteHelper.getPatientHome(), arguments: 2),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -104,7 +104,7 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                 : appointments!.isEmpty
                     ? displayEmptyDataLoaded("No appointment found",
                         onBack: () {
-                        Get.offAllNamed(RouteHelper.getPatientHome(),
+                        Get.offNamed(RouteHelper.getPatientHome(),
                             arguments: 2);
                       })
                     : TabBarView(

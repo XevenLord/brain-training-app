@@ -23,8 +23,17 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
   void initState() {
     super.initState();
     appointmentViewModel = Get.find<AppointmentViewModel>();
-    physiotherapists = appointmentViewModel.physiotherapistList;
+    if (appointmentViewModel.physiotherapistList.isEmpty) {
+      getPhysiotherapistList();
+    } else {
+      physiotherapists = appointmentViewModel.physiotherapistList;
+    }
     print("physiotherapists: $physiotherapists");
+  }
+
+  void getPhysiotherapistList() async {
+    physiotherapists = await appointmentViewModel.getPhysiotherapistList();
+    setState(() {});
   }
 
   @override

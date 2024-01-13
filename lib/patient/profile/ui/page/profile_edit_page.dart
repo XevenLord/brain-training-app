@@ -56,7 +56,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
       await profileVModel.updateProfile(_fbKey.currentState!.value);
-      Get.offAllNamed(RouteHelper.getPatientHome(), arguments: 3);
+      Get.offNamed(RouteHelper.getPatientHome(), arguments: 3);
     }
   }
 

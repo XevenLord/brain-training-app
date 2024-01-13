@@ -1,7 +1,9 @@
 import 'package:brain_training_app/admin/insMssg/ui/view_model/ins_mssg_vmodel.dart';
 import 'package:brain_training_app/admin/patients/domain/entity/inspirational_mssg.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class InspirationalMssgGeneralHome extends StatefulWidget {
@@ -46,7 +48,9 @@ class _InspirationalMssgGeneralHomeState
           itemCount: messages.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(messages[index].getMessage ?? ''),
+              contentPadding: EdgeInsets.only(bottom: 4.w),
+              title: Text(messages[index].getMessage ?? '',
+                  style: AppTextStyle.h4),
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {

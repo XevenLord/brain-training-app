@@ -91,7 +91,7 @@ class _PatientOverviewState extends State<PatientOverview> {
         },
       },
       {
-        "category": "MMSE Result",
+        "category": "MMSE Screening",
         "icon": Icons.edit_attributes_rounded,
         "gradient": const LinearGradient(
           colors: <Color>[

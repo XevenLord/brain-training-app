@@ -41,7 +41,7 @@ Future<void> init() async {
 
   // View Models
   Get.lazyPut(() => HomeViewModel());
-  Get.lazyPut(() => AppointmentViewModel());
+  Get.lazyPut(() => AppointmentViewModel(), fenix: true);
   Get.lazyPut(() => ChatViewModel(), fenix: true);
   Get.lazyPut(() => AdminChatViewModel(), fenix: true);
   Get.lazyPut(() => ProfileViewModel());

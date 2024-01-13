@@ -27,6 +27,9 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
   void initState() {
     super.initState();
     appointmentViewModel = Get.find<AppointmentViewModel>();
+    if (appointmentViewModel.physiotherapistList.isEmpty) {
+      getPhysiotherapistList();
+    }
     callDataInit();
   }
 
@@ -34,6 +37,11 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
     List<Appointment> appts =
         await appointmentViewModel.getAppointmentsByID(widget.patient.uid!);
     return appts;
+  }
+
+  void getPhysiotherapistList() async {
+    await appointmentViewModel.getPhysiotherapistList();
+    setState(() {});
   }
 
   callDataInit() async {

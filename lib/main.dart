@@ -1,3 +1,5 @@
+import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/view_model/sign_up_controller.dart';
 import 'package:brain_training_app/patient/game/2048/models/board_adapter.dart';
@@ -36,6 +38,9 @@ Future<void> main() async {
 
   Get.put(AppUser());
   Get.put(SignUpController());
+
+  await Get.find<AppointmentViewModel>().getPhysiotherapistList();
+  await Get.find<AdminAppointmentViewModel>().getPhysiotherapistList();
 
   camerasAvailable = await availableCameras();
 

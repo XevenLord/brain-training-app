@@ -210,6 +210,7 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                     textEditingController: nameController,
                     label: "Enter Your Full Name",
                     keyboardType: TextInputType.name,
+                    readOnly: true,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(
                         errorText: "Please enter your name",
@@ -223,6 +224,7 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                     promptText: "IC Number",
                     textEditingController: icController,
                     keyboardType: TextInputType.number,
+                    readOnly: true,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(
                         errorText: "Please enter your IC number",

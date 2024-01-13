@@ -26,6 +26,7 @@ class AppointmentEditPage extends StatefulWidget {
 class _AppointmentEditPageState extends State<AppointmentEditPage> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   late AppointmentViewModel appointmentVModel;
+  DateTime intialDate = DateTime.now().add(Duration(days: 1));
   String? time;
   late AppUser physiotherapist;
 
@@ -132,11 +133,9 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: widget.appointment.date! == ""
-                                  ? DateTime.now()
-                                  : DateTime.parse(widget.appointment.date!),
-                              firstDate: DateTime(1950),
-                              lastDate: DateTime(2100));
+                              initialDate: intialDate,
+                              firstDate: intialDate,
+                              lastDate: DateTime(2025));
 
                           if (pickedDate != null) {
                             String formattedDate =
