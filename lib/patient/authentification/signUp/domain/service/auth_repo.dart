@@ -144,7 +144,7 @@ class FirebaseAuthRepository extends GetxController {
           email: email, password: password);
       return res;
     } on FirebaseAuthException catch (e) {
-      throw Error();
+      throw e;
     }
   }
 

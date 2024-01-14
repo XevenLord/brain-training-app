@@ -73,7 +73,7 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (signUpController.userDetails == null) {
+    if (signUpController.userDetails.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
@@ -102,9 +102,6 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                       Center(
                         child: Column(
                           children: [
-                            Image.asset(AppConstant.NEUROFIT_LOGO_ONLY,
-                                width: 80.w),
-                            SizedBox(height: 16.h),
                             Text("Create New Account", style: AppTextStyle.h2),
                           ],
                         ),
