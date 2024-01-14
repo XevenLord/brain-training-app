@@ -35,7 +35,6 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
   @override
   Widget build(BuildContext context) {
     return Screen(
-      appBarTitle: "Appointment",
       hasHorizontalPadding: false,
       noBackBtn: true,
       body: Column(
@@ -138,7 +137,7 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  "Mon - Sat (08:30 AM - 09:00 PM)",
+                  "Mon - Sat (08:30 AM - 06:00 PM)",
                   style: AppTextStyle.c2,
                 ),
               ],

@@ -227,7 +227,6 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                         promptText: "Password",
                         textEditingController: _passwordInput,
                         label: "Enter Your Password",
-                        keyboardType: TextInputType.name,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(
                               errorText: "Password is required!"),
@@ -250,7 +249,6 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                         promptText: "Confirm Password",
                         textEditingController: _confirmPasswordInput,
                         label: "Enter Your Password Again",
-                        keyboardType: TextInputType.number,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(
                               errorText: "Confirm password is required!"),
