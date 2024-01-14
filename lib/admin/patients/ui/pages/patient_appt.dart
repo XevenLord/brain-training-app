@@ -133,6 +133,8 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
                                               style: AppTextStyle.h2),
                                         AppointmentTile(
                                             time: appointments![index].time!,
+                                            status:
+                                                appointments![index].status!,
                                             doctorName: appointmentViewModel
                                                 .physiotherapistList
                                                 .firstWhere((element) =>
@@ -140,9 +142,8 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
                                                     appointments![index]
                                                         .physiotherapistID!)
                                                 .name!,
-                                            type: checkAppointmentTileType(
-                                                DateTime.parse(appointments![index]
-                                                    .date!)),
+                                            type: checkAppointmentTileType(DateTime.parse(
+                                                appointments![index].date!)),
                                             img: appointmentViewModel
                                                 .physiotherapistList
                                                 .firstWhere((element) =>
