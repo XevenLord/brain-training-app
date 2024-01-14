@@ -23,11 +23,22 @@ class SignUpController extends GetxController {
   }
 
   void signUpWithData(Map<String, dynamic> data) async {
-    UserCredential signUpRes =
+    UserCredential? signUpRes =
         await FirebaseAuthRepository.signUpWithEmailAndPassword(
       email: _userDetails['email'],
       password: data['password'],
     );
+
+    if (signUpRes == null) {
+      killDialog();
+      useErrorDialog(
+          title: "Oops! Something went wrong",
+          titleStyle: AppTextStyle.h2,
+          description:
+              "An error occurred while creating your account. Please try again later.",
+          descriptionStyle: AppTextStyle.c1);
+      return;
+    }
 
     try {
       await _uploadFile();

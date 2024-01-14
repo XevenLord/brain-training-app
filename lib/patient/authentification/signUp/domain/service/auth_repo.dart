@@ -136,14 +136,36 @@ class FirebaseAuthRepository extends GetxController {
     }
   }
 
-  static Future<UserCredential> signUpWithEmailAndPassword(
-      {required String email, required String password}) async {
+  static Future<UserCredential?> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       debugModePrint("check sign up password passed in: $password");
       UserCredential res = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       return res;
     } on FirebaseAuthException catch (e) {
+      // Handle the FirebaseAuthException and show an error dialog
+      showDialog(
+        context: Get.context!,
+        // Your dialog configuration here
+        // You can use Flutter's built-in dialogs or a custom dialog widget
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Sign Up Error"),
+            content: Text(e.toString()), // Display the error message
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
       throw e;
     }
   }

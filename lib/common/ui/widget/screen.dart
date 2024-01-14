@@ -56,19 +56,9 @@ class Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Expanded(
-      child: bodyCenter
-          ? Center(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: (hasHorizontalPadding) ? 30.w : 0,
-                  right: (hasHorizontalPadding) ? 30.w : 0,
-                  top: noBackBtn ? 0 : topPadding(),
-                ),
-                child: body,
-              ),
-            )
-          : Padding(
+    Widget content = bodyCenter
+        ? Center(
+            child: Padding(
               padding: EdgeInsets.only(
                 left: (hasHorizontalPadding) ? 30.w : 0,
                 right: (hasHorizontalPadding) ? 30.w : 0,
@@ -76,7 +66,15 @@ class Screen extends StatelessWidget {
               ),
               child: body,
             ),
-    );
+          )
+        : Padding(
+            padding: EdgeInsets.only(
+              left: (hasHorizontalPadding) ? 30.w : 0,
+              right: (hasHorizontalPadding) ? 30.w : 0,
+              top: noBackBtn ? 0 : topPadding(),
+            ),
+            child: body,
+          );
 
     if (useSingleChildScrollView) {
       content = SingleChildScrollView(
@@ -84,6 +82,7 @@ class Screen extends StatelessWidget {
         child: content,
       );
     }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBar,
@@ -101,7 +100,10 @@ class Screen extends StatelessWidget {
                     onPressed: onPressed,
                   )
                 : Container(),
-            content,
+            Expanded(
+              // Move Expanded here to wrap the body
+              child: content,
+            ),
             Container(
               child: (bottomWidget == null)
                   ? const SizedBox.shrink()
