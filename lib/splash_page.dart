@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -50,6 +51,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> loaded() async {
     debugModePrint("splash page: enter loaded");
+
+    await removeStoredValues();
+
     resourceLoaded = await AppConstant.loadResources();
     NotificationAPI.init(initScheduled: true);
     listenNotifications();
@@ -70,11 +74,19 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  Future<void> removeStoredValues() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('dialogShown');
+    await prefs.remove('mentalTestShown');
+  }
+
   void listenNotifications() =>
       NotificationAPI.onNotifications.stream.listen(onClickedNotification);
 
   void onClickedNotification(String? payload) {
-    Get.toNamed(RouteHelper.getPatientHome());
+    Get.find<AppUser>().role == "admin"
+        ? Get.toNamed(RouteHelper.getAdminHome())
+        : Get.toNamed(RouteHelper.getPatientHome());
   }
 
   @override

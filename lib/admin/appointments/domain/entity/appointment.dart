@@ -11,6 +11,8 @@ class AdminAppointment {
   String? physiotherapistID;
   String? status;
   String? remark;
+  bool? isRead;
+  bool? isPhysioRead;
 
   AdminAppointment({
     this.appointmentID,
@@ -22,6 +24,8 @@ class AdminAppointment {
     this.physiotherapistID,
     this.status,
     this.remark,
+    this.isRead = false,
+    this.isPhysioRead = false,
   });
 
   AdminAppointment.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,8 @@ class AdminAppointment {
     physiotherapistID = json['physiotherapistID'];
     status = json['status'];
     remark = json['remark'];
+    isRead = json['isRead'];
+    isPhysioRead = json['isPhysioRead'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +53,8 @@ class AdminAppointment {
     data['physiotherapistID'] = this.physiotherapistID;
     data['status'] = this.status;
     data['remark'] = this.remark;
+    data['isRead'] = this.isRead;
+    data['isPhysioRead'] = this.isPhysioRead;
     return data;
   }
 

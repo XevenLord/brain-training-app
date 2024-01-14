@@ -168,6 +168,18 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                 child: Column(
                   children: [
                     TableCalendar(
+                      headerStyle: HeaderStyle(
+                        titleTextStyle: AppTextStyle.h3,
+                        formatButtonVisible: false,
+                        leftChevronIcon: const Icon(
+                          Icons.chevron_left,
+                          color: AppColors.brandBlue,
+                        ),
+                        rightChevronIcon: const Icon(
+                          Icons.chevron_right,
+                          color: AppColors.brandBlue,
+                        ),
+                      ),
                       firstDay: DateTime.utc(2022, 10, 16),
                       lastDay: DateTime.utc(2030, 3, 14),
                       focusedDay: _focusedDay,

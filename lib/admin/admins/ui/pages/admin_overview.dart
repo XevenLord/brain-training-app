@@ -130,43 +130,7 @@ class _AdminOverviewState extends State<AdminOverview> {
                           Get.toNamed(RouteHelper.getAdminProfileEdit(),
                               arguments: widget.admin);
                         },
-                        child: const Text('Edit Admin Profile'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 20.w),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: SizedBox(
-                  height: 40.w,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned.fill(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: <Color>[
-                                Color(
-                                    0xFFFF0000), // Start with red color (hex: FF0000)
-                                Color(
-                                    0xFFB71C1C), // Transition to a darker red (hex: B71C1C)
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10.w),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 16.0),
-                          textStyle: const TextStyle(fontSize: 14),
-                        ),
-                        onPressed: () {},
-                        child: const Text('Delete Admin'),
+                        child: Text('Edit Admin Profile', style: AppTextStyle.h3),
                       ),
                     ],
                   ),

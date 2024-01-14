@@ -17,6 +17,22 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
 
   Future<List<AdminAppointment>> getAppointmentList() async {
     appointments = await AdminAppointmentService.getAppointmentList();
+    List<AdminAppointment> myAppointments = filterAppointmentByMe();
+    List<AdminAppointment> readAppointments = [];
+    for (var element in myAppointments) {
+      if (element.isPhysioRead != null &&
+          !element.isPhysioRead! &&
+          element.status == "pending") {
+        readAppointments.add(element);
+        NotificationAPI.showNotification(
+          id: element.appointmentID.hashCode,
+          title: "New Appointment on ${element.date}",
+          body: "You have a new appointment from ${element.patient}",
+          payload: "This is the payload of the notification",
+        );
+      }
+    }
+    updateIsPhysioRead(readAppointments);
     sortAppointmentByDate();
     update();
     return appointments.reversed.toList();
@@ -89,19 +105,22 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
       await updateStatusAppointment(appointment: appointment);
     }
     await AdminAppointmentService.updateAppointment(appointment, oldDate);
-    AppUser physio = physiotherapistList
-        .firstWhere((element) => element.uid == appointment.physiotherapistID);
+    AppUser patient = patientList
+        .firstWhere((element) => element.uid == appointment.patientID);
     DateTime newDate = DateFormat('yyyy-MM-dd').parse(date);
-    NotificationAPI.showScheduledNotification(
-      id: appointment.appointmentID.hashCode,
-      title: "Appointment with ${physio.name}",
-      body: "Meet you on ${formatDateTime(newDate)}, ${time}",
-      payload: "This is the payload of the notification",
-      // scheduledDate:
-      //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
-      scheduledDate: createDateWithTimeSlot(
-          date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
-    );
+    if (newDate.isAfter(DateTime.now())) {
+      NotificationAPI.showScheduledNotification(
+        id: appointment.appointmentID.hashCode,
+        title: "Appointment with ${patient.name}",
+        body: "Meet you on ${formatDateTime(newDate)}, ${time}",
+        payload: "This is the payload of the notification",
+        // scheduledDate:
+        //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
+        scheduledDate: createDateWithTimeSlot(
+            date: newDate.subtract(const Duration(days: 1)),
+            timeSlot: "9:00 AM"),
+      );
+    }
   }
 
   Future<void> updateStatusAppointment(
@@ -165,5 +184,11 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
   String formatDateTime(DateTime dateTime) {
     final formatter = DateFormat('dd-MM-yyyy');
     return formatter.format(dateTime);
+  }
+
+  void updateIsPhysioRead(List<AdminAppointment> readAppointments) async {
+    readAppointments.forEach((element) async {
+      await AdminAppointmentService.updateIsPhysioRead(element);
+    });
   }
 }

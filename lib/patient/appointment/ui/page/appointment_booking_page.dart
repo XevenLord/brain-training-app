@@ -46,7 +46,7 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                 width: double.maxFinite,
-                height: 480.h,
+                height: 400.h,
                 decoration: BoxDecoration(
                   gradient: AppColors.linearBlueProfile,
                   borderRadius: BorderRadius.only(
@@ -80,39 +80,14 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    SizedBox(height: 40.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconBox(
-                          onPressed: () {
-                            Get.to(Chat(
-                              targetName: physiotherapist.name,
-                              targetUid: physiotherapist.uid,
-                            ));
-                          },
-                          icon: Icon(Icons.message, color: AppColors.brandBlue),
-                          title: "Messaging",
-                          boxColor: AppColors.lightBlue,
-                          textStyle: AppTextStyle.brandBlueTextStyle,
-                        ),
-                        IconBox(
-                          icon: Icon(Icons.calendar_month,
-                              color: AppColors.brandBlue),
-                          title: "Schedule",
-                          boxColor: AppColors.lightBlue,
-                          textStyle: AppTextStyle.brandBlueTextStyle,
-                        ),
-                        // IconBox(
-                        //   icon:
-                        //       Icon(Icons.videocam, color: AppColors.brandBlue),
-                        //   title: "Video Call",
-                        //   boxColor: AppColors.lightBlue,
-                        //   textStyle: AppTextStyle.brandBlueTextStyle,
-                        // ),
-                      ],
+                    SizedBox(height: 8.h),
+                    Text(
+                      physiotherapist.email!,
+                      style: AppTextStyle.c2.merge(AppTextStyle.whiteTextStyle),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 35.h),
                   ],
                 ),
               ),
@@ -124,6 +99,19 @@ class _AppointmentBookingPageState extends State<AppointmentBookingPage> {
                     Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                ),
+              ),
+              Positioned(
+                top: 16.h,
+                right: 8.w,
+                child: IconButton(
+                  onPressed: () {
+                    Get.to(Chat(
+                      targetName: physiotherapist.name,
+                      targetUid: physiotherapist.uid,
+                    ));
+                  },
+                  icon: const Icon(Icons.message, color: AppColors.lightBlue),
                 ),
               ),
             ],

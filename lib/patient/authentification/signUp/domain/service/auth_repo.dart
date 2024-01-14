@@ -186,6 +186,10 @@ class FirebaseAuthRepository extends GetxController {
         "role": data["role"] ?? "patient",
         "profilePic": data["profilePic"],
         "aboutMe": data["aboutMe"],
+        "lastOnline": FieldValue.serverTimestamp(),
+        "lastInspired": FieldValue.serverTimestamp(),
+        "strokeType": data["strokeType"],
+        "mentalQuiz": data["mentalQuiz"],
         // "appointments": [],
       });
       if (data["role"] == "admin") {
@@ -205,6 +209,11 @@ class FirebaseAuthRepository extends GetxController {
           gender: data["gender"],
           role: "patient",
           profilePic: data["profilePic"],
+          aboutMe: data["aboutMe"],
+          lastOnline: DateTime.now(),
+          lastInspired: DateTime.now(),
+          strokeType: data["strokeType"],
+          mentalQuiz: data["mentalQuiz"],
           // appointments: [],
         );
       debugModePrint("init process done...");

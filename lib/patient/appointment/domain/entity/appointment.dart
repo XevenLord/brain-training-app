@@ -9,16 +9,21 @@ class Appointment {
   String? reason;
   String? physiotherapistID;
   String? status;
+  bool? isRead;
+  bool? isPhysioRead;
 
-  Appointment(
-      {this.appointmentID,
-      this.date,
-      this.time,
-      this.reason,
-      this.patient,
-      this.patientID,
-      this.physiotherapistID,
-      this.status});
+  Appointment({
+    this.appointmentID,
+    this.date,
+    this.time,
+    this.reason,
+    this.patient,
+    this.patientID,
+    this.physiotherapistID,
+    this.status,
+    this.isRead = false,
+    this.isPhysioRead = false,
+  });
 
   Appointment.fromJson(Map<String, dynamic> json) {
     appointmentID = json['appointmentID'];
@@ -29,6 +34,8 @@ class Appointment {
     reason = json['reason'];
     physiotherapistID = json['physiotherapistID'];
     status = json['status'];
+    isRead = json['isRead'];
+    isPhysioRead = json['isPhysioRead'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,12 +48,14 @@ class Appointment {
     data['reason'] = this.reason;
     data['physiotherapistID'] = this.physiotherapistID;
     data['status'] = this.status;
+    data['isRead'] = this.isRead;
+    data['isPhysioRead'] = this.isPhysioRead;
     return data;
   }
 
   static List<Appointment> fromJsonList(List<dynamic> json) {
     List<Appointment> appointments = [];
-    for(var element in json) {
+    for (var element in json) {
       appointments.add(Appointment.fromJson(element));
     }
     return appointments;

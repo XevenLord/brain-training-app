@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:brain_training_app/common/domain/service/dependencies.dart'
     as dep;
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'patient/authentification/signUp/domain/service/auth_repo.dart';
@@ -25,6 +26,7 @@ late List<CameraDescription> camerasAvailable;
 late FlutterSecureStorage secureStorage;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance(); 
   secureStorage = FlutterSecureStorage();
   await dep.init();
   await Firebase.initializeApp(

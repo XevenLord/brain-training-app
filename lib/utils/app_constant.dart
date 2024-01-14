@@ -59,18 +59,19 @@ class AppConstant {
   }
 }
 
-displayLoadingData() {
+displayLoadingData({bool showBackArrow = true}) {
   return Stack(
     children: [
       Center(
         child: CircularProgressIndicator(),
       ),
-      Positioned(
-        child: IconButton(
-          onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back),
+      if (showBackArrow)
+        Positioned(
+          child: IconButton(
+            onPressed: () => Get.back(),
+            icon: Icon(Icons.arrow_back),
+          ),
         ),
-      ),
     ],
   );
 }
@@ -90,7 +91,11 @@ displayEmptyDataLoaded(String message,
               width: 200,
             ),
             SizedBox(height: 20.h),
-            Text(message, style: AppTextStyle.h1, textAlign: TextAlign.center,),
+            Text(
+              message,
+              style: AppTextStyle.h1,
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),

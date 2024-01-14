@@ -76,7 +76,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                         ),
                       ),
                     ]),
-                SizedBox(height: 32.h),
+                SizedBox(height: 60.h),
               ],
             ),
           );

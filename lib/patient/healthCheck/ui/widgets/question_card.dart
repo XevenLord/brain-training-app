@@ -153,21 +153,21 @@ class _QuestionCardState extends State<QuestionCard> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
-                                  title: const Text("Mental Health Check Up"),
-                                  content: Container(
-                                    height: 190.w,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Image.asset(AppConstant.DONE_CHECK,
-                                            width: 100.w),
-                                        SizedBox(height: 10.h),
-                                        const Text(
-                                            "Your answer has been submitted successfully, wish you have a good day!",
-                                            textAlign: TextAlign.center),
-                                      ],
-                                    ),
+                                  title: Text("Mental Health Check Up",
+                                      style: AppTextStyle.h2),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(AppConstant.DONE_CHECK,
+                                          width: 100.w),
+                                      SizedBox(height: 10.h),
+                                      Text(
+                                          "Your answer has been submitted successfully, wish you have a good day!",
+                                          textAlign: TextAlign.center,
+                                          style: AppTextStyle.h4),
+                                    ],
                                   ),
                                   actions: [
                                     TextButton(
