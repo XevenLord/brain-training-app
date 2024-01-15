@@ -11,7 +11,7 @@ class DoctorCard extends StatelessWidget {
   String imgUrl;
   String doctorName;
   String position;
-  num rating;
+  String email;
   Function()? onTap;
 
   DoctorCard({
@@ -19,7 +19,7 @@ class DoctorCard extends StatelessWidget {
     required this.doctorName,
     required this.position,
     required this.imgUrl,
-    this.rating = 5.0,
+    required this.email,
     this.onTap,
   });
 
@@ -71,15 +71,13 @@ class DoctorCard extends StatelessWidget {
             Row(
               children: [
                 Icon(Icons.star, color: Colors.yellow),
-                Text(
-                  rating.toStringAsFixed(1),
-                  style:
-                      AppTextStyle.smallText.merge(AppTextStyle.greyTextStyle),
-                ),
-                Text(
-                  "(135 reviews)",
-                  style:
-                      AppTextStyle.smallText.merge(AppTextStyle.greyTextStyle),
+                Expanded(
+                  child: Text(
+                    email,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        AppTextStyle.smallText.merge(AppTextStyle.greyTextStyle),
+                  ),
                 )
               ],
             )

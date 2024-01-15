@@ -20,6 +20,7 @@ class AppConstant {
   static const String NO_PROFILE_PIC = "assets/images/noProfilePic.png";
   static const String SUPPORTIVE_IMG = 'assets/images/supportive_img.png';
   static const String FEEDBACK_IMG = 'assets/images/feedback.png';
+  static const String HUG_IMG = 'assets/images/hug.png';
 
   // Game 1: Tic Tac Toe
   static const String TIC_TAC_TOE_O = 'assets/images/ttt_default_o.png';

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:brain_training_app/admin/patients/domain/entity/inspirational_mssg.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -93,8 +94,15 @@ class HomeViewModel extends GetxController implements GetxService {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               insMssg.imgUrl != null && insMssg.imgUrl!.isNotEmpty
-                  ? Image(image: NetworkImage(insMssg.imgUrl!), height: 150.w)
-                  : Container(),
+                  ? CircleAvatar(
+                      radius: 120.r,
+                      backgroundColor: AppColors.lightYellow,
+                      backgroundImage: NetworkImage(insMssg.imgUrl!),
+                    )
+                  : Image(
+                      image: const AssetImage(AppConstant.HUG_IMG),
+                      height: 150.w,
+                    ),
               SizedBox(height: 10.w),
               Text(insMssg.message!, style: AppTextStyle.h3),
             ],
@@ -121,7 +129,15 @@ class HomeViewModel extends GetxController implements GetxService {
         builder: (context) => AlertDialog(
           backgroundColor: AppColors.lightYellow,
           title: Text('From NeuroFit : ', style: AppTextStyle.h2),
-          content: Text(insMssg.message!, style: AppTextStyle.h3),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Image(
+                image: AssetImage(AppConstant.HUG_IMG),
+              ),
+              Text(insMssg.message!, style: AppTextStyle.h3),
+            ],
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -135,6 +151,9 @@ class HomeViewModel extends GetxController implements GetxService {
         ),
       );
     }
+  }
+
+  Future<void> updateLastInspired() async {
     await HomeService.updateLastInspired();
   }
 }

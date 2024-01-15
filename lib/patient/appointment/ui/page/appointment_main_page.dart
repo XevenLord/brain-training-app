@@ -65,7 +65,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                           doctorName: physiotherapists[index].name!,
                           position: physiotherapists[index].position!,
                           imgUrl: physiotherapists[index].profilePic!,
-                          rating: 5.0,
+                          email: physiotherapists[index].email!,
                           onTap: () {
                             appointmentViewModel.setChosenPhysiotherapist(
                               physiotherapist: physiotherapists[index],

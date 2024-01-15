@@ -115,14 +115,13 @@ class _HomePageState extends State<HomePage> {
       lastMentalTest = Get.find<AppUser>().mentalQuiz;
       lastInspired = Get.find<AppUser>().lastInspired;
       updateLastOnline();
+      updateLastInspired();
 
       SchedulerBinding.instance.addPostFrameCallback((_) {
         if (!mentalTestShown) {
-          print(mentalTestShown.toString() + " hehe");
           showMentalStatusQuiz();
         }
-        if (!dialogShown) {
-          print(dialogShown.toString() + " hehe");
+        if (!dialogShown && lastInspired != null) {
           showActiveGameDialog();
         }
       });
@@ -160,6 +159,11 @@ class _HomePageState extends State<HomePage> {
 
   void updateLastOnline() async {
     await FirebaseAuthRepository.updateLastOnline(Get.find<AppUser>().uid!);
+    setState(() {});
+  }
+
+  void updateLastInspired() async {
+    await homeVModel.updateLastInspired();
     setState(() {});
   }
 
