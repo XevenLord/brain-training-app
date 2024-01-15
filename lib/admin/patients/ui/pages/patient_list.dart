@@ -1,5 +1,6 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/admin/patients/ui/view_model/patient_vmodel.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/info_card.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -22,24 +23,31 @@ class _PatientListState extends State<PatientList> {
   late UserRepository userRepo;
   late List<AppUser> allPatients;
   late List<AppUser> patients;
+  late List<AppUser> admins;
   late AdminAppointmentViewModel adminAppointmentViewModel;
+  late ManagePatientViewModel managePatientViewModel;
   List<AdminAppointment> appointments = [];
 
   bool isLoading = true;
 
   List<String> selectedGenders = [];
   List<String> selectedAgeRanges = [];
+  List<String> selectedAssignations = [];
 
   @override
   void initState() {
     userRepo = Get.find<UserRepository>();
     adminAppointmentViewModel = Get.find<AdminAppointmentViewModel>();
+    managePatientViewModel = Get.find<ManagePatientViewModel>();
     appointments = adminAppointmentViewModel.appointments;
-    fetchPatients();
+    patients = allPatients = UserRepository.patients;
+    admins = UserRepository.admins;
+    isLoading = false;
     super.initState();
   }
 
   void fetchPatients() async {
+    isLoading = true;
     try {
       allPatients = await UserRepository.fetchAllPatients();
       patients = allPatients;
@@ -93,6 +101,21 @@ class _PatientListState extends State<PatientList> {
     // Filter patients based on selectedGender and selectedAge
     List<AppUser> filteredPatients = allPatients;
 
+    if (selectedAssignations.isNotEmpty) {
+      filteredPatients = filteredPatients.where((patient) {
+        bool isAssigned = false;
+        if (selectedAssignations.contains('Yours') &&
+            selectedAssignations.contains('Others')) {
+          isAssigned = true;
+        } else if (selectedAssignations.contains('Yours')) {
+          isAssigned = patient.assignedTo == Get.find<AppUser>().uid;
+        } else if (selectedAssignations.contains('Others')) {
+          isAssigned = patient.assignedTo != Get.find<AppUser>().uid;
+        }
+        return isAssigned;
+      }).toList();
+    }
+
     if (selectedGenders.isNotEmpty) {
       filteredPatients = filteredPatients.where((patient) {
         return selectedGenders.contains(patient.gender);
@@ -140,7 +163,7 @@ class _PatientListState extends State<PatientList> {
           ]),
       body: SafeArea(
         child: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : patients.isEmpty
                 ? displayEmptyDataLoaded("No patient.", showBackArrow: false)
                 : SingleChildScrollView(
@@ -151,6 +174,19 @@ class _PatientListState extends State<PatientList> {
                         children: [
                           ...patients.map((e) {
                             AdminAppointment appt;
+                            String? assignedTo = e.assignedTo;
+
+                            bool isAssigned =
+                                assignedTo != null && assignedTo.isNotEmpty;
+
+                            String assignedToName = assignedTo != null
+                                ? admins
+                                        .where((element) =>
+                                            element.uid == assignedTo)
+                                        .first
+                                        .name ??
+                                    ''
+                                : '';
 
                             try {
                               appt = appointments
@@ -167,10 +203,12 @@ class _PatientListState extends State<PatientList> {
                               appt = AdminAppointment();
                             }
                             return InfoCardTile().buildInfoCard(
+                              hasAssignStarIcon: true,
                               shout: true,
                               name: e.name!,
                               age: calculateAge(e.dateOfBirth),
                               gender: e.gender!,
+                              assignedTo: assignedToName,
                               onShout: () {
                                 Get.toNamed(RouteHelper.getPatientShoutPage(),
                                     arguments: e);
@@ -180,6 +218,53 @@ class _PatientListState extends State<PatientList> {
                                     RouteHelper.getPatientOverviewPage(),
                                     arguments: [e, appt]);
                               },
+                              backgroundColor: isAssigned &&
+                                      assignedTo == Get.find<AppUser>().uid
+                                  ? AppColors.lightYellow
+                                  : isAssigned
+                                      ? Colors.grey.withOpacity(0.1)
+                                      : Colors.white,
+                              topRightTrailing: Container(
+                                height: 50.w,
+                                width: 50.w,
+                                child: IconButton(
+                                  icon: Icon(
+                                      isAssigned
+                                          ? Icons.star
+                                          : Icons.star_outline,
+                                      color: isAssigned &&
+                                              assignedTo ==
+                                                  Get.find<AppUser>().uid
+                                          ? AppColors.brandYellow
+                                          : AppColors.brandBlue),
+                                  onPressed: e.assignedTo != null &&
+                                          e.assignedTo !=
+                                              Get.find<AppUser>().uid
+                                      ? null
+                                      : () async {
+                                          if (isAssigned) {
+                                            bool isUnassigned =
+                                                await managePatientViewModel
+                                                    .unassignPatient(e);
+                                            if (isUnassigned) {
+                                              setState(() {
+                                                e.assignedTo = null;
+                                              });
+                                            }
+                                          } else {
+                                            bool isAssigned =
+                                                await managePatientViewModel
+                                                    .assignPatient(e);
+                                            if (isAssigned) {
+                                              setState(() {
+                                                e.assignedTo =
+                                                    Get.find<AppUser>().uid;
+                                              });
+                                            }
+                                          }
+                                        },
+                                ),
+                              ),
                             );
                           }),
                         ],
@@ -199,7 +284,70 @@ class _PatientListState extends State<PatientList> {
             return Column(
               children: [
                 ListTile(
-                  title: Text('Gender'),
+                  title: Text('Assignation', style: AppTextStyle.h2),
+                  onTap: () {
+                    // Close the modal
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return StatefulBuilder(builder: (context, setState) {
+                          return AlertDialog(
+                            title: Text('Select Assignation'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                CheckboxListTile(
+                                  title: Text('Your Patients'),
+                                  value: selectedAssignations.contains('Yours'),
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      if (newValue != null) {
+                                        if (newValue) {
+                                          selectedAssignations.add('Yours');
+                                        } else {
+                                          selectedAssignations.remove('Yours');
+                                        }
+                                      }
+                                    });
+                                  },
+                                ),
+                                CheckboxListTile(
+                                  title: Text('Other patients'),
+                                  value:
+                                      selectedAssignations.contains('Others'),
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      if (newValue != null) {
+                                        if (newValue) {
+                                          selectedAssignations.add('Others');
+                                        } else {
+                                          selectedAssignations.remove('Others');
+                                        }
+                                      }
+                                    });
+                                  },
+                                ),
+                                // Add more gender options as needed
+                              ],
+                            ),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Apply gender filters and update the list
+                                  applyFilters();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Apply'),
+                              ),
+                            ],
+                          );
+                        });
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: Text('Gender', style: AppTextStyle.h2),
                   onTap: () {
                     // Close the modal
                     showDialog(
@@ -261,90 +409,91 @@ class _PatientListState extends State<PatientList> {
                   },
                 ),
                 ListTile(
-                  title: Text('Age'),
+                  title: Text('Age', style: AppTextStyle.h2),
                   onTap: () {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return StatefulBuilder(
-                          builder: (context, setState) {
-                            return AlertDialog(
-                              title: Text('Select Age Range'),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  CheckboxListTile(
-                                    title: Text('18-34'),
-                                    value: selectedAgeRanges.contains('18-34'),
-                                    onChanged: (bool? newValue) {
-                                      setState(() {
-                                        if (newValue != null) {
-                                          if (newValue) {
-                                            selectedAgeRanges.add('18-34');
-                                          } else {
-                                            selectedAgeRanges.remove('18-34');
-                                          }
+                        return StatefulBuilder(builder: (context, setState) {
+                          return AlertDialog(
+                            title: Text('Select Age Range'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                CheckboxListTile(
+                                  title: Text('18-34'),
+                                  value: selectedAgeRanges.contains('18-34'),
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      if (newValue != null) {
+                                        if (newValue) {
+                                          selectedAgeRanges.add('18-34');
+                                        } else {
+                                          selectedAgeRanges.remove('18-34');
                                         }
-                                      });
-                                    },
-                                  ),
-                                  CheckboxListTile(
-                                    title: Text('35-60'),
-                                    value: selectedAgeRanges.contains('35-60'),
-                                    onChanged: (bool? newValue) {
-                                      setState(() {
-                                        if (newValue != null) {
-                                          if (newValue) {
-                                            selectedAgeRanges.add('35-60');
-                                          } else {
-                                            selectedAgeRanges.remove('35-60');
-                                          }
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  CheckboxListTile(
-                                    title: Text('61-90'),
-                                    value: selectedAgeRanges.contains('61-90'),
-                                    onChanged: (bool? newValue) {
-                                      setState(() {
-                                        if (newValue != null) {
-                                          if (newValue) {
-                                            selectedAgeRanges.add('61-90');
-                                          } else {
-                                            selectedAgeRanges.remove('61-90');
-                                          }
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  // Add more age range options as needed
-                                ],
-                              ),
-                              actions: <Widget>[
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Apply age range filters and update the list
-                                    applyFilters();
-                                    Navigator.of(context).pop();
+                                      }
+                                    });
                                   },
-                                  child: Text('Apply'),
                                 ),
+                                CheckboxListTile(
+                                  title: Text('35-60'),
+                                  value: selectedAgeRanges.contains('35-60'),
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      if (newValue != null) {
+                                        if (newValue) {
+                                          selectedAgeRanges.add('35-60');
+                                        } else {
+                                          selectedAgeRanges.remove('35-60');
+                                        }
+                                      }
+                                    });
+                                  },
+                                ),
+                                CheckboxListTile(
+                                  title: Text('61-90'),
+                                  value: selectedAgeRanges.contains('61-90'),
+                                  onChanged: (bool? newValue) {
+                                    setState(() {
+                                      if (newValue != null) {
+                                        if (newValue) {
+                                          selectedAgeRanges.add('61-90');
+                                        } else {
+                                          selectedAgeRanges.remove('61-90');
+                                        }
+                                      }
+                                    });
+                                  },
+                                ),
+                                // Add more age range options as needed
                               ],
-                            );
-                          }
-                        );
+                            ),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Apply age range filters and update the list
+                                  applyFilters();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Apply'),
+                              ),
+                            ],
+                          );
+                        });
                       },
                     );
                   },
                 ),
                 Divider(),
                 ListTile(
-                  title: Text('Clear Filters'),
+                  title: Text('Clear Filters',
+                      style: AppTextStyle.h2
+                          .merge(AppTextStyle.brandBlueTextStyle)),
                   onTap: () {
                     setState(() {
                       selectedGenders.clear();
                       selectedAgeRanges.clear();
+                      selectedAssignations.clear();
                       applyFilters();
                     });
                     Navigator.of(context).pop();

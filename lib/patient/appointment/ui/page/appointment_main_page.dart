@@ -18,6 +18,7 @@ class AppointmentMainPage extends StatefulWidget {
 class _AppointmentMainPageState extends State<AppointmentMainPage> {
   late AppointmentViewModel appointmentViewModel;
   List<AppUser> physiotherapists = [];
+  AppUser? assignedPhysio;
 
   @override
   void initState() {
@@ -27,6 +28,10 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
       getPhysiotherapistList();
     } else {
       physiotherapists = appointmentViewModel.physiotherapistList;
+    }
+    if (Get.find<AppUser>().assignedTo != null) {
+      assignedPhysio = appointmentViewModel.physiotherapistList.firstWhere(
+          (element) => element.uid == Get.find<AppUser>().assignedTo);
     }
     print("physiotherapists: $physiotherapists");
   }
@@ -49,8 +54,71 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
             key: PageStorageKey("appts"),
             child: Column(
               children: [
-                Text("Select a practitioner", style: AppTextStyle.h3),
-                SizedBox(height: 16.h),
+                assignedPhysio != null
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                style: AppTextStyle.h3.merge(
+                                    const TextStyle(color: Colors.black)),
+                                children: [
+                                  const TextSpan(
+                                    text: "You are assigned to:  ",
+                                  ),
+                                  TextSpan(
+                                    text: "Dr. ${assignedPhysio!.name!}",
+                                    style: AppTextStyle.h2
+                                        .merge(AppTextStyle.brandBlueTextStyle),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                          ],
+                        ),
+                      )
+                    : Container(),
+                assignedPhysio != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width:
+                                (MediaQuery.of(context).size.width - 60.w) / 2,
+                            child: DoctorCard(
+                              doctorName: assignedPhysio!.name!,
+                              position: assignedPhysio!.position!,
+                              imgUrl: assignedPhysio!.profilePic!,
+                              email: assignedPhysio!.email!,
+                              isAssignedPhysio:
+                                  Get.find<AppUser>().assignedTo ==
+                                          assignedPhysio!.uid
+                                      ? true
+                                      : false,
+                              onTap: () {
+                                appointmentViewModel.setChosenPhysiotherapist(
+                                  physiotherapist: assignedPhysio!,
+                                );
+                                Get.toNamed(
+                                    RouteHelper.getAppointmentBookingPage());
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Text("All practitioners below:",
+                                style: AppTextStyle.h3),
+                          ),
+                        ],
+                      )
+                    : Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text("Select a practitioner below:",
+                            style: AppTextStyle.h3)),
+                SizedBox(height: 8.h),
                 GridView.count(
                     crossAxisCount: 2,
                     childAspectRatio: 0.75,
@@ -66,6 +134,10 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                           position: physiotherapists[index].position!,
                           imgUrl: physiotherapists[index].profilePic!,
                           email: physiotherapists[index].email!,
+                          isAssignedPhysio: Get.find<AppUser>().assignedTo ==
+                                  physiotherapists[index].uid
+                              ? true
+                              : false,
                           onTap: () {
                             appointmentViewModel.setChosenPhysiotherapist(
                               physiotherapist: physiotherapists[index],

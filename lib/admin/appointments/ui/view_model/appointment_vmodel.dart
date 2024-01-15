@@ -1,25 +1,37 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
-import 'package:brain_training_app/admin/appointments/domain/entity/physiotherapist.dart';
 import 'package:brain_training_app/admin/appointments/domain/services/admin_appt_service.dart';
 import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
-import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AdminAppointmentViewModel extends GetxController implements GetxService {
   List<AdminAppointment> appointments = [];
+  List<AdminAppointment>? pendingAppointments;
+  List<AdminAppointment>? myPendingAppointments;
+  List<AdminAppointment>? myAppointments;
+
+  List<AdminAppointment>? appointmentsBySelectedDay;
+  List<AdminAppointment>? myAppointmentsBySelectedDay;
+
+  DateTime? selectedDay;
+
   List<AppUser> physiotherapistList = [];
   List<AppUser> patientList = [];
   bool isAppointmentSet = false;
 
   Future<List<AdminAppointment>> getAppointmentList() async {
     appointments = await AdminAppointmentService.getAppointmentList();
-    List<AdminAppointment> myAppointments = filterAppointmentByMe();
+    pendingAppointments =
+        appointments.where((element) => element.status == "pending").toList();
+    filterAppointmentByMe();
+    myPendingAppointments = myAppointments!
+        .where((element) => element.status == "pending")
+        .toList();
     List<AdminAppointment> readAppointments = [];
-    for (var element in myAppointments) {
+    for (var element in myAppointments!) {
       if (element.isPhysioRead != null &&
           !element.isPhysioRead! &&
           element.status == "pending") {
@@ -74,20 +86,48 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
   }
 
   List<AdminAppointment> filterAppointmentByMe() {
-    return appointments
+    myAppointments = appointments
         .where(
             (element) => element.physiotherapistID == Get.find<AppUser>().uid)
         .toList();
+    update();
+    return myAppointments!;
   }
 
   List<AdminAppointment> filterAppointmentByDay(
       {required DateTime day, required List<AdminAppointment> appts}) {
+    selectedDay = day;
     if (appts.isNotEmpty) {
-      return appts
-          .where((element) => isSameDay(DateTime.parse(element.date!), day))
-          .toList();
+      appts = appts.where(
+        (element) {
+          return (element.status == "approved" ||
+                  element.status == "completed") &&
+              isSameDay(DateTime.parse(element.date!), day);
+        },
+      ).toList();
     }
-    return [];
+    appts.sort((a, b) {
+      return a.time!.compareTo(b.time!);
+    });
+    appts = appts.reversed.toList();
+    update();
+    return appts;
+  }
+
+  void filterAppointmentsBySelectedDay({required DateTime day}) {
+    if (appointments.isNotEmpty) {
+      appointmentsBySelectedDay =
+          filterAppointmentByDay(day: day, appts: appointments);
+    }
+    update();
+  }
+
+  void filterMyAppointmentsBySelectedDay({required DateTime day}) {
+    if (myAppointments != null && myAppointments!.isNotEmpty) {
+      myAppointmentsBySelectedDay =
+          filterAppointmentByDay(day: day, appts: myAppointments!);
+    }
+    update();
   }
 
   Future<void> updateAppointment(
@@ -132,10 +172,24 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
 
   Future<void> approveAppointment(
       {required AdminAppointment appointment}) async {
+    appointments.remove(appointment);
     await AdminAppointmentService.approveAppointment(appointment);
     AppUser patient = patientList
         .firstWhere((element) => element.uid == appointment.patientID);
     DateTime newDate = DateFormat('yyyy-MM-dd').parse(appointment.date!);
+    bool meRemoved = false;
+
+    if (pendingAppointments != null && pendingAppointments!.isNotEmpty) {
+      pendingAppointments!.remove(appointment);
+    }
+    if (myPendingAppointments != null && myPendingAppointments!.isNotEmpty) {
+      meRemoved = myPendingAppointments!.remove(appointment);
+    }
+
+    appointment.status = "approved";
+    appointments.add(appointment);
+    if (meRemoved) myAppointments!.add(appointment);
+
     NotificationAPI.showScheduledNotification(
       id: appointment.appointmentID.hashCode,
       title: "Appointment with ${patient.name}",
@@ -146,6 +200,7 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
       scheduledDate: createDateWithTimeSlot(
           date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
     );
+    update();
   }
 
   Future<void> completeAppointment({required AdminAppointment appointment}) {

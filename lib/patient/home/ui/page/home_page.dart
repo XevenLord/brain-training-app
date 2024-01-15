@@ -1,6 +1,4 @@
-import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
-import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -16,7 +14,6 @@ import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

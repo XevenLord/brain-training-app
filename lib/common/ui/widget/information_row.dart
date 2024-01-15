@@ -26,10 +26,10 @@ class InformationRow extends StatelessWidget {
       padding: padding!,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            width: 100.w,
+            // width: 100.w,
             child: Text(
               '$title',
               style: titleStyle ??

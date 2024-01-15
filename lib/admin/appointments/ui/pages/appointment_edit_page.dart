@@ -1,5 +1,6 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -29,6 +30,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   DateTime intialDate = DateTime.now().add(Duration(days: 1));
   String? time;
   late AppUser patient;
+  AppUser? admin;
 
   List<String> timeSlots = [
     "09:00 AM",
@@ -45,14 +47,18 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   TextEditingController dateController = TextEditingController();
   TextEditingController reasonController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
+  TextEditingController adminController = TextEditingController();
 
   @override
   void initState() {
     appointmentVModel = Get.find<AdminAppointmentViewModel>();
     patient = widget.patient;
+    admin = UserRepository.admins.firstWhere(
+        (element) => element.uid == widget.appointment.physiotherapistID);
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason ?? "";
     remarkController.text = widget.appointment.remark ?? "";
+    adminController.text = admin?.name ?? "";
     time = widget.appointment.time!;
     super.initState();
   }
@@ -121,6 +127,16 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                             ],
                           ),
                         ),
+                      ),
+                      SizedBox(height: 16.h),
+                      InputTextFormField(
+                        name: "admin",
+                        textEditingController: adminController,
+                        promptText: "Admin",
+                        label: "Select your admin",
+                        textAlign: TextAlign.center,
+                        initialValue: admin!.name,
+                        readOnly: true,
                       ),
                       SizedBox(height: 16.h),
                       InputTextFormField(

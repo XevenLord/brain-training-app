@@ -53,4 +53,9 @@ class AdminHomeViewModel extends GetxController implements GetxService {
     patientList = await UserRepository.fetchAllPatients();
     return patientList;
   }
+
+  Future<List<AppUser>> fetchAllUsers() async {
+    List<AppUser> allUsers = await UserRepository.fetchAllUsers();
+    return allUsers;
+  }
 }

@@ -12,6 +12,7 @@ class DoctorCard extends StatelessWidget {
   String doctorName;
   String position;
   String email;
+  bool? isAssignedPhysio;
   Function()? onTap;
 
   DoctorCard({
@@ -21,6 +22,7 @@ class DoctorCard extends StatelessWidget {
     required this.imgUrl,
     required this.email,
     this.onTap,
+    this.isAssignedPhysio = false,
   });
 
   @override
@@ -29,7 +31,9 @@ class DoctorCard extends StatelessWidget {
       onTap: onTap,
       child: EmptyBox(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isAssignedPhysio != null && isAssignedPhysio == true
+              ? AppColors.lightBlue
+              : Colors.white,
           borderRadius: BorderRadius.circular(10.r),
           boxShadow: [
             BoxShadow(
@@ -69,14 +73,17 @@ class DoctorCard extends StatelessWidget {
             ),
             SizedBox(height: 5.h),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.email, color: AppColors.brandBlue, size: 20.w),
+                SizedBox(width: 5.w),
                 Expanded(
                   child: Text(
                     email,
                     overflow: TextOverflow.ellipsis,
-                    style:
-                        AppTextStyle.smallText.merge(AppTextStyle.greyTextStyle),
+                    style: AppTextStyle.smallText
+                        .merge(AppTextStyle.greyTextStyle),
                   ),
                 )
               ],

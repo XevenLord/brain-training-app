@@ -1,6 +1,7 @@
 import 'package:brain_training_app/admin/home/ui/view_model/home_vmodel.dart';
 import 'package:brain_training_app/admin/mmse/domain/entity/patient_response.dart';
 import 'package:brain_training_app/admin/mmse/ui/view_model/mmse_vmodel.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -29,7 +30,7 @@ class _MMSEMainPageState extends State<MMSEMainPage> {
     adminHomeViewModel = Get.find<AdminHomeViewModel>();
     mmseViewModel = Get.find<MMSEViewModel>();
     setState(() {
-      patients = adminHomeViewModel.patientList;
+      patients = UserRepository.patients;
     });
     _loadPatientResponses();
     super.initState();

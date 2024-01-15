@@ -20,6 +20,11 @@ class InfoCardTile implements InfoCardInterface {
       EdgeInsetsGeometry? margin = const EdgeInsets.only(bottom: 16),
       bool isView = false,
       bool shout = false,
+      bool hasAssignStarIcon = false,
+      Widget? topRightTrailing,
+      Color? backgroundColor,
+      String? assignedTo,
+      Function()? onChoose,
       Function()? onEdit,
       Function()? onShout,
       Function()? onCheck}) {
@@ -27,7 +32,7 @@ class InfoCardTile implements InfoCardInterface {
       margin: margin,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor ?? Colors.white,
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
@@ -41,8 +46,15 @@ class InfoCardTile implements InfoCardInterface {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(name, style: AppTextStyle.h2),
-          SizedBox(height: 10.w),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(name, style: AppTextStyle.h2),
+              if (hasAssignStarIcon) topRightTrailing!,
+            ],
+          ),
+          SizedBox(height: 8.w),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,7 +69,6 @@ class InfoCardTile implements InfoCardInterface {
                       Text(
                         "Age",
                         style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 16,
                           color: Color(0xFF003F5F),
                         )),
                       ),
@@ -65,7 +76,6 @@ class InfoCardTile implements InfoCardInterface {
                       Text(
                         "Gender",
                         style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 16,
                           color: Color(0xFF003F5F),
                         )),
                       ),
@@ -74,11 +84,19 @@ class InfoCardTile implements InfoCardInterface {
                         Text(
                           "Position",
                           style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 16,
                             color: Color(0xFF003F5F),
                           )),
                         ),
-                      ]
+                      ],
+                      if (assignedTo != null && assignedTo.isNotEmpty) ...[
+                        SizedBox(height: 4.w),
+                        Text(
+                          "Assigned To",
+                          style: AppTextStyle.h3.merge(const TextStyle(
+                            color: Color(0xFF003F5F),
+                          )),
+                        ),
+                      ],
                     ],
                   ),
                   SizedBox(width: 50.w),
@@ -89,7 +107,6 @@ class InfoCardTile implements InfoCardInterface {
                         Text(
                           age,
                           style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF003F5F),
                           )),
@@ -98,7 +115,6 @@ class InfoCardTile implements InfoCardInterface {
                         Text(
                           gender,
                           style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF003F5F),
                           )),
@@ -108,12 +124,24 @@ class InfoCardTile implements InfoCardInterface {
                           Text(
                             position,
                             style: AppTextStyle.h3.merge(const TextStyle(
-                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF003F5F),
                             )),
                           ),
-                        ]
+                        ],
+                        if (assignedTo != null && assignedTo.isNotEmpty) ...[
+                          SizedBox(height: 4.w),
+                          Text(
+                            assignedTo.length > 20
+                                ? assignedTo.substring(0, 12) + "..."
+                                : assignedTo,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.h3.merge(const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF003F5F),
+                            )),
+                          ),
+                        ],
                       ]),
                 ],
               ),
@@ -131,7 +159,7 @@ class InfoCardTile implements InfoCardInterface {
                                     width: 50.w,
                                     height: 50.w,
                                     child: const Icon(Icons.contactless,
-                                        color: Colors.blue)),
+                                        color: AppColors.brandBlue)),
                               ),
                               SizedBox(height: 8.w),
                             ],
@@ -146,7 +174,6 @@ class InfoCardTile implements InfoCardInterface {
                                 decoration: isView
                                     ? null
                                     : BoxDecoration(
-                                        color: AppColors.lightBlue,
                                         borderRadius:
                                             BorderRadius.circular(10.w)),
                                 child: isView
@@ -154,7 +181,7 @@ class InfoCardTile implements InfoCardInterface {
                                         style: AppTextStyle.h3.merge(
                                             AppTextStyle.brandBlueTextStyle))
                                     : const Icon(Icons.edit,
-                                        color: Colors.blue)),
+                                        color: AppColors.brandBlue)),
                           )
                         : Container(),
                     hasCheckIcon
@@ -170,7 +197,7 @@ class InfoCardTile implements InfoCardInterface {
                                       borderRadius:
                                           BorderRadius.circular(10.w)),
                                   child: const Icon(Icons.check,
-                                      color: Colors.blue)),
+                                      color: AppColors.brandBlue)),
                             ),
                           ])
                         : Container()

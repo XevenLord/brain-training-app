@@ -212,6 +212,7 @@ class FirebaseAuthRepository extends GetxController {
         "lastInspired": FieldValue.serverTimestamp(),
         "strokeType": data["strokeType"],
         "mentalQuiz": data["mentalQuiz"],
+        "assignedTo": data["assignedTo"],
         // "appointments": [],
       });
       if (data["role"] == "admin") {
@@ -236,6 +237,7 @@ class FirebaseAuthRepository extends GetxController {
           lastInspired: DateTime.now(),
           strokeType: data["strokeType"],
           mentalQuiz: data["mentalQuiz"],
+          assignedTo: data["assignedTo"],
           // appointments: [],
         );
       debugModePrint("init process done...");
@@ -292,6 +294,7 @@ class FirebaseAuthRepository extends GetxController {
         mentalQuiz: data["mentalQuiz"] != null
             ? DateTime.parse(data["mentalQuiz"])
             : null,
+        assignedTo: data["assignedTo"],
       );
 
       // store uid in shared preference

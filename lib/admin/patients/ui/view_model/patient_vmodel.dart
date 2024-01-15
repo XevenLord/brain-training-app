@@ -38,6 +38,8 @@ class ManagePatientViewModel extends GetxController {
 
     InspirationalMessage message = InspirationalMessage.fromJson(newData);
     isUpdated = await ManagePatientService.onPushInspirationalMessage(message);
+    _pictureUrl = null;
+    _userDetails.clear();
     update();
     return isUpdated;
   }
@@ -107,5 +109,28 @@ class ManagePatientViewModel extends GetxController {
         print("Error getting download URL: $error");
       }
     });
+  }
+
+  Future<bool> assignPatient(AppUser patient) async {
+    try {
+      bool isAssigned = false;
+      if (patient.assignedTo != null) return isAssigned;
+      isAssigned = await ManagePatientService.assignPatient(patient.uid!);
+      return isAssigned;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> unassignPatient(AppUser patient) async {
+    try {
+      bool isUnassigned = false;
+      if (patient.assignedTo == null ||
+          patient.assignedTo != Get.find<AppUser>().uid) return isUnassigned;
+      isUnassigned = await ManagePatientService.unassignPatient(patient.uid!);
+      return isUnassigned;
+    } catch (e) {
+      return false;
+    }
   }
 }

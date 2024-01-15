@@ -26,12 +26,14 @@ class AdminAppointmentMainPage extends StatefulWidget {
 
 class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   late AdminAppointmentViewModel _appointmentViewModel;
-  List<AdminAppointment>? appointments;
-  List<AdminAppointment>? filteredAppointments;
-  List<AdminAppointment>? filteredMeAppointments;
-  List<AdminAppointment>? filteredMeAppointmentsByDay;
-  List<AdminAppointment>? pendingAppointments;
+  // List<AdminAppointment>? appointments;
+  // List<AdminAppointment>? pendingAppointments;
+  // List<AdminAppointment>? filteredAppointments;
+  // List<AdminAppointment>? filteredMeAppointments;
+  // List<AdminAppointment>? filteredMeAppointmentsByDay;
+  // List<AdminAppointment>? myPendingAppointments;
   List<AppUser>? patients;
+  List<AppUser>? admins;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.week;
@@ -42,8 +44,11 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   @override
   void initState() {
     _appointmentViewModel = Get.find<AdminAppointmentViewModel>();
+    _appointmentViewModel.getAppointmentList();
     getAppointmentList();
-    fetchAllPatients();
+    patients = UserRepository.patients;
+    admins = UserRepository.admins;
+    // fetchAllPatients();
     super.initState();
   }
 
@@ -53,13 +58,9 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   }
 
   void getAppointmentList() async {
-    appointments = await _appointmentViewModel.getAppointmentList();
-    filterAppointmentByDay();
-    filteredMeAppointments = _appointmentViewModel.filterAppointmentByMe();
-    pendingAppointments = filteredMeAppointments!
-        .where((element) => element.status == "pending")
-        .toList();
-    filterMeAppointmentByDay();
+    await _appointmentViewModel.getAppointmentList();
+    _appointmentViewModel.filterAppointmentsBySelectedDay(day: _selectedDay);
+    _appointmentViewModel.filterMyAppointmentsBySelectedDay(day: _selectedDay);
     setState(() {});
   }
 
@@ -67,40 +68,6 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   void didUpdateWidget(covariant AdminAppointmentMainPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     getAppointmentList();
-  }
-
-  void filterAppointmentByDay() {
-    filteredAppointments = _appointmentViewModel.filterAppointmentByDay(
-        day: _selectedDay, appts: appointments!);
-    if (filteredAppointments == null || filteredAppointments!.isEmpty) {
-      filteredAppointments = [];
-      return;
-    }
-    filteredAppointments = filteredAppointments!.where(
-      (element) {
-        return element.status == "approved" || element.status == "completed";
-      },
-    ).toList();
-    filteredAppointments = filteredAppointments!.reversed.toList();
-    setState(() {});
-  }
-
-  void filterMeAppointmentByDay() {
-    filteredMeAppointmentsByDay = _appointmentViewModel.filterAppointmentByDay(
-        day: _selectedDay, appts: filteredMeAppointments!);
-    if (filteredMeAppointmentsByDay == null ||
-        filteredMeAppointmentsByDay!.isEmpty) {
-      filteredMeAppointmentsByDay = [];
-      return;
-    }
-    filteredMeAppointmentsByDay = filteredMeAppointmentsByDay!.where(
-      (element) {
-        return element.status == "approved" || element.status == "completed";
-      },
-    ).toList();
-    filteredMeAppointmentsByDay =
-        filteredMeAppointmentsByDay!.reversed.toList();
-    setState(() {});
   }
 
   String calculateAge(DateTime? dateOfBirth) {
@@ -141,239 +108,340 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          bottom: const TabBar(
-              unselectedLabelColor: AppColors.brandBlue,
-              labelColor: AppColors.black,
-              tabs: [Tab(text: "All"), Tab(text: "Me")]),
-          title: Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Appointments",
-                style: AppTextStyle.blackTextStyle.merge(AppTextStyle.h2)),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Get.back(), // Or Get.back() if using GetX
-          ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: appointments == null || patients == null
-            ? const Center(child: CircularProgressIndicator())
-            : SafeArea(
-                child: Column(
-                  children: [
-                    TableCalendar(
-                      headerStyle: HeaderStyle(
-                        titleTextStyle: AppTextStyle.h3,
-                        formatButtonVisible: false,
-                        leftChevronIcon: const Icon(
-                          Icons.chevron_left,
-                          color: AppColors.brandBlue,
-                        ),
-                        rightChevronIcon: const Icon(
-                          Icons.chevron_right,
-                          color: AppColors.brandBlue,
-                        ),
-                      ),
-                      firstDay: DateTime.utc(2022, 10, 16),
-                      lastDay: DateTime.utc(2030, 3, 14),
-                      focusedDay: _focusedDay,
-                      calendarFormat: _calendarFormat,
-                      availableCalendarFormats: const {
-                        CalendarFormat.month: 'Week',
-                        CalendarFormat.twoWeeks: 'Month',
-                        CalendarFormat.week: '2 weeks',
-                      },
-                      onFormatChanged: (format) {
-                        setState(() {
-                          _calendarFormat = format;
-                        });
-                      },
-                      selectedDayPredicate: (day) {
-                        return isSameDay(_selectedDay, day);
-                      },
-                      onDaySelected: (selectedDay, focusedDay) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay =
-                              focusedDay; // update `_focusedDay` here as well
-                          filteredAppointments =
-                              _appointmentViewModel.filterAppointmentByDay(
-                                  day: _selectedDay, appts: appointments!);
-                          filteredMeAppointmentsByDay =
-                              _appointmentViewModel.filterAppointmentByDay(
-                                  day: _selectedDay,
-                                  appts: filteredMeAppointments!);
-                        });
-                      },
-                      calendarStyle: CalendarStyle(
-                        isTodayHighlighted: true,
-                        selectedDecoration: const BoxDecoration(
-                          color: AppColors.brandBlue,
-                          shape: BoxShape.circle,
-                        ),
-                        selectedTextStyle:
-                            AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
-                        todayDecoration: const BoxDecoration(
-                          color: AppColors.lightBlue,
-                          shape: BoxShape.circle,
-                        ),
-                        todayTextStyle: AppTextStyle.h3,
-                        defaultTextStyle:
-                            AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
-                        weekendTextStyle:
-                            AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
-                      ),
-                    ),
-                    Expanded(
-                      child: TabBarView(
+    return GetBuilder<AdminAppointmentViewModel>(
+        init: _appointmentViewModel,
+        builder: (_) {
+          return DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                bottom: const TabBar(
+                    unselectedLabelColor: AppColors.black,
+                    labelColor: AppColors.brandBlue,
+                    tabs: [Tab(text: "All"), Tab(text: "Me")]),
+                title: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Appointments",
+                      style: AppTextStyle.brandBlueTextStyle
+                          .merge(AppTextStyle.h2)),
+                ),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Get.back(), // Or Get.back() if using GetX
+                ),
+                backgroundColor: Colors.white,
+                foregroundColor: AppColors.brandBlue,
+                elevation: 0,
+              ),
+              body: patients == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : SafeArea(
+                      child: Column(
                         children: [
-                          // All tab
-                          Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: ListView(
-                                  children: <Widget>[
-                                    if (filteredAppointments != null &&
-                                        patients != null)
-                                      ...filteredAppointments!.map((appt) {
-                                        AppUser patient = patients!.firstWhere(
-                                            (element) =>
-                                                element.uid == appt.patientID);
-                                        return AppointmentCard(
-                                          name: patient.name!,
-                                          age:
-                                              calculateAge(patient.dateOfBirth),
-                                          gender: patient.gender!,
-                                          reason: appt.reason!,
-                                          time: appt.time!,
-                                          appointment: appt,
-                                          onEdit: () =>
-                                              navigateToEditPage(appt, patient),
-                                          onComplete: () =>
-                                              onCompleteAppointment(appt),
-                                        );
-                                      }).toList(),
-                                    if (filteredAppointments!.isEmpty)
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 128.w),
-                                        child: Center(
-                                            child: Text(
-                                                "No appointments for this day",
-                                                style: AppTextStyle.h2)),
-                                      ),
-                                    SizedBox(height: 20.w)
-                                  ],
-                                ),
-                              )
-                            ],
+                          TableCalendar(
+                            headerStyle: HeaderStyle(
+                              titleTextStyle: AppTextStyle.h3,
+                              formatButtonVisible: false,
+                              leftChevronIcon: const Icon(
+                                Icons.chevron_left,
+                                color: AppColors.brandBlue,
+                              ),
+                              rightChevronIcon: const Icon(
+                                Icons.chevron_right,
+                                color: AppColors.brandBlue,
+                              ),
+                            ),
+                            firstDay: DateTime.utc(2022, 10, 16),
+                            lastDay: DateTime.utc(2030, 3, 14),
+                            focusedDay: _focusedDay,
+                            calendarFormat: _calendarFormat,
+                            availableCalendarFormats: const {
+                              CalendarFormat.month: 'Week',
+                              CalendarFormat.twoWeeks: 'Month',
+                              CalendarFormat.week: '2 weeks',
+                            },
+                            onFormatChanged: (format) {
+                              setState(() {
+                                _calendarFormat = format;
+                              });
+                            },
+                            selectedDayPredicate: (day) {
+                              return isSameDay(_selectedDay, day);
+                            },
+                            onDaySelected: (selectedDay, focusedDay) {
+                              setState(() {
+                                _selectedDay = selectedDay;
+                                _focusedDay =
+                                    focusedDay; // update `_focusedDay` here as well
+                                _.filterAppointmentsBySelectedDay(
+                                    day: _selectedDay);
+                                _.filterMyAppointmentsBySelectedDay(
+                                    day: _selectedDay);
+                              });
+                            },
+                            calendarStyle: CalendarStyle(
+                              isTodayHighlighted: true,
+                              selectedDecoration: const BoxDecoration(
+                                color: AppColors.brandBlue,
+                                shape: BoxShape.circle,
+                              ),
+                              selectedTextStyle: AppTextStyle.h3
+                                  .merge(AppTextStyle.whiteTextStyle),
+                              todayDecoration: const BoxDecoration(
+                                color: AppColors.lightBlue,
+                                shape: BoxShape.circle,
+                              ),
+                              todayTextStyle: AppTextStyle.h3,
+                              defaultTextStyle: AppTextStyle.h3
+                                  .merge(AppTextStyle.blackTextStyle),
+                              weekendTextStyle: AppTextStyle.h3
+                                  .merge(AppTextStyle.blackTextStyle),
+                            ),
                           ),
-                          // My tab
-                          Column(
-                            children: <Widget>[
-                              SizedBox(height: 10.w),
-                              if (pendingAppointments!.isNotEmpty)
-                                Stack(
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Get.toNamed(
-                                            RouteHelper
-                                                .getAdminAppointmentViewRequests(),
-                                            arguments: [
-                                              pendingAppointments,
-                                              patients
-                                            ]);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        side: const BorderSide(
-                                          color: AppColors.brandBlue,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        "Appointment Requests",
-                                        style: AppTextStyle.h4.merge(
-                                            AppTextStyle.brandBlueTextStyle),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top:
-                                          0, // Adjust the top position as needed
-                                      right:
-                                          0, // Adjust the right position as needed
-                                      child: Container(
-                                        padding: const EdgeInsets.all(
-                                            6), // Adjust the padding as needed
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Text(
-                                          pendingAppointments!.length
-                                              .toString(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              Expanded(
-                                child: ListView(
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                // All tab
+                                Column(
                                   children: <Widget>[
-                                    if (filteredMeAppointmentsByDay != null &&
-                                        patients != null)
-                                      ...filteredMeAppointmentsByDay!
-                                          .map((appt) {
-                                        AppUser patient = patients!.firstWhere(
-                                            (element) =>
-                                                element.uid == appt.patientID);
-                                        return AppointmentCard(
-                                          name: patient.name!,
-                                          age:
-                                              calculateAge(patient.dateOfBirth),
-                                          gender: patient.gender!,
-                                          reason: appt.reason!,
-                                          time: appt.time!,
-                                          appointment: appt,
-                                          onEdit: () =>
-                                              navigateToEditPage(appt, patient),
-                                          onComplete: () =>
-                                              onCompleteAppointment(appt),
-                                        );
-                                      }).toList(),
-                                    if (filteredMeAppointmentsByDay!.isEmpty)
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 128.w),
-                                        child: Center(
+                                    if (_.pendingAppointments!.isNotEmpty)
+                                      Stack(
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Get.toNamed(
+                                                      RouteHelper
+                                                          .getAdminAppointmentViewRequests(),
+                                                      arguments: [
+                                                    _.pendingAppointments,
+                                                    patients
+                                                  ])!
+                                                  .then((value) {
+                                                setState(() {
+                                                  _.filterAppointmentsBySelectedDay(
+                                                      day: _selectedDay);
+                                                  _.filterMyAppointmentsBySelectedDay(
+                                                      day: _selectedDay);
+                                                });
+                                              });
+                                              setState(() {});
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                color: AppColors.brandBlue,
+                                                width: 1,
+                                              ),
+                                            ),
                                             child: Text(
-                                                "No appointments for this day",
-                                                style: AppTextStyle.h2)),
+                                              "All Appointment Requests",
+                                              style: AppTextStyle.h4.merge(
+                                                  AppTextStyle
+                                                      .brandBlueTextStyle),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top:
+                                                0, // Adjust the top position as needed
+                                            right:
+                                                0, // Adjust the right position as needed
+                                            child: Container(
+                                              padding: const EdgeInsets.all(
+                                                  6), // Adjust the padding as needed
+                                              decoration: const BoxDecoration(
+                                                color: Colors.red,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Text(
+                                                _.pendingAppointments!.length
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    SizedBox(height: 20.w)
+                                    Expanded(
+                                      child: ListView(
+                                        children: <Widget>[
+                                          if (_.appointmentsBySelectedDay !=
+                                                  null &&
+                                              patients != null &&
+                                              admins != null)
+                                            ..._.appointmentsBySelectedDay!
+                                                .map((appt) {
+                                              AppUser patient = patients!
+                                                  .firstWhere((element) =>
+                                                      element.uid ==
+                                                      appt.patientID);
+
+                                              AppUser admin = admins!
+                                                  .firstWhere((element) =>
+                                                      element.uid ==
+                                                      appt.physiotherapistID);
+                                              return AppointmentCard(
+                                                name: patient.name!,
+                                                age: calculateAge(
+                                                    patient.dateOfBirth),
+                                                gender: patient.gender!,
+                                                reason: appt.reason!,
+                                                physio: admin.name!,
+                                                time: appt.time!,
+                                                appointment: appt,
+                                                onEdit: () =>
+                                                    navigateToEditPage(
+                                                        appt, patient),
+                                                onComplete: () =>
+                                                    onCompleteAppointment(appt),
+                                              );
+                                            }).toList(),
+                                          if (_.appointmentsBySelectedDay ==
+                                                  null ||
+                                              _.appointmentsBySelectedDay!
+                                                  .isEmpty)
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 128.w),
+                                              child: Center(
+                                                  child: Text(
+                                                      "No appointments for this day",
+                                                      style: AppTextStyle.h2)),
+                                            ),
+                                          SizedBox(height: 20.w)
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              )
-                            ],
+                                // My tab
+                                Column(
+                                  children: <Widget>[
+                                    SizedBox(height: 10.w),
+                                    if (_.myPendingAppointments!.isNotEmpty)
+                                      Stack(
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Get.toNamed(
+                                                      RouteHelper
+                                                          .getAdminAppointmentViewRequests(),
+                                                      arguments: [
+                                                    _.myPendingAppointments,
+                                                    patients,
+                                                  ])!
+                                                  .then((value) {
+                                                setState(() {
+                                                  _.filterAppointmentsBySelectedDay(
+                                                      day: _selectedDay);
+                                                  _.filterMyAppointmentsBySelectedDay(
+                                                      day: _selectedDay);
+                                                });
+                                              });
+                                              setState(() {});
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              side: const BorderSide(
+                                                color: AppColors.brandBlue,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              "My Appointment Requests",
+                                              style: AppTextStyle.h4.merge(
+                                                  AppTextStyle
+                                                      .brandBlueTextStyle),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top:
+                                                0, // Adjust the top position as needed
+                                            right:
+                                                0, // Adjust the right position as needed
+                                            child: Container(
+                                              padding: const EdgeInsets.all(
+                                                  6), // Adjust the padding as needed
+                                              decoration: const BoxDecoration(
+                                                color: Colors.red,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Text(
+                                                _.myPendingAppointments!.length
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    Expanded(
+                                      child: ListView(
+                                        children: <Widget>[
+                                          if (_.myAppointmentsBySelectedDay !=
+                                                  null &&
+                                              patients != null &&
+                                              admins != null)
+                                            ..._.myAppointmentsBySelectedDay!
+                                                .map((appt) {
+                                              AppUser patient = patients!
+                                                  .firstWhere((element) =>
+                                                      element.uid ==
+                                                      appt.patientID);
+
+                                              AppUser admin = admins!
+                                                  .firstWhere((element) =>
+                                                      element.uid ==
+                                                      appt.physiotherapistID);
+                                              return AppointmentCard(
+                                                name: patient.name!,
+                                                age: calculateAge(
+                                                    patient.dateOfBirth),
+                                                gender: patient.gender!,
+                                                reason: appt.reason!,
+                                                physio: admin.name!,
+                                                time: appt.time!,
+                                                appointment: appt,
+                                                onEdit: () =>
+                                                    navigateToEditPage(
+                                                        appt, patient),
+                                                onComplete: () =>
+                                                    onCompleteAppointment(appt),
+                                              );
+                                            }).toList(),
+                                          if (_.myAppointmentsBySelectedDay == null || _.myAppointmentsBySelectedDay!
+                                              .isEmpty)
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(top: 128.w),
+                                              child: Center(
+                                                  child: Text(
+                                                      "No appointments for this day",
+                                                      style: AppTextStyle.h2)),
+                                            ),
+                                          SizedBox(height: 20.w)
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-      ),
-    );
+            ),
+          );
+        });
   }
 }
 
@@ -383,6 +451,7 @@ class AppointmentCard extends StatelessWidget {
   final String gender;
   final String reason;
   final String time;
+  final String physio;
   AdminAppointment appointment;
   Function()? onEdit;
   Function()? onComplete;
@@ -394,6 +463,7 @@ class AppointmentCard extends StatelessWidget {
     required this.gender,
     required this.reason,
     required this.time,
+    required this.physio,
     required this.appointment,
     this.onEdit,
     this.onComplete,
@@ -426,6 +496,7 @@ class AppointmentCard extends StatelessWidget {
             gender: gender,
             reason: reason,
             status: appointment.status!,
+            physio: physio,
             appointment: appointment,
             onEdit: onEdit,
             onComplete: onComplete,
@@ -443,6 +514,7 @@ class CardWidget extends StatelessWidget {
   final String gender;
   final String reason;
   final String status;
+  final String physio;
   AdminAppointment appointment;
   Function()? onEdit;
   Function()? onComplete;
@@ -454,6 +526,7 @@ class CardWidget extends StatelessWidget {
     required this.gender,
     required this.reason,
     required this.status,
+    required this.physio,
     required this.appointment,
     this.onEdit,
     this.onComplete,
@@ -488,9 +561,11 @@ class CardWidget extends StatelessWidget {
           SizedBox(height: 2.w),
           InformationRow(title: 'Gender', value: gender),
           SizedBox(height: 2.w),
-          InformationRow(title: 'Reason', value: reason),
+          if (reason.isNotEmpty) InformationRow(title: 'Reason', value: reason),
           SizedBox(height: 2.w),
           InformationRow(title: 'Status', value: status),
+          SizedBox(height: 2.w),
+          InformationRow(title: 'Physiotherapist', value: physio),
           SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

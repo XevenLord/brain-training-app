@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
@@ -78,8 +79,6 @@ class SignUpController extends GetxController {
   }
 
   Future<bool> adminSignUpWithData(Map<String, dynamic> data) async {
-    print(data);
-
     try {
       UserCredential signUpRes = await FirebaseAuthRepository.registerAdmin(
         email: data['email'],
@@ -109,7 +108,7 @@ class SignUpController extends GetxController {
             descriptionStyle: AppTextStyle.c1);
         return false;
       }
-
+      await UserRepository.fetchSpecificAdmin(newUser.uid);
       killDialog();
       return initRes;
     } catch (e) {

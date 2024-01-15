@@ -53,6 +53,8 @@ class _AppointmentViewRequestsState extends State<AppointmentViewRequests> {
     if (appointments != null && appointments!.isNotEmpty) {
       appointments!.remove(appointment);
     }
+    apptVModel.filterAppointmentsBySelectedDay(day: apptVModel.selectedDay!);
+    apptVModel.filterMyAppointmentsBySelectedDay(day: apptVModel.selectedDay!);
     setState(() {});
   }
 
