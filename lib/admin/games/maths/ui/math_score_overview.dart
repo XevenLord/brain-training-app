@@ -23,11 +23,12 @@ class _MathScoreOverviewState extends State<MathScoreOverview> {
       Get.find<MathResultViewModel>();
   List<MathSet> mathAnswers = [];
   int index = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
-    print("Math score overview param: " + widget.mathAns.toString());
     mathAnswers = widget.mathAns!;
+    isLoading = false;
     // mathAnswers.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
     setState(() {});
     print("Math Answers: " + mathResultViewModel.mathAnswers.toString());
@@ -71,18 +72,20 @@ class _MathScoreOverviewState extends State<MathScoreOverview> {
       body: SafeArea(
         child: mathAnswers.isEmpty
             ? Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        AppConstant.EMPTY_DATA,
-                        width: 200,
-                        height: 200,
-                      ),
-                      Text("There is no data of Maths Score yet.",
-                          style: AppTextStyle.h2
-                              .merge(AppTextStyle.brandBlueTextStyle))
-                    ]),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            Image.asset(
+                              AppConstant.EMPTY_DATA,
+                              width: 200,
+                              height: 200,
+                            ),
+                            Text("There is no data of Maths Score yet.",
+                                style: AppTextStyle.h2
+                                    .merge(AppTextStyle.brandBlueTextStyle))
+                          ]),
               )
             : SingleChildScrollView(
                 child: Padding(
@@ -118,8 +121,9 @@ class _MathScoreOverviewState extends State<MathScoreOverview> {
                     SizedBox(height: 12.h),
                     ...mathAnswers.map((mathAns) {
                       return ExpansionTile(
-                        title: Text(
-                            mathAns.id ?? "", style: AppTextStyle.h3), // Assuming 'id' is a property of MathAnswer
+                        title: Text(mathAns.id ?? "",
+                            style: AppTextStyle
+                                .h3), // Assuming 'id' is a property of MathAnswer
                         children: mathAns.maths!.map((math) {
                           MathAnsRow row = MathAnsRow(
                             mathAnswer: math,

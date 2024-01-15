@@ -21,6 +21,7 @@ class _TZFEScorePageState extends State<TZFEScorePage> {
   late AppUser patient;
   List<TZFEScoreSet> tZFEScoreSet = [];
   int index = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _TZFEScorePageState extends State<TZFEScorePage> {
 
   void getTZFEScores() async {
     tZFEScoreSet = await tZFEViewModel.getTZFEScores();
+    isLoading = false;
     setState(() {});
   }
 
@@ -73,8 +75,10 @@ class _TZFEScorePageState extends State<TZFEScorePage> {
       body: SafeArea(
         child: tZFEScoreSet.isEmpty
             ? Center(
-                child: displayEmptyDataLoaded("There is no 2048 score yet!",
-                    showBackArrow: false))
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : displayEmptyDataLoaded("There is no 2048 score yet!",
+                        showBackArrow: false))
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),

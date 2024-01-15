@@ -25,11 +25,13 @@ class _TZFEScoreOverviewState extends State<TZFEScoreOverview> {
   late AdminTZFEViewModel adminTZFEVModel = Get.find<AdminTZFEViewModel>();
   List<TZFEScoreSet> tzfeScoreSets = [];
   int index = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
     print("tzfe score overview param: " + widget.tzfeScoreSets.toString());
     tzfeScoreSets = widget.tzfeScoreSets!;
+    isLoading = false;
     // mathAnswers.sort((a, b) => b.timestamp!.compareTo(a.timestamp!));
     setState(() {});
     print("tzfeScoreSet: " + adminTZFEVModel.tzfeScoreSet.toString());
@@ -73,18 +75,20 @@ class _TZFEScoreOverviewState extends State<TZFEScoreOverview> {
       body: SafeArea(
         child: tzfeScoreSets.isEmpty
             ? Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        AppConstant.EMPTY_DATA,
-                        width: 200,
-                        height: 200,
-                      ),
-                      Text("There is no data of 2048 yet.",
-                          style: AppTextStyle.h2
-                              .merge(AppTextStyle.brandBlueTextStyle))
-                    ]),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            Image.asset(
+                              AppConstant.EMPTY_DATA,
+                              width: 200,
+                              height: 200,
+                            ),
+                            Text("There is no data of 2048 yet.",
+                                style: AppTextStyle.h2
+                                    .merge(AppTextStyle.brandBlueTextStyle))
+                          ]),
               )
             : SingleChildScrollView(
                 child: Padding(

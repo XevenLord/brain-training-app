@@ -20,6 +20,7 @@ class _FlipCardResultPageState extends State<FlipCardResultPage> {
   late FlipCardViewModel adminFlipCardViewModel = Get.find<FlipCardViewModel>();
   List<FlipCardSet> flipCardSet = [];
   int index = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _FlipCardResultPageState extends State<FlipCardResultPage> {
 
   void getFlipCardSet() async {
     flipCardSet = await adminFlipCardViewModel.getFlipCardSet();
+    isLoading = false;
     setState(() {});
   }
 
@@ -72,18 +74,20 @@ class _FlipCardResultPageState extends State<FlipCardResultPage> {
         body: SafeArea(
           child: flipCardSet.isEmpty
               ? Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          AppConstant.EMPTY_DATA,
-                          width: 200,
-                          height: 200,
-                        ),
-                        Text("There is no data of Flip Card result yet.",
-                            style: AppTextStyle.h2
-                                .merge(AppTextStyle.brandBlueTextStyle))
-                      ]),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                              Image.asset(
+                                AppConstant.EMPTY_DATA,
+                                width: 200,
+                                height: 200,
+                              ),
+                              Text("There is no data of Flip Card result yet.",
+                                  style: AppTextStyle.h2
+                                      .merge(AppTextStyle.brandBlueTextStyle))
+                            ]),
                 )
               : SingleChildScrollView(
                   child: Padding(
@@ -97,22 +101,19 @@ class _FlipCardResultPageState extends State<FlipCardResultPage> {
                           CircleAvatar(
                             radius: 32.r,
                             backgroundColor: AppColors.lightBlue,
-                            backgroundImage:
-                                (patient.profilePic == null ||
-                                        patient.profilePic!.isEmpty)
-                                    ? const AssetImage(
-                                        AppConstant.NO_PROFILE_PIC,
-                                      ) as ImageProvider
-                                    : NetworkImage(patient.profilePic!),
+                            backgroundImage: (patient.profilePic == null ||
+                                    patient.profilePic!.isEmpty)
+                                ? const AssetImage(
+                                    AppConstant.NO_PROFILE_PIC,
+                                  ) as ImageProvider
+                                : NetworkImage(patient.profilePic!),
                           ),
                           SizedBox(width: 10.w),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(patient.name!,
-                                  style: AppTextStyle.h2),
-                              Text(
-                                  "Age: ${calculateAge(patient.dateOfBirth)}",
+                              Text(patient.name!, style: AppTextStyle.h2),
+                              Text("Age: ${calculateAge(patient.dateOfBirth)}",
                                   style: AppTextStyle.h3),
                             ],
                           ),

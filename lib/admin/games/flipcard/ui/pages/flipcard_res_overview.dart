@@ -22,11 +22,13 @@ class _FlipCardResultOverviewState extends State<FlipCardResultOverview> {
       Get.find<AdminFlipCardViewModel>();
   List<FlipCardSet> flipCardSet = [];
   int index = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
     print(widget.flipCardSet.toString());
     flipCardSet = widget.flipCardSet!;
+    isLoading = false;
 
     setState(() {});
     super.initState();
@@ -70,18 +72,20 @@ class _FlipCardResultOverviewState extends State<FlipCardResultOverview> {
         body: SafeArea(
           child: flipCardSet.isEmpty
               ? Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          AppConstant.EMPTY_DATA,
-                          width: 200,
-                          height: 200,
-                        ),
-                        Text("There is no data of Flip Card result yet.",
-                            style: AppTextStyle.h2
-                                .merge(AppTextStyle.brandBlueTextStyle))
-                      ]),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                              Image.asset(
+                                AppConstant.EMPTY_DATA,
+                                width: 200,
+                                height: 200,
+                              ),
+                              Text("There is no data of Flip Card result yet.",
+                                  style: AppTextStyle.h2
+                                      .merge(AppTextStyle.brandBlueTextStyle))
+                            ]),
                 )
               : SingleChildScrollView(
                   child: Padding(

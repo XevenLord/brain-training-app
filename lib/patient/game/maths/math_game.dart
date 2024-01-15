@@ -19,6 +19,7 @@ class MathGame extends StatefulWidget {
 
 class _MathGameState extends State<MathGame> {
   late MathGameViewModel mathModel = Get.find<MathGameViewModel>();
+  int questionsAnswered = 0;
   // number pad list
   List<String> numberPad = [
     '7',
@@ -122,8 +123,8 @@ class _MathGameState extends State<MathGame> {
         if (userAnswer.isNotEmpty) {
           userAnswer = userAnswer.substring(0, userAnswer.length - 1);
         }
-      } else if (userAnswer.length < 3) {
-        // maximum of 3 numbers can be inputted
+      } else if (userAnswer.length < 5) {
+        // maximum of 5 numbers can be inputted
         userAnswer += button;
       }
     });
@@ -162,9 +163,9 @@ class _MathGameState extends State<MathGame> {
         builder: (context) {
           submitCorrectAnswer(questionText, result.toString(), userAnswer);
           return ResultMessage(
-            message: 'Correct!',
+            message: 'It Is Correct!',
             onTap: goToNextQuestion,
-            icon: Icons.arrow_forward,
+            icon: questionsAnswered >= 10 ? Icons.home : Icons.arrow_forward,
           );
         },
       );
@@ -174,9 +175,9 @@ class _MathGameState extends State<MathGame> {
         builder: (context) {
           submitWrongAnswer(questionText, result.toString(), userAnswer);
           return ResultMessage(
-            message: 'Sorry, try again',
-            onTap: goBackToQuestion,
-            icon: Icons.rotate_left,
+            message: 'Sorry, It Is Wrong!',
+            onTap: goToNextQuestion,
+            icon: Icons.arrow_forward,
           );
         },
       );
@@ -202,6 +203,12 @@ class _MathGameState extends State<MathGame> {
     setState(() {
       userAnswer = '';
     });
+    questionsAnswered++;
+
+    if (questionsAnswered >= 10) {
+      Get.back();
+      return;
+    }
 
     // create a new question
     operator = getRandomOperator();
@@ -291,6 +298,21 @@ class _MathGameState extends State<MathGame> {
             Text("Type The Correct Answer",
                 style:
                     AppTextStyle.h1.merge(AppTextStyle.lightPurpleTextStyle)),
+
+            SizedBox(height: 20.w),
+            // level progress
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (int i = 0; i < 10; i++)
+                  Icon(
+                    questionsAnswered > i
+                        ? Icons.circle
+                        : Icons.circle_outlined,
+                    color: Colors.white,
+                  ),
+              ],
+            ),
             // question
             Expanded(
               child: Container(
@@ -304,11 +326,11 @@ class _MathGameState extends State<MathGame> {
                         style:
                             AppTextStyle.whiteTextStyle.merge(AppTextStyle.h1),
                       ),
-
+                      SizedBox(width: 10.w),
                       // answer box
                       Container(
                         height: 50,
-                        width: 100,
+                        width: 120,
                         decoration: BoxDecoration(
                           color: Colors.deepPurple[400],
                           borderRadius: BorderRadius.circular(4),

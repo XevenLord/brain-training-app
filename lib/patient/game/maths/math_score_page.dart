@@ -21,6 +21,7 @@ class _MathScorePageState extends State<MathScorePage> {
   late AppUser patient;
   List<MathSet> mathAnswers = [];
   int index = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _MathScorePageState extends State<MathScorePage> {
 
   void getMathAnswers() async {
     mathAnswers = await mathResultViewModel.getMathAnswers();
+    isLoading = false;
     setState(() {});
   }
 
@@ -73,21 +75,24 @@ class _MathScorePageState extends State<MathScorePage> {
       body: SafeArea(
         child: mathAnswers.isEmpty
             ? Center(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        AppConstant.EMPTY_DATA,
-                        width: 200,
-                        height: 200,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("There is no data of Maths Score yet.",
-                            style: AppTextStyle.h2
-                                .merge(AppTextStyle.brandBlueTextStyle)),
-                      )
-                    ]),
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            Image.asset(
+                              AppConstant.EMPTY_DATA,
+                              width: 200,
+                              height: 200,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                  "There is no data of Maths Score yet.",
+                                  style: AppTextStyle.h2
+                                      .merge(AppTextStyle.brandBlueTextStyle)),
+                            )
+                          ]),
               )
             : SingleChildScrollView(
                 child: Padding(
@@ -113,8 +118,7 @@ class _MathScorePageState extends State<MathScorePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(patient.name!, style: AppTextStyle.h2),
-                            Text(
-                                "Age: ${calculateAge(patient.dateOfBirth)}",
+                            Text("Age: ${calculateAge(patient.dateOfBirth)}",
                                 style: AppTextStyle.h3),
                           ],
                         ),
