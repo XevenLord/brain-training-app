@@ -154,13 +154,18 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                                         .date)
                                                               SizedBox()
                                                             else
-                                                              Text(
-                                                                  todayText(pendingAppointments![
-                                                                          index]
-                                                                      .date!),
-                                                                  style:
-                                                                      AppTextStyle
-                                                                          .h2),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Text(
+                                                                    todayText(pendingAppointments![
+                                                                            index]
+                                                                        .date!),
+                                                                    style:
+                                                                        AppTextStyle
+                                                                            .h2),
+                                                              ),
                                                             AppointmentTile(
                                                                 time: pendingAppointments![index]
                                                                     .time!,
@@ -247,11 +252,14 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                       appointments![index].date)
                                                 SizedBox()
                                               else
-                                                Text(
-                                                    todayText(
-                                                        appointments![index]
-                                                            .date!),
-                                                    style: AppTextStyle.h2),
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                      todayText(
+                                                          appointments![index]
+                                                              .date!),
+                                                      style: AppTextStyle.h2),
+                                                ),
                                               AppointmentTile(
                                                   time: appointments![index]
                                                       .time!,
@@ -360,13 +368,16 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                                         .date)
                                                               SizedBox()
                                                             else
-                                                              Text(
-                                                                  todayText(declinedAppointments![
-                                                                          index]
-                                                                      .date!),
-                                                                  style:
-                                                                      AppTextStyle
-                                                                          .h2),
+                                                              Align(
+                                                                alignment: Alignment.center,
+                                                                child: Text(
+                                                                    todayText(declinedAppointments![
+                                                                            index]
+                                                                        .date!),
+                                                                    style:
+                                                                        AppTextStyle
+                                                                            .h2),
+                                                              ),
                                                             AppointmentTile(
                                                                 time: declinedAppointments![index]
                                                                     .time!,

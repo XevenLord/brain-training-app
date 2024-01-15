@@ -127,10 +127,13 @@ class _PatientAppointmentPageState extends State<PatientAppointmentPage> {
                                                 appointments![index].date)
                                           SizedBox()
                                         else
-                                          Text(
-                                              todayText(
-                                                  appointments![index].date!),
-                                              style: AppTextStyle.h2),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                todayText(
+                                                    appointments![index].date!),
+                                                style: AppTextStyle.h2),
+                                          ),
                                         AppointmentTile(
                                             time: appointments![index].time!,
                                             status:

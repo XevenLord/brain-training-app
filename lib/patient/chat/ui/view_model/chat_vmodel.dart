@@ -53,17 +53,17 @@ class ChatViewModel extends GetxController {
     });
   }
 
-  Future<bool> sendTextMessage(MessageChat chat) async {
-    bool res = await Get.find<ChatService>().sendChatMessage(chat);
+  Future<bool> sendTextMessage(MessageChat chat, String targetUid) async {
+    bool res = await Get.find<ChatService>().sendChatMessage(chat, targetUid);
     return res;
   }
 
-  Future<bool> sendImageMessage(MessageChat chat) async {
+  Future<bool> sendImageMessage(MessageChat chat, String targetUid) async {
     bool res = false;
     await uploadFile();
     if (_chatImgUrl != null) {
       chat.setMsg(_chatImgUrl);
-      res = await Get.find<ChatService>().sendChatMessage(chat);
+      res = await Get.find<ChatService>().sendChatMessage(chat, targetUid);
       _chatImgUrl = null;
     }
 
@@ -79,8 +79,13 @@ class ChatViewModel extends GetxController {
       chatDocuments = snapshot.docs.map((DocumentSnapshot doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         Map<String, dynamic> names = data['names'];
+        Map<String, dynamic> isRead = data['isRead'] ?? {};
         names.remove(currentUser);
-        return {'docid': doc.id, 'name': names.values.first};
+        return {
+          'docid': doc.id,
+          'name': names.values.first,
+          'isRead': isRead[currentUser] ?? false,
+        };
       }).toList();
 
       for (var doc in chatDocuments) {
@@ -96,7 +101,8 @@ class ChatViewModel extends GetxController {
               'msg': snapshot.docs.first['msg'],
               'time': snapshot.docs.first['createdOn'],
               'targetName': doc['name'],
-              'targetUid': snapshot.docs.first['uid']
+              'targetUid': snapshot.docs.first['uid'],
+              'isRead': doc['isRead'],
             };
           }
         });

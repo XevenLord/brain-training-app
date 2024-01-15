@@ -1,8 +1,11 @@
 import 'package:brain_training_app/common/ui/widget/info_card_interface.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'information_row.dart';
 
 class InfoCardTile implements InfoCardInterface {
   @override
@@ -214,15 +217,12 @@ class InfoCardTile implements InfoCardInterface {
             children: [
               CircleAvatar(
                 radius: 40.r,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40.r),
-                  child: Image(
-                    image: NetworkImage(imgUrl),
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.fill,
-                  ),
-                ),
+                backgroundColor: AppColors.lightBlue,
+                backgroundImage: (imgUrl.isEmpty)
+                    ? const AssetImage(
+                        AppConstant.NO_PROFILE_PIC,
+                      ) as ImageProvider
+                    : NetworkImage(imgUrl),
               ),
               SizedBox(width: 14.w),
               Text(
@@ -240,99 +240,55 @@ class InfoCardTile implements InfoCardInterface {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Age",
-                        style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 14,
-                        )),
-                      ),
-                      SizedBox(height: 4.w),
-                      Text(
-                        "Gender",
-                        style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 14,
-                        )),
-                      ),
-                      SizedBox(height: 4.w),
-                      Text(
-                        "Date",
-                        style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 14,
-                        )),
-                      ),
-                      SizedBox(height: 4.w),
-                      Text(
-                        "Time",
-                        style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 14,
-                        )),
-                      ),
-                      Text(
-                        "Reason",
-                        style: AppTextStyle.h3.merge(const TextStyle(
-                          fontSize: 14,
-                        )),
-                      )
-                    ],
-                  ),
-                  SizedBox(width: 50.w),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          age,
-                          style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF003F5F),
-                          )),
-                        ),
-                        SizedBox(height: 4.w),
-                        Text(
-                          gender,
-                          style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF003F5F),
-                          )),
-                        ),
-                        SizedBox(height: 4.w),
-                        Text(
-                          date,
-                          style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF003F5F),
-                          )),
-                        ),
-                        SizedBox(height: 4.w),
-                        Text(
-                          time,
-                          style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF003F5F),
-                          )),
-                        ),
-                        Text(
-                          reason,
-                          style: AppTextStyle.h3.merge(const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF003F5F),
-                          )),
-                        ),
-                      ]),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InformationRow(
+                      title: "Age",
+                      value: age,
+                      titleStyle: AppTextStyle.c1
+                          .merge(const TextStyle(fontWeight: FontWeight.bold)),
+                      valueStyle: AppTextStyle.c1,
+                    ),
+                    SizedBox(height: 10.w),
+                    InformationRow(
+                      title: "Gender",
+                      value: gender,
+                      titleStyle: AppTextStyle.c1
+                          .merge(const TextStyle(fontWeight: FontWeight.bold)),
+                      valueStyle: AppTextStyle.c1,
+                    ),
+                    SizedBox(height: 10.w),
+                    InformationRow(
+                      title: "Date",
+                      value: date,
+                      titleStyle: AppTextStyle.c1
+                          .merge(const TextStyle(fontWeight: FontWeight.bold)),
+                      valueStyle: AppTextStyle.c1,
+                    ),
+                    SizedBox(height: 10.w),
+                    InformationRow(
+                      title: "Time",
+                      value: time,
+                      titleStyle: AppTextStyle.c1
+                          .merge(const TextStyle(fontWeight: FontWeight.bold)),
+                      valueStyle: AppTextStyle.c1,
+                    ),
+                    SizedBox(height: 10.w),
+                    InformationRow(
+                      title: "Reason",
+                      value: reason,
+                      titleStyle: AppTextStyle.c1
+                          .merge(const TextStyle(fontWeight: FontWeight.bold)),
+                      valueStyle: AppTextStyle.c1,
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(width: 50.w),
               Column(children: [
                 SizedBox(height: 8.w),
                 InkWell(

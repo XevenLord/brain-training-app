@@ -113,6 +113,9 @@ class _SignInPageState extends State<SignInPage> {
         case 'user-disabled':
           showMessage("User has been disabled.");
           break;
+        case 'too-many-requests':
+          showMessage("Too many requests. Please try again later.");
+          break;
       }
     }
   }
