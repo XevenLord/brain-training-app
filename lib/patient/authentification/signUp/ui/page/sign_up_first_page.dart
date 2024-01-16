@@ -98,7 +98,8 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                         errorText: "Please enter your IC number",
                       ),
                       FormBuilderValidators.equalLength(12,
-                          errorText: "Your IC number is not valid!")
+                          errorText: "Your IC number is not valid!"),
+                      FormBuilderValidators.numeric(),
                     ]),
                   ),
                   InputTextFormField(
@@ -134,6 +135,7 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                     textEditingController: _dOBInput,
                     label: "DD/MM/YYYY",
                     keyboardType: TextInputType.datetime,
+                    readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
@@ -160,6 +162,7 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                         errorText: "Select your date of birth",
                       ),
                       FormBuilderValidators.dateString(),
+
                     ]),
                   ),
                   InputFormSegmentedControl(
