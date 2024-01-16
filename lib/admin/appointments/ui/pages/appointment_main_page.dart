@@ -217,13 +217,13 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                                                     _.pendingAppointments,
                                                     patients
                                                   ])!
-                                                  .then((value) {
-                                                setState(() {
-                                                  _.filterAppointmentsBySelectedDay(
-                                                      day: _selectedDay);
-                                                  _.filterMyAppointmentsBySelectedDay(
-                                                      day: _selectedDay);
-                                                });
+                                                  .then((value) async {
+                                                await _.getAppointmentList();
+                                                _.filterAppointmentsBySelectedDay(
+                                                    day: _selectedDay);
+                                                _.filterMyAppointmentsBySelectedDay(
+                                                    day: _selectedDay);
+                                                setState(() {});
                                               });
                                               setState(() {});
                                             },
@@ -334,13 +334,13 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                                                     _.myPendingAppointments,
                                                     patients,
                                                   ])!
-                                                  .then((value) {
-                                                setState(() {
-                                                  _.filterAppointmentsBySelectedDay(
-                                                      day: _selectedDay);
-                                                  _.filterMyAppointmentsBySelectedDay(
-                                                      day: _selectedDay);
-                                                });
+                                                  .then((value) async {
+                                                await _.getAppointmentList();
+                                                _.filterAppointmentsBySelectedDay(
+                                                    day: _selectedDay);
+                                                _.filterMyAppointmentsBySelectedDay(
+                                                    day: _selectedDay);
+                                                setState(() {});
                                               });
                                               setState(() {});
                                             },
@@ -417,8 +417,10 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
                                                     onCompleteAppointment(appt),
                                               );
                                             }).toList(),
-                                          if (_.myAppointmentsBySelectedDay == null || _.myAppointmentsBySelectedDay!
-                                              .isEmpty)
+                                          if (_.myAppointmentsBySelectedDay ==
+                                                  null ||
+                                              _.myAppointmentsBySelectedDay!
+                                                  .isEmpty)
                                             Padding(
                                               padding:
                                                   EdgeInsets.only(top: 128.w),
@@ -591,16 +593,23 @@ class CardWidget extends StatelessWidget {
                     style: TextButton.styleFrom(
                       backgroundColor: appointment.status == "completed"
                           ? Colors.green
-                          : AppColors.lightBlue,
+                          : appointment.status == "expired"
+                              ? AppColors.lightRed
+                              : AppColors.lightBlue,
                       padding: EdgeInsets.zero,
                     ),
                     onPressed: onComplete,
                     child: appointment.status == "completed"
                         ? const Icon(Icons.check, color: Colors.white)
                         : Text(
-                            "Complete",
-                            style: AppTextStyle.h3
-                                .merge(AppTextStyle.brandBlueTextStyle),
+                            appointment.status == "expired"
+                                ? "Complete (Expired)"
+                                : "Complete",
+                            textAlign: TextAlign.center,
+                            style: AppTextStyle.h3.merge(
+                                appointment.status == "expired"
+                                    ? AppTextStyle.brandRedTextStyle
+                                    : AppTextStyle.brandBlueTextStyle),
                           ),
                     // Icon(Icons.check,
                     //     color: appointment.status == "completed"

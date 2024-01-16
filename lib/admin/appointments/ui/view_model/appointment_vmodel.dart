@@ -101,7 +101,8 @@ class AdminAppointmentViewModel extends GetxController implements GetxService {
       appts = appts.where(
         (element) {
           return (element.status == "approved" ||
-                  element.status == "completed") &&
+                  element.status == "completed" ||
+                  element.status == "expired") &&
               isSameDay(DateTime.parse(element.date!), day);
         },
       ).toList();
