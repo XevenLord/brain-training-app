@@ -30,7 +30,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
       physiotherapists = appointmentViewModel.physiotherapistList;
     }
     if (Get.find<AppUser>().assignedTo != null) {
-      assignedPhysio = appointmentViewModel.physiotherapistList.firstWhere(
+      assignedPhysio =physiotherapists.firstWhere(
           (element) => element.uid == Get.find<AppUser>().assignedTo);
     }
     print("physiotherapists: $physiotherapists");
