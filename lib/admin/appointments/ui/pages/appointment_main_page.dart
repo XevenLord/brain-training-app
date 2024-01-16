@@ -44,7 +44,6 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   @override
   void initState() {
     _appointmentViewModel = Get.find<AdminAppointmentViewModel>();
-    _appointmentViewModel.getAppointmentList();
     getAppointmentList();
     patients = UserRepository.patients;
     admins = UserRepository.admins;
@@ -90,14 +89,14 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
 
   void navigateToEditPage(AdminAppointment appointment, AppUser patient) async {
     final result = await Get.toNamed(RouteHelper.getAdminAppointmentEditPage(),
-        arguments: {
+            arguments: {
           "appointment": appointment,
           "patient": patient,
-        });
-
-    if (result == true) {
+        })!
+        .then((value) {
       getAppointmentList();
-    }
+      setState(() {});
+    });
   }
 
   void onCompleteAppointment(AdminAppointment appointment) {

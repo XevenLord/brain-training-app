@@ -109,7 +109,8 @@ class _AppointmentTileState extends State<AppointmentTile> {
                                 ? AppColors.brandYellow
                                 : widget.status == "approved"
                                     ? AppColors.brandBlue
-                                    : widget.status == "declined"
+                                    : widget.status == "declined" ||
+                                            widget.status == "expired"
                                         ? AppColors.brandRed
                                         : AppColors.brandGreen)),
                       ),

@@ -97,8 +97,31 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   }
 
   void deleteAppointment() async {
-    await appointmentVModel.cancelAppointment(appointment: widget.appointment);
-    Get.back(result: true);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Appointment', style: AppTextStyle.h2),
+        content: Text('Are you sure you want to delete this appointment?',
+            style: AppTextStyle.h3),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              Get.back();
+              await appointmentVModel.cancelAppointment(
+                  appointment: widget.appointment);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
   }
 
   bool isAfterToday(DateTime date) {
@@ -246,29 +269,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                           SizedBox(width: 16.w),
                           ElevatedButton(
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Delete Appointment'),
-                                  content: const Text(
-                                      'Are you sure you want to delete this appointment?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.back();
-                                      },
-                                      child: const Text('No'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.back();
-                                        deleteAppointment();
-                                      },
-                                      child: const Text('Yes'),
-                                    ),
-                                  ],
-                                ),
-                              );
+                              deleteAppointment();
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.brandRed),

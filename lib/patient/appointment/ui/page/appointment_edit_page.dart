@@ -90,8 +90,33 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
   }
 
   void deleteAppointment() async {
-    await appointmentVModel.cancelAppointment(appointment: widget.appointment);
-    Get.toNamed(RouteHelper.getMyAppointmentPage());
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Appointment", style: AppTextStyle.h2),
+          content: Text("Are you sure you want to delete this appointment?",
+              style: AppTextStyle.h3),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await appointmentVModel.cancelAppointment(
+                    appointment: widget.appointment);
+                Get.toNamed(RouteHelper.getMyAppointmentPage());
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
