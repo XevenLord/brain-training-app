@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
     onTapNav(widget.pageIndex ?? 0);
     fetchInspirationalMessages();
     appointmentVModel.getAppointmentList();
+    appointmentVModel.getPhysiotherapistList();
 
     if (Get.find<AppUser>().uid != null) {
       print("got user");
@@ -194,7 +195,8 @@ class _HomePageState extends State<HomePage> {
 
   void showMentalStatusQuiz() async {
     if ((lastMentalTest != null &&
-        DateTime.now().difference(lastMentalTest!).inDays <= 7) || lastMentalTest == null) {
+            DateTime.now().difference(lastMentalTest!).inDays <= 7) ||
+        lastMentalTest == null) {
       showDialog(
           context: context,
           builder: (context) {

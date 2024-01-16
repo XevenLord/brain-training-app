@@ -172,6 +172,74 @@ class _PatientListState extends State<PatientList> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          InkWell(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Star Meaning',
+                                      style: AppTextStyle.h2),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Icon(Icons.star,
+                                              color: AppColors.brandYellow),
+                                          SizedBox(width: 10.w),
+                                          Text(": Yours",
+                                              style: AppTextStyle.h3.merge(
+                                                  AppTextStyle
+                                                      .brandBlueTextStyle)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.star,
+                                              color: AppColors.brandBlue),
+                                          SizedBox(width: 10.w),
+                                          Text(": Other Physicians",
+                                              style: AppTextStyle.h3.merge(
+                                                  AppTextStyle
+                                                      .brandBlueTextStyle)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.star_outline,
+                                              color: AppColors.brandBlue),
+                                          SizedBox(width: 10.w),
+                                          Text(": Not Assigned",
+                                              style: AppTextStyle.h3.merge(
+                                                  AppTextStyle
+                                                      .brandBlueTextStyle)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.brandBlue,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Close',
+                                          style: AppTextStyle.h3.merge(
+                                              AppTextStyle.lightBlueTextStyle)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            child: Text("View Star's Meaning",
+                                style: const TextStyle(
+                                        decoration: TextDecoration.underline)
+                                    .merge(AppTextStyle.h3.merge(
+                                        AppTextStyle.brandBlueTextStyle))),
+                          ),
+                          SizedBox(height: 10.w),
                           ...patients.map((e) {
                             AdminAppointment appt;
                             String? assignedTo = e.assignedTo;
@@ -222,7 +290,7 @@ class _PatientListState extends State<PatientList> {
                                       assignedTo == Get.find<AppUser>().uid
                                   ? AppColors.lightYellow
                                   : isAssigned
-                                      ? Colors.grey.withOpacity(0.1)
+                                      ? AppColors.lightBlue.withOpacity(0.8)
                                       : Colors.white,
                               topRightTrailing: Container(
                                 height: 50.w,

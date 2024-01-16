@@ -29,8 +29,9 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
     } else {
       physiotherapists = appointmentViewModel.physiotherapistList;
     }
+    setState(() {});
     if (Get.find<AppUser>().assignedTo != null) {
-      assignedPhysio =physiotherapists.firstWhere(
+      assignedPhysio = physiotherapists.firstWhere(
           (element) => element.uid == Get.find<AppUser>().assignedTo);
     }
     print("physiotherapists: $physiotherapists");
@@ -116,7 +117,8 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                       )
                     : Align(
                         alignment: Alignment.bottomLeft,
-                        child: Text("Select a practitioner to make appointment:",
+                        child: Text(
+                            "Select a practitioner to make appointment:",
                             style: AppTextStyle.h3)),
                 SizedBox(height: 8.h),
                 GridView.count(

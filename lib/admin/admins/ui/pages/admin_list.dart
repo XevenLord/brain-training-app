@@ -81,10 +81,10 @@ class _AdminListState extends State<AdminList> {
       body: SafeArea(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Padding(
+            : SingleChildScrollView(
+                child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: SingleChildScrollView(
-                    child: Obx(
+                child: Obx(
                   () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -123,8 +123,8 @@ class _AdminListState extends State<AdminList> {
                       SizedBox(height: 30.w)
                     ],
                   ),
-                )),
-              ),
+                ),
+              )),
       ),
     );
   }

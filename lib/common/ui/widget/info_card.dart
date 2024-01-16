@@ -150,21 +150,6 @@ class InfoCardTile implements InfoCardInterface {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    shout
-                        ? Column(
-                            children: [
-                              InkWell(
-                                onTap: () => {if (onShout != null) onShout()},
-                                child: Container(
-                                    width: 50.w,
-                                    height: 50.w,
-                                    child: const Icon(Icons.contactless,
-                                        color: AppColors.brandBlue)),
-                              ),
-                              SizedBox(height: 8.w),
-                            ],
-                          )
-                        : Container(),
                     hasEditIcon
                         ? InkWell(
                             onTap: () => {if (onEdit != null) onEdit()},
@@ -182,6 +167,30 @@ class InfoCardTile implements InfoCardInterface {
                                             AppTextStyle.brandBlueTextStyle))
                                     : const Icon(Icons.edit,
                                         color: AppColors.brandBlue)),
+                          )
+                        : Container(),
+                    shout
+                        ? Column(
+                            children: [
+                              SizedBox(height: 8.w),
+                              TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: AppColors.brandBlue,
+                                  ),
+                                  onPressed: () =>
+                                      {if (onShout != null) onShout()},
+                                  child: Text("Inspire",
+                                      style: AppTextStyle.h3
+                                          .merge(AppTextStyle.whiteTextStyle))),
+                              // InkWell(
+                              //   onTap: () => {if (onShout != null) onShout()},
+                              //   child: Container(
+                              //       width: 50.w,
+                              //       height: 50.w,
+                              //       child: const Icon(Icons.contactless,
+                              //           color: AppColors.brandBlue)),
+                              // ),
+                            ],
                           )
                         : Container(),
                     hasCheckIcon

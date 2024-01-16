@@ -106,93 +106,106 @@ class _ChatListState extends State<ChatList> {
                       )
                     : Obx(
                         () => SliverList(
-                          delegate: chatViewModel.messages.values
-                                  .toList()
-                                  .isEmpty
+                          delegate: isLoading
                               ? SliverChildListDelegate([
-                                  SizedBox(height: 20.w),
-                                  displayEmptyDataLoaded("No chats found",
-                                      showBackArrow: false)
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
                                 ])
-                              : SliverChildListDelegate(
-                                  chatViewModel.messages.values
-                                      .toList()
-                                      .map((data) {
-                                    var physio = allAdmins.firstWhereOrNull(
-                                        (e) => e.name == data['targetName']);
+                              : chatViewModel.messages.values.toList().isEmpty
+                                  ? SliverChildListDelegate([
+                                      SizedBox(height: 20.w),
+                                      displayEmptyDataLoaded("No chats found",
+                                          showBackArrow: false)
+                                    ])
+                                  : SliverChildListDelegate(
+                                      chatViewModel.messages.values
+                                          .toList()
+                                          .map((data) {
+                                        var physio = allAdmins.firstWhereOrNull(
+                                            (e) =>
+                                                e.name == data['targetName']);
 
-                                    bool isRead = (data['isRead'] != null &&
-                                        data['isRead'] == true);
+                                        bool isRead = (data['isRead'] != null &&
+                                            data['isRead'] == true);
 
-                                    bool isSender = data['targetUid'] ==
-                                        chatViewModel.currentUser!;
+                                        bool isSender = data['targetUid'] ==
+                                            chatViewModel.currentUser!;
 
-                                    return CupertinoListTile(
-                                        padding: EdgeInsets.zero,
-                                        leading: CircleAvatar(
-                                          backgroundImage: (physio
-                                                          ?.profilePic ==
-                                                      null ||
-                                                  physio!.profilePic!.isEmpty)
-                                              ? const AssetImage(
-                                                  AppConstant.NO_PROFILE_PIC,
-                                                ) as ImageProvider
-                                              : NetworkImage(
-                                                  physio.profilePic!),
-                                        ),
-                                        title: Text(
-                                          data['targetName'] ?? "",
-                                          style: isRead
-                                              ? AppTextStyle.h3.merge(
-                                                  TextStyle(fontSize: 18.sp))
-                                              : AppTextStyle.h3.merge(TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18.sp)),
-                                        ),
-                                        subtitle: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                data['msg'].toString().startsWith(
-                                                        "https://firebasestorage.googleapis.com")
-                                                    ? "[Image]"
-                                                    : data['msg'] ?? "",
-                                                style: isRead
-                                                    ? AppTextStyle.c1.merge(
-                                                        const TextStyle(
-                                                            color: AppColors
-                                                                .black))
-                                                    : AppTextStyle.c1.merge(
-                                                        const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: AppColors
-                                                                .black)),
-                                              ),
+                                        return CupertinoListTile(
+                                            padding: EdgeInsets.zero,
+                                            leading: CircleAvatar(
+                                              backgroundImage:
+                                                  (physio?.profilePic == null ||
+                                                          physio!.profilePic!
+                                                              .isEmpty)
+                                                      ? const AssetImage(
+                                                          AppConstant
+                                                              .NO_PROFILE_PIC,
+                                                        ) as ImageProvider
+                                                      : NetworkImage(
+                                                          physio.profilePic!),
                                             ),
-                                            SizedBox(
-                                              width: 30.w,
-                                              child: isRead
-                                                  ? isSender
-                                                      ? null
-                                                      : Icon(Icons.done_all,
-                                                          color: AppColors.blue,
-                                                          size: 14.sp)
-                                                  : Icon(Icons.circle,
-                                                      color: Colors.red,
-                                                      size: 12.sp),
-                                            )
-                                          ],
-                                        ),
-                                        onTap: () => {
-                                              Get.to(Chat(
-                                                  key: UniqueKey(),
-                                                  targetName:
-                                                      data['targetName'],
-                                                  targetUid: physio!.uid))
-                                            });
-                                  }).toList(),
-                                ),
+                                            title: Text(
+                                              data['targetName'] ?? "",
+                                              style: isRead
+                                                  ? AppTextStyle.h3.merge(
+                                                      TextStyle(
+                                                          fontSize: 18.sp))
+                                                  : AppTextStyle.h3.merge(
+                                                      TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 18.sp)),
+                                            ),
+                                            subtitle: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    data['msg']
+                                                            .toString()
+                                                            .startsWith(
+                                                                "https://firebasestorage.googleapis.com")
+                                                        ? "[Image]"
+                                                        : data['msg'] ?? "",
+                                                    style: isRead
+                                                        ? AppTextStyle.c1.merge(
+                                                            const TextStyle(
+                                                                color: AppColors
+                                                                    .black))
+                                                        : AppTextStyle.c1.merge(
+                                                            const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: AppColors
+                                                                    .black)),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 30.w,
+                                                  child: isRead
+                                                      ? isSender
+                                                          ? null
+                                                          : Icon(Icons.done_all,
+                                                              color: AppColors
+                                                                  .blue,
+                                                              size: 14.sp)
+                                                      : Icon(Icons.circle,
+                                                          color: Colors.red,
+                                                          size: 12.sp),
+                                                )
+                                              ],
+                                            ),
+                                            onTap: () => {
+                                                  Get.to(Chat(
+                                                      key: UniqueKey(),
+                                                      targetName:
+                                                          data['targetName'],
+                                                      targetUid: physio!.uid))
+                                                });
+                                      }).toList(),
+                                    ),
                         ),
                       )
               ],

@@ -99,6 +99,7 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                   key: _fbKey,
                   child: Column(
                     children: [
+                      SizedBox(height: 20.w),
                       Center(
                         child: Column(
                           children: [
@@ -151,8 +152,8 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                           padding: EdgeInsets.only(bottom: 16.h),
                           child: Obx(
                             () => FutureBuilder<File?>(
-                              future:
-                                  Future.value(signUpController.imagefile.value),
+                              future: Future.value(
+                                  signUpController.imagefile.value),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -176,15 +177,13 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                                   // If the image is available, display it
                                   return CircleAvatar(
                                     radius: 60,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: Image.file(
-                                        snapshot.data!,
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                                    backgroundColor: AppColors.brandBlue,
+                                    backgroundImage: Image.file(
+                                      snapshot.data!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.fill,
+                                    ).image,
                                   );
                                 } else {
                                   // If no image is available, display a default image or icon
@@ -209,6 +208,11 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                           ),
                         ),
                       ),
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text("Upload image as your profile picture",
+                              style: AppTextStyle.h3.merge(const TextStyle(
+                                  fontStyle: FontStyle.italic)))),
                       SizedBox(height: 30.h),
                       InputTextFormField(
                         obscureText: obscureText,
