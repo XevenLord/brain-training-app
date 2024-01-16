@@ -153,7 +153,7 @@ class FirebaseAuthRepository extends GetxController {
         // You can use Flutter's built-in dialogs or a custom dialog widget
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Sign Up Error"),
+            title: Text("Sign Up Error", style: AppTextStyle.h2),
             content: Text(e.toString()), // Display the error message
             actions: <Widget>[
               TextButton(

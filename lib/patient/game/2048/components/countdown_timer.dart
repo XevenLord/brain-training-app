@@ -17,7 +17,7 @@ class CountdownTimer extends ConsumerStatefulWidget {
 class _CountdownTimerState extends ConsumerState<CountdownTimer>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   static const countdownDuration = Duration(minutes: 10);
-  
+
   Duration duration = Duration();
   Timer? timer;
 

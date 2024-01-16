@@ -20,7 +20,7 @@ class _TTTHomeState extends State<TTTHome> {
         child: GameIntro(
           title: 'Tic Tac Toe Game',
           introduction:
-              'Tic Tac Toe is a game where you win when you have 3 of your symbols in a row, column or diagonal.',
+              'Tic Tac Toe is a game where you win when you have 3 of your symbols in a row, column or diagonal.\n\nGame Modes:\nUnbeatable Mode: Prepare for the ultimate challenge! Our unbeatable robot opponent employs advanced algorithms to make every move count. Can you outsmart the machine and claim victory?\n\nEasy Mode: Perfect for casual play, the easy mode allows beginners and leisure gamers to enjoy the classic fun of Tic Tac Toe without breaking a sweat.',
           img: 'assets/images/tic_tac_toe_game.png',
           gradient: AppColors.transparentBlue,
           buttonColor: AppColors.lightBlue,

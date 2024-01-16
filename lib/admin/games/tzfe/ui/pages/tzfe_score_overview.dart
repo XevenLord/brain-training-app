@@ -1,6 +1,3 @@
-import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
-import 'package:brain_training_app/admin/games/maths/ui/math_ans_row.dart';
-import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
 import 'package:brain_training_app/admin/games/tzfe/ui/view_model/tzfe_vmodel.dart';
 import 'package:brain_training_app/common/domain/entity/tzfe_score_set.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -134,7 +131,7 @@ class _TZFEScoreOverviewState extends State<TZFEScoreOverview> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '${DateFormat("hh:mm").format(tzfeScore.timestamp!.toDate())}',
+                                  '${DateFormat.jm().format(tzfeScore.timestamp!.toDate())}',
                                   style: AppTextStyle.h3,
                                 ),
                                 Text(
@@ -146,6 +143,10 @@ class _TZFEScoreOverviewState extends State<TZFEScoreOverview> {
                                 ),
                                 Text(
                                   '${tzfeScore.score.toString()} scores',
+                                  style: AppTextStyle.h3,
+                                ),
+                                Text(
+                                  '${tzfeScore.duration.toString()} seconds',
                                   style: AppTextStyle.h3,
                                 ),
                               ],

@@ -106,11 +106,14 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
             child: appointments == null
                 ? displayLoadingData(showBackArrow: false)
                 : appointments!.isEmpty
-                    ? displayEmptyDataLoaded("No appointment found",
+                    ? displayEmptyDataLoaded(
+                        "No appointment found",
                         onBack: () {
-                        Get.offNamed(RouteHelper.getPatientHome(),
-                            arguments: 2);
-                      })
+                          Get.offNamed(RouteHelper.getPatientHome(),
+                              arguments: 2);
+                        },
+                        showBackArrow: false,
+                      )
                     : TabBarView(
                         children: [
                           SingleChildScrollView(
@@ -369,7 +372,9 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                               SizedBox()
                                                             else
                                                               Align(
-                                                                alignment: Alignment.center,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
                                                                 child: Text(
                                                                     todayText(declinedAppointments![
                                                                             index]

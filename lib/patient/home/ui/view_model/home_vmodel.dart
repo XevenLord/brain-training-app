@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
+  bool isInsMssgShown = false;
   List<InspirationalMessage> inspirationalMessages = [];
   List<InspirationalMessage> generalInspirationalMessages = [];
   HomeViewModel();
@@ -71,6 +72,10 @@ class HomeViewModel extends GetxController implements GetxService {
     // if (date != null && DateTime.now().difference(date).inHours > 0) {
     //   return;
     // }
+    if (isInsMssgShown) {
+      return;
+    }
+
     date = date ?? DateTime.now();
     Random random = Random();
     if (inspirationalMessages.isNotEmpty) {
@@ -110,6 +115,7 @@ class HomeViewModel extends GetxController implements GetxService {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
+                isInsMssgShown = true;
                 await HomeService.updateReadAtStatus(insMssg.id!);
                 Get.back();
               },
@@ -141,6 +147,7 @@ class HomeViewModel extends GetxController implements GetxService {
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                isInsMssgShown = true;
                 Get.back();
               },
               child: Text('Received',

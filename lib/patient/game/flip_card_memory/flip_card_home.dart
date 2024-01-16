@@ -20,7 +20,7 @@ class _FlipCardHomeState extends State<FlipCardHome> {
         child: GameIntro(
           title: 'Flip Card Memory Game',
           introduction:
-              'A memory flip card game tests your recall by matching pairs of hidden cards.',
+              'Simply flip cards to find matching pairs and boost your memory skills! Choose your difficulty level – easy for beginners, medium for a bit of challenge, and hard for the ultimate test. As you progress, the game increases the number of hidden cards. Enjoy beautiful card designs, easy-to-use controls, and track your progress with scores.',
           img: 'assets/images/flipcard_game.jpg',
           gradient: AppColors.transparentGreen,
           buttonColor: AppColors.lightGreen,

@@ -19,10 +19,16 @@ class Board {
   //Keeps the previous round board state used for the undo functionality
   final Board? undo;
 
-  Duration? duration;
+  DateTime? startTime;
+
+  DateTime? endTime;
 
   Board(this.score, this.best, this.tiles,
-      {this.over = false, this.won = false, this.undo, this.duration});
+      {this.over = false,
+      this.won = false,
+      this.undo,
+      this.startTime,
+      this.endTime});
 
   //Create a model for a new game.
   Board.newGame(this.best, this.tiles)
@@ -30,7 +36,8 @@ class Board {
         over = false,
         won = false,
         undo = null,
-        duration = null;
+        startTime = DateTime.now(),
+        endTime = null;
 
   //Create an immutable copy of the board
   Board copyWith(
@@ -40,12 +47,14 @@ class Board {
           bool? over,
           bool? won,
           Board? undo,
-          Duration? duration}) =>
+          DateTime? startTime,
+          DateTime? endTime}) =>
       Board(score ?? this.score, best ?? this.best, tiles ?? this.tiles,
           over: over ?? this.over,
           won: won ?? this.won,
           undo: undo ?? this.undo,
-          duration: duration ?? this.duration);
+          startTime: startTime ?? this.startTime,
+          endTime: endTime ?? this.endTime);
 
   //Create a Board from json data
   factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);

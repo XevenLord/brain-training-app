@@ -122,7 +122,7 @@ class _TZFEScorePageState extends State<TZFEScorePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  '${DateFormat("hh:mm").format(tzfeScore.timestamp!.toDate())}',
+                                  '${DateFormat.jm().format(tzfeScore.timestamp!.toDate())}',
                                   style: AppTextStyle.h3,
                                 ),
                                 Text(
@@ -134,6 +134,10 @@ class _TZFEScorePageState extends State<TZFEScorePage> {
                                 ),
                                 Text(
                                   '${tzfeScore.score.toString()} scores',
+                                  style: AppTextStyle.h3,
+                                ),
+                                Text(
+                                  '${tzfeScore.duration.toString()} seconds',
                                   style: AppTextStyle.h3,
                                 ),
                               ],

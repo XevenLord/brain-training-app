@@ -43,10 +43,10 @@ class _ChatListState extends State<ChatList> {
         isLoading = false;
       });
     } catch (e) {
-      debugModePrint(e);
       setState(() {
         isLoading = false;
       });
+      debugModePrint(e);
     }
   }
 

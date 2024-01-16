@@ -73,9 +73,9 @@ class _HomePageState extends State<HomePage> {
       }
     },
     {
-      "name": "Mathematics",
+      "name": "Arithmetic Game",
       "description":
-          "A math game enhances math skills through fun challenges and problem-solving.",
+          "Arithmetic game enhances math skills through fun challenges and problem-solving.",
       "img": "assets/images/mathematics_game.png",
       "onTap": () {
         Get.toNamed(RouteHelper.getMathHome());
@@ -193,10 +193,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showMentalStatusQuiz() async {
-    if (lastMentalTest == null) return;
-    if (lastMentalTest != null &&
-        DateTime.now().difference(lastMentalTest!).inDays <= 7) {
-      print("lastMentalTest: ${lastMentalTest!.toIso8601String()}");
+    if ((lastMentalTest != null &&
+        DateTime.now().difference(lastMentalTest!).inDays <= 7) || lastMentalTest == null) {
       showDialog(
           context: context,
           builder: (context) {

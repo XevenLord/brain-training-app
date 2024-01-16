@@ -116,7 +116,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                       )
                     : Align(
                         alignment: Alignment.bottomLeft,
-                        child: Text("Select a practitioner below:",
+                        child: Text("Select a practitioner to make appointment:",
                             style: AppTextStyle.h3)),
                 SizedBox(height: 8.h),
                 GridView.count(

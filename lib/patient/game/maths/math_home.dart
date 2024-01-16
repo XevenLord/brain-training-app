@@ -18,9 +18,9 @@ class _MathHomeState extends State<MathHome> {
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: GameIntro(
-          title: 'Math Game',
+          title: 'Arithmetic Game',
           introduction:
-              'You will be given a simple math question, answer it as fast as you can!',
+              'Arithmetic Game presents you with a series of arithmetic operations, ranging from easy to hard difficulty levels. You\'ll encounter addition, subtraction, multiplication, and division problems involving two numbers. Use the provided math calculator keypad to input your answers quickly and accurately.',
           img: 'assets/images/mathematics_game.png',
           actions: IconButton(
             onPressed: () => Get.toNamed(RouteHelper.getMathScorePage()),

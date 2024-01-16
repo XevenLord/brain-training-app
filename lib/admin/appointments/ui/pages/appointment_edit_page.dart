@@ -31,8 +31,10 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   String? time;
   late AppUser patient;
   AppUser? admin;
+  List<AdminAppointment> appts = [];
 
-  List<String> timeSlots = [
+  List timeSlots = [];
+  List<String> timeSlotsTemplate = [
     "09:00 AM",
     "10:00 AM",
     "11:00 AM",
@@ -55,6 +57,12 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
     patient = widget.patient;
     admin = UserRepository.admins.firstWhere(
         (element) => element.uid == widget.appointment.physiotherapistID);
+
+    appts = appointmentVModel.appointments
+        .where((element) =>
+            element.physiotherapistID == widget.appointment.physiotherapistID)
+        .toList();
+    updateTimeSlots();
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason ?? "";
     remarkController.text = widget.appointment.remark ?? "";
@@ -74,6 +82,18 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
       );
     }
     Get.back(result: true);
+  }
+
+  void updateTimeSlots() {
+    timeSlots = List.from(timeSlotsTemplate);
+    for (int i = 0; i < appts.length; i++) {
+      if (appts[i].date != null && appts[i].date! == widget.appointment.date) {
+        if (appts[i].time != widget.appointment.time) {
+          timeSlots.remove(appts[i].time);
+        }
+      }
+    }
+    setState(() {});
   }
 
   void deleteAppointment() async {
@@ -178,7 +198,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                         name: "time",
                         promptText: "Appointment Time",
                         isDropdown: true,
-                        items: timeSlots,
+                        items: timeSlots.cast<String>(),
                         label: "Select your appointment time",
                         initialValue: widget.appointment.time,
                         readOnly: !isAfterToday(
@@ -226,7 +246,29 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                           SizedBox(width: 16.w),
                           ElevatedButton(
                             onPressed: () {
-                              deleteAppointment();
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Delete Appointment'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this appointment?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      child: const Text('No'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                        deleteAppointment();
+                                      },
+                                      child: const Text('Yes'),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.brandRed),

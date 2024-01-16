@@ -19,6 +19,7 @@ class BoardManager extends StateNotifier<Board> {
   final verticalOrder = [12, 8, 4, 0, 13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3];
   List<int> valueList = [2];
   int benchmark = 200;
+  DateTime? endTime = DateTime.now();
 
   final StateNotifierProviderRef ref;
   BoardManager(this.ref) : super(Board.newGame(0, [])) {
@@ -191,13 +192,6 @@ class BoardManager extends StateNotifier<Board> {
     }
 
     //If tiles got moved then generate a new tile at random position of the available positions on the board.
-
-    if (score > benchmark) {
-      if (valueList.last < 16) {
-        valueList.add(valueList.last * 2);
-      }
-      benchmark += 200;
-    }
     if (tilesMoved) {
       tiles.add(random(indexes));
     }
@@ -221,7 +215,8 @@ class BoardManager extends StateNotifier<Board> {
           gameWon = true;
           valueList = [2];
           benchmark = 200;
-          submitScore(state.score, gameWon, state.duration ?? Duration());
+          // submitScore(state.score, gameWon,
+          //     getDuration(state.startTime!, DateTime.now()));
         }
 
         var x = (i - (((i + 1) / 4).ceil() * 4 - 4));
@@ -274,19 +269,23 @@ class BoardManager extends StateNotifier<Board> {
     }
 
     if (gameOver) {
-      submitScore(state.score, gameWon, state.duration ?? Duration());
+      endTime = DateTime.now();
+      // submitScore(
+      //     state.score, gameWon, getDuration(state.startTime!, endTime!));
     }
 
-    state = state.copyWith(tiles: tiles, won: gameWon, over: gameOver);
+    state = state.copyWith(
+        tiles: tiles, won: gameWon, over: gameOver, endTime: endTime);
   }
 
-  void submitScore(int score, bool status, Duration duration) async {
-    await TZFEService.submitScore(score, status ? 'win' : 'lose', duration);
-  }
+  // void submitScore(int score, bool status, Duration duration) async {
+  //   await TZFEService.submitScore(score, status ? 'win' : 'lose', duration);
+  // }
 
-  void getDuration(Duration duration) {
-    state = state.copyWith(duration: duration);
-  }
+  // Duration getDuration(DateTime startTime, DateTime endTime) {
+  //   Duration duration = endTime.difference(startTime);
+  //   return duration;
+  // }
 
   //Mark the merged as false after the merge animation is complete.
   bool endRound() {
@@ -350,4 +349,3 @@ class BoardManager extends StateNotifier<Board> {
 dynamic boardManager = StateNotifierProvider<BoardManager, Board>((ref) {
   return BoardManager(ref);
 });
-

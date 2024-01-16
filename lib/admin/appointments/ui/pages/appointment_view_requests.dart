@@ -102,10 +102,54 @@ class _AppointmentViewRequestsState extends State<AppointmentViewRequests> {
                       time: appointment.time!,
                       reason: appointment.reason!,
                       onAccept: () {
-                        onApproveAppointment(appointment);
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Approve Appointment'),
+                            content: const Text(
+                                'Are you sure you want to approve this appointment?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: const Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  onApproveAppointment(appointment);
+                                  Get.back();
+                                },
+                                child: const Text('Yes'),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                       onDecline: () {
-                        onDeclineAppointment(appointment);
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Decline Appointment'),
+                            content: const Text(
+                                'Are you sure you want to decline this appointment?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: const Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  onDeclineAppointment(appointment);
+                                  Get.back();
+                                },
+                                child: const Text('Yes'),
+                              ),
+                            ],
+                          ),
+                        );
                       },
                     );
                   },
