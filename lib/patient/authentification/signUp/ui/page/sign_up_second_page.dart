@@ -214,50 +214,56 @@ class _SignUpSecondPageState extends State<SignUpSecondPage> {
                               style: AppTextStyle.h3.merge(const TextStyle(
                                   fontStyle: FontStyle.italic)))),
                       SizedBox(height: 30.h),
-                      InputTextFormField(
-                        obscureText: obscureText,
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              obscureText = !obscureText;
-                            });
-                          },
-                          child: const Icon(Icons.remove_red_eye),
-                        ),
-                        name: "password",
-                        promptText: "Password",
-                        textEditingController: _passwordInput,
-                        label: "Enter Your Password",
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: "Password is required!"),
-                          FormBuilderValidators.minLength(8,
-                              errorText:
-                                  "Password must be at least 8 characters long."),
-                        ]),
+                      StatefulBuilder(
+                        builder: (context, setState) {
+                          return InputTextFormField(
+                            obscureText: obscureText,
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                              child: const Icon(Icons.remove_red_eye),
+                            ),
+                            name: "password",
+                            promptText: "Password",
+                            textEditingController: _passwordInput,
+                            label: "Enter Your Password",
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                  errorText: "Password is required!"),
+                              FormBuilderValidators.minLength(8,
+                                  errorText:
+                                      "Password must be at least 8 characters long."),
+                            ]),
+                          );
+                        }
                       ),
-                      InputTextFormField(
-                        obscureText: obscureTextConfirm,
-                        suffixIcon: InkWell(
-                          onTap: () {
-                            setState(() {
-                              obscureTextConfirm = !obscureTextConfirm;
-                            });
-                          },
-                          child: const Icon(Icons.remove_red_eye),
-                        ),
-                        name: "confirmPassword",
-                        promptText: "Confirm Password",
-                        textEditingController: _confirmPasswordInput,
-                        label: "Enter Your Password Again",
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: "Confirm password is required!"),
-                          FormBuilderValidators.minLength(8,
-                              errorText:
-                                  "Password must be at least 8 characters long."),
-                        ]),
-                      ),
+                      StatefulBuilder(builder: (context, setState) {
+                        return InputTextFormField(
+                          obscureText: obscureTextConfirm,
+                          suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                obscureTextConfirm = !obscureTextConfirm;
+                              });
+                            },
+                            child: const Icon(Icons.remove_red_eye),
+                          ),
+                          name: "confirmPassword",
+                          promptText: "Confirm Password",
+                          textEditingController: _confirmPasswordInput,
+                          label: "Enter Your Password Again",
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: "Confirm password is required!"),
+                            FormBuilderValidators.minLength(8,
+                                errorText:
+                                    "Password must be at least 8 characters long."),
+                          ]),
+                        );
+                      }),
                       SizedBox(height: 30.h),
                       Center(
                         child: ElevatedButton(

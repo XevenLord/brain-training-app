@@ -225,7 +225,7 @@ class _SignInPageState extends State<SignInPage> {
                             onTap: () {
                               Get.toNamed(RouteHelper.getForgetPassword());
                             },
-                            child: Text("Forget Password"),
+                            child: const Text("Forget Password"),
                           ),
                         ),
                         SizedBox(height: 30.h),
