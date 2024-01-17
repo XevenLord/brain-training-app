@@ -53,7 +53,8 @@ class _InspirationalMssgGeneralHomeState
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(
+            top: 8.0, left: 16.0, right: 16.0, bottom: 64.0),
         child: ListView.builder(
           itemCount: messages.length,
           itemBuilder: (context, index) {
@@ -111,30 +112,31 @@ class _InspirationalMssgGeneralHomeState
   }
 
   void deleteMessage(int index) async {
-    // Remove the me  ssage when the delete button is pressed.
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text('Delete Message', style: AppTextStyle.h2),
-              content: Text(
-                  'Are you sure you want to delete this "${messages[index].getMessage}" message?',
-                  style: AppTextStyle.h3),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: Text('Cancel', style: AppTextStyle.h3)),
-                TextButton(
-                    onPressed: () async {
-                      await inspirationalMssgViewModel
-                          .deleteInspirationalMessage(messages[index]);
-                      messages.removeAt(index);
-                      setState(() {});
-                      Get.back();
-                    },
-                    child: Text('Delete', style: AppTextStyle.h3))
-              ],
-            ));
+    if (index >= 0 && index < messages.length) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Delete Message', style: AppTextStyle.h2),
+                content: Text(
+                    'Are you sure you want to delete this "${messages[index].getMessage}" message?',
+                    style: AppTextStyle.h3),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text('Cancel', style: AppTextStyle.h3)),
+                  TextButton(
+                      onPressed: () async {
+                        await inspirationalMssgViewModel
+                            .deleteInspirationalMessage(messages[index]);
+                        // messages.removeAt(index);
+                        setState(() {});
+                        Get.back();
+                      },
+                      child: Text('Delete', style: AppTextStyle.h3))
+                ],
+              ));
+    }
   }
 }
