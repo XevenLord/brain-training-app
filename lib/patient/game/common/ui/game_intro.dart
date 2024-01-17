@@ -11,6 +11,7 @@ class GameIntro extends StatelessWidget {
   LinearGradient? gradient;
   Color? buttonColor;
   Color? btnTextColor;
+  Widget? actions;
   Function() onTap;
 
   GameIntro(
@@ -19,6 +20,7 @@ class GameIntro extends StatelessWidget {
       required this.introduction,
       required this.onTap,
       required this.img,
+      this.actions,
       this.gradient = AppColors.transparentPurple,
       this.buttonColor = AppColors.brandYellow,
       this.btnTextColor = AppColors.white});
@@ -78,6 +80,7 @@ class GameIntro extends StatelessWidget {
                             Get.back();
                           },
                         ),
+                        if (actions != null) actions!,
                       ],
                     ),
                   ],
@@ -107,13 +110,41 @@ class GameIntro extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text(
                       'How to play',
-                      style: AppTextStyle.h1.merge(AppTextStyle.whiteTextStyle),
+                      style: const TextStyle(
+                        shadows: [
+                          Shadow(
+                            color:
+                                Colors.black, // Choose the color of the shadow
+                            blurRadius:
+                                10.0, // Adjust the blur radius for the shadow effect
+                            offset: Offset(2.0,
+                                1.0), // Set the horizontal and vertical offset for the shadow
+                          ),
+                        ],
+                      ).merge(
+                          AppTextStyle.h1.merge(AppTextStyle.whiteTextStyle)),
                     ),
                     const SizedBox(height: 20),
-                    Text(
-                      introduction,
-                      textAlign: TextAlign.center,
-                      style: AppTextStyle.h3.merge(AppTextStyle.whiteTextStyle),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.white.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(10.r),
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(3, 5),
+                            color: AppColors.shadow,
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        introduction,
+                        textAlign: TextAlign.center,
+                        style:
+                            AppTextStyle.h3.merge(AppTextStyle.blackTextStyle),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(

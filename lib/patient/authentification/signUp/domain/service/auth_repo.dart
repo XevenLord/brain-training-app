@@ -67,6 +67,7 @@ class FirebaseAuthRepository extends GetxController {
       builder: (context) {
         return AlertDialog(
           title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(AppConstant.ERROR_IMG, width: 100.w),
               SizedBox(height: 10.h),
@@ -136,15 +137,37 @@ class FirebaseAuthRepository extends GetxController {
     }
   }
 
-  static Future<UserCredential> signUpWithEmailAndPassword(
-      {required String email, required String password}) async {
+  static Future<UserCredential?> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       debugModePrint("check sign up password passed in: $password");
       UserCredential res = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       return res;
     } on FirebaseAuthException catch (e) {
-      throw Error();
+      // Handle the FirebaseAuthException and show an error dialog
+      showDialog(
+        context: Get.context!,
+        // Your dialog configuration here
+        // You can use Flutter's built-in dialogs or a custom dialog widget
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Sign Up Error", style: AppTextStyle.h2),
+            content: Text(e.toString()), // Display the error message
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+      throw e;
     }
   }
 
@@ -186,6 +209,11 @@ class FirebaseAuthRepository extends GetxController {
         "role": data["role"] ?? "patient",
         "profilePic": data["profilePic"],
         "aboutMe": data["aboutMe"],
+        "lastOnline": FieldValue.serverTimestamp(),
+        "lastInspired": FieldValue.serverTimestamp(),
+        "strokeType": data["strokeType"],
+        "mentalQuiz": data["mentalQuiz"],
+        "assignedTo": data["assignedTo"],
         // "appointments": [],
       });
       if (data["role"] == "admin") {
@@ -205,6 +233,12 @@ class FirebaseAuthRepository extends GetxController {
           gender: data["gender"],
           role: "patient",
           profilePic: data["profilePic"],
+          aboutMe: data["aboutMe"],
+          lastOnline: DateTime.now(),
+          lastInspired: DateTime.now(),
+          strokeType: data["strokeType"],
+          mentalQuiz: data["mentalQuiz"],
+          assignedTo: data["assignedTo"],
           // appointments: [],
         );
       debugModePrint("init process done...");
@@ -261,6 +295,7 @@ class FirebaseAuthRepository extends GetxController {
         mentalQuiz: data["mentalQuiz"] != null
             ? DateTime.parse(data["mentalQuiz"])
             : null,
+        assignedTo: data["assignedTo"],
       );
 
       // store uid in shared preference

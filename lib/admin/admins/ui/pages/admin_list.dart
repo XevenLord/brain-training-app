@@ -24,7 +24,8 @@ class _AdminListState extends State<AdminList> {
   @override
   void initState() {
     userRepo = Get.find<UserRepository>();
-    fetchAdmins();
+    admins = UserRepository.admins;
+    isLoading = false;
     super.initState();
   }
 
@@ -80,13 +81,14 @@ class _AdminListState extends State<AdminList> {
       body: SafeArea(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Padding(
+            : SingleChildScrollView(
+                child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: SingleChildScrollView(
-                  child: Column(
+                child: Obx(
+                  () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ...admins.map(
+                      ...UserRepository.admins.map(
                         (admin) => InfoCardTile().buildInfoCard(
                           name: admin.name!,
                           age: calculateAge(admin.dateOfBirth),
@@ -107,7 +109,7 @@ class _AdminListState extends State<AdminList> {
                                 iconSize: 60.w,
                                 icon: Icon(Icons.add_circle,
                                     color: Colors.blue, size: 60.w),
-                              onPressed: () {
+                                onPressed: () {
                                   Get.toNamed(RouteHelper.getAdminRegister());
                                 },
                               ),
@@ -122,7 +124,7 @@ class _AdminListState extends State<AdminList> {
                     ],
                   ),
                 ),
-              ),
+              )),
       ),
     );
   }

@@ -82,7 +82,11 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           bottom: const TabBar(
               unselectedLabelColor: AppColors.black,
               labelColor: AppColors.brandBlue,
-              tabs: [Tab(text: "Pending"), Tab(text: "Timeline"), Tab(text: "Declined")]),
+              tabs: [
+                Tab(text: "Pending"),
+                Tab(text: "Timeline"),
+                Tab(text: "Declined")
+              ]),
           title: Align(
             alignment: Alignment.centerLeft,
             child: Text("My Appointments",
@@ -100,13 +104,16 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: appointments == null
-                ? displayLoadingData()
+                ? displayLoadingData(showBackArrow: false)
                 : appointments!.isEmpty
-                    ? displayEmptyDataLoaded("No appointment found",
+                    ? displayEmptyDataLoaded(
+                        "No appointment found",
                         onBack: () {
-                        Get.offNamed(RouteHelper.getPatientHome(),
-                            arguments: 2);
-                      })
+                          Get.offNamed(RouteHelper.getPatientHome(),
+                              arguments: 2);
+                        },
+                        showBackArrow: false,
+                      )
                     : TabBarView(
                         children: [
                           SingleChildScrollView(
@@ -116,11 +123,13 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                     ? Center(
                                         child: isPendingApptLoading
                                             ? const CircularProgressIndicator()
-                                            : Padding(padding: EdgeInsets.only(top: 50.w), child:  displayEmptyDataLoaded(
-                                                "There is no pending appointment",
-                                                showBackArrow: false),)
-                                           
-                                      )
+                                            : Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 50.w),
+                                                child: displayEmptyDataLoaded(
+                                                    "There is no pending appointment",
+                                                    showBackArrow: false),
+                                              ))
                                     : Column(
                                         children: [
                                           SizedBox(height: 16.h),
@@ -148,13 +157,18 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                                         .date)
                                                               SizedBox()
                                                             else
-                                                              Text(
-                                                                  todayText(pendingAppointments![
-                                                                          index]
-                                                                      .date!),
-                                                                  style:
-                                                                      AppTextStyle
-                                                                          .h2),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Text(
+                                                                    todayText(pendingAppointments![
+                                                                            index]
+                                                                        .date!),
+                                                                    style:
+                                                                        AppTextStyle
+                                                                            .h2),
+                                                              ),
                                                             AppointmentTile(
                                                                 time: pendingAppointments![index]
                                                                     .time!,
@@ -241,11 +255,14 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                       appointments![index].date)
                                                 SizedBox()
                                               else
-                                                Text(
-                                                    todayText(
-                                                        appointments![index]
-                                                            .date!),
-                                                    style: AppTextStyle.h2),
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                      todayText(
+                                                          appointments![index]
+                                                              .date!),
+                                                      style: AppTextStyle.h2),
+                                                ),
                                               AppointmentTile(
                                                   time: appointments![index]
                                                       .time!,
@@ -320,11 +337,13 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                     ? Center(
                                         child: isPendingApptLoading
                                             ? const CircularProgressIndicator()
-                                            : Padding(padding: EdgeInsets.only(top: 50.w), child:  displayEmptyDataLoaded(
-                                                "There is no declined appointment",
-                                                showBackArrow: false),)
-                                           
-                                      )
+                                            : Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 50.w),
+                                                child: displayEmptyDataLoaded(
+                                                    "There is no declined appointment",
+                                                    showBackArrow: false),
+                                              ))
                                     : Column(
                                         children: [
                                           SizedBox(height: 16.h),
@@ -352,13 +371,18 @@ class _MyAppointmentPageState extends State<MyAppointmentPage> {
                                                                         .date)
                                                               SizedBox()
                                                             else
-                                                              Text(
-                                                                  todayText(declinedAppointments![
-                                                                          index]
-                                                                      .date!),
-                                                                  style:
-                                                                      AppTextStyle
-                                                                          .h2),
+                                                              Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                child: Text(
+                                                                    todayText(declinedAppointments![
+                                                                            index]
+                                                                        .date!),
+                                                                    style:
+                                                                        AppTextStyle
+                                                                            .h2),
+                                                              ),
                                                             AppointmentTile(
                                                                 time: declinedAppointments![index]
                                                                     .time!,

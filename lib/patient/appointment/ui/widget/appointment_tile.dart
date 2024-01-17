@@ -104,7 +104,15 @@ class _AppointmentTileState extends State<AppointmentTile> {
                       ),
                       TextSpan(
                         text: widget.status ?? "unknown",
-                        style: AppTextStyle.h4,
+                        style: AppTextStyle.h4.merge(TextStyle(
+                            color: widget.status == "pending"
+                                ? AppColors.brandYellow
+                                : widget.status == "approved"
+                                    ? AppColors.brandBlue
+                                    : widget.status == "declined" ||
+                                            widget.status == "expired"
+                                        ? AppColors.brandRed
+                                        : AppColors.brandGreen)),
                       ),
                     ],
                   ),

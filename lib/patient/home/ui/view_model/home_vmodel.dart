@@ -4,12 +4,15 @@ import 'dart:math';
 import 'package:brain_training_app/admin/patients/domain/entity/inspirational_mssg.dart';
 import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
+import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class HomeViewModel extends GetxController implements GetxService {
+  bool isInsMssgShown = false;
   List<InspirationalMessage> inspirationalMessages = [];
   List<InspirationalMessage> generalInspirationalMessages = [];
   HomeViewModel();
@@ -66,9 +69,13 @@ class HomeViewModel extends GetxController implements GetxService {
   }
 
   void showPopUpInspirationalMessageDialog(DateTime? date) async {
-    if (date != null && DateTime.now().difference(date).inHours > 0) {
+    // if (date != null && DateTime.now().difference(date).inHours > 0) {
+    //   return;
+    // }
+    if (isInsMssgShown) {
       return;
     }
+
     date = date ?? DateTime.now();
     Random random = Random();
     if (inspirationalMessages.isNotEmpty) {
@@ -84,15 +91,23 @@ class HomeViewModel extends GetxController implements GetxService {
       showDialog(
         context: Get.context!,
         builder: (context) => AlertDialog(
-          title: Text('From $sender : ', style: AppTextStyle.h3),
+          backgroundColor: AppColors.lightYellow,
+          title: Text('From $sender : ', style: AppTextStyle.h2),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               insMssg.imgUrl != null && insMssg.imgUrl!.isNotEmpty
-                  ? Image(image: NetworkImage(insMssg.imgUrl!), height: 150.w)
-                  : Container(),
+                  ? CircleAvatar(
+                      radius: 120.r,
+                      backgroundColor: AppColors.lightYellow,
+                      backgroundImage: NetworkImage(insMssg.imgUrl!),
+                    )
+                  : Image(
+                      image: const AssetImage(AppConstant.HUG_IMG),
+                      height: 150.w,
+                    ),
               SizedBox(height: 10.w),
               Text(insMssg.message!, style: AppTextStyle.h3),
             ],
@@ -100,10 +115,13 @@ class HomeViewModel extends GetxController implements GetxService {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
+                isInsMssgShown = true;
                 await HomeService.updateReadAtStatus(insMssg.id!);
                 Get.back();
               },
-              child: Text('Received', style: AppTextStyle.h3),
+              child: Text('Received',
+                  style:
+                      AppTextStyle.h3.merge(AppTextStyle.brandYellowTextStyle)),
             ),
           ],
         ),
@@ -115,19 +133,34 @@ class HomeViewModel extends GetxController implements GetxService {
       showDialog(
         context: Get.context!,
         builder: (context) => AlertDialog(
-          title: Text('From NeuroFit : ', style: AppTextStyle.h3),
-          content: Text(insMssg.message!, style: AppTextStyle.h3),
+          backgroundColor: AppColors.lightYellow,
+          title: Text('From NeuroFit : ', style: AppTextStyle.h2),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Image(
+                image: AssetImage(AppConstant.HUG_IMG),
+              ),
+              Text(insMssg.message!, style: AppTextStyle.h3),
+            ],
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
+                isInsMssgShown = true;
                 Get.back();
               },
-              child: Text('Received', style: AppTextStyle.h3),
+              child: Text('Received',
+                  style:
+                      AppTextStyle.h3.merge(AppTextStyle.brandYellowTextStyle)),
             ),
           ],
         ),
       );
     }
+  }
+
+  Future<void> updateLastInspired() async {
     await HomeService.updateLastInspired();
   }
 }

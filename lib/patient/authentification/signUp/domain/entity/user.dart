@@ -18,6 +18,7 @@ class AppUser {
   DateTime? lastOnline;
   DateTime? lastInspired;
   String? strokeType;
+  String? assignedTo;
 
   AppUser({
     this.uid,
@@ -35,6 +36,7 @@ class AppUser {
     this.lastOnline,
     this.strokeType,
     this.lastInspired,
+    this.assignedTo,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -60,6 +62,7 @@ class AppUser {
       strokeType: json["strokeType"],
       lastInspired:
           json["lastInspired"] != null ? json["lastInspired"].toDate() : null,
+      assignedTo: json["assignedTo"],
     );
   }
 
@@ -83,6 +86,7 @@ class AppUser {
       'strokeType': strokeType,
       'lastInspired':
           lastInspired != null ? Timestamp.fromDate(lastInspired!) : null,
+      'assignedTo': assignedTo,
     };
   }
 
@@ -102,6 +106,7 @@ class AppUser {
     DateTime? lastOnline,
     String? strokeType,
     DateTime? lastInspired,
+    String? assignedTo,
   }) {
     this.uid = uid;
     this.name = name;
@@ -118,6 +123,7 @@ class AppUser {
     this.lastOnline = lastOnline;
     this.strokeType = strokeType;
     this.lastInspired = lastInspired;
+    this.assignedTo = assignedTo;
   }
 
   void clear() {
@@ -136,5 +142,6 @@ class AppUser {
     lastOnline = null;
     strokeType = null;
     lastInspired = null;
+    assignedTo = null;
   }
 }

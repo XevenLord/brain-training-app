@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends GetxController {
   late final SharedPreferences _prefs;
-  String nickName = 'player1';
+  String nickName = 'player';
   String theme = 'Default';
 
   @override
@@ -17,7 +17,7 @@ class SettingsController extends GetxController {
       String? prefTheme = _prefs.getString('theme');
 
       if (prefNickname == null) {
-        _prefs.setString('nickname', 'player1');
+        _prefs.setString('nickname', 'player');
       } else {
         nickName = prefNickname;
         update();

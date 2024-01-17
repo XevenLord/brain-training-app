@@ -18,7 +18,46 @@ class AppointmentViewModel extends GetxController implements GetxService {
   bool isAppointmentSet = false;
 
   Future<List<Appointment>> getAppointmentList() async {
+    print("Enter here fetchinggggg");
+    List<Appointment> readAppointments = [];
     appointments = await AppointmentService.getAppointmentList();
+    appointments.forEach((element) {
+      if (element.status == "approved" &&
+          element.isRead != null &&
+          !element.isRead!) {
+        print("Enter here");
+        AppUser physio = physiotherapistList
+            .firstWhere((physio) => physio.uid == element.physiotherapistID);
+        NotificationAPI.showNotification(
+          id: element.appointmentID.hashCode,
+          title: "Dr ${physio.name} approved your appointment",
+          body: "Meet you on ${element.date}, ${element.time}",
+          payload: "This is the payload of the notification",
+        );
+        NotificationAPI.showScheduledNotification(
+          id: element.appointmentID.hashCode,
+          title: "Appointment with Dr ${physio.name}",
+          body: "Meet you on ${element.date}, ${element.time}",
+          payload: "This is the payload of the notification",
+          scheduledDate: createDateWithTimeSlot(
+              date: DateTime.now(), timeSlot: element.time!),
+        );
+        readAppointments.add(element);
+      } else if (element.status == "declined" &&
+          element.isRead != null &&
+          !element.isRead!) {
+        AppUser physio = physiotherapistList
+            .firstWhere((physio) => physio.uid == element.physiotherapistID);
+        NotificationAPI.showNotification(
+          id: element.appointmentID.hashCode,
+          title: "Your appointment with Dr ${physio.name} has been declined",
+          body: "Please kindly reschedule your appointment",
+          payload: "This is the payload of the notification",
+        );
+        readAppointments.add(element);
+      }
+    });
+    updateIsRead(readAppointments);
     sortAppointmentByDate();
     update();
     return appointments.reversed.toList();
@@ -94,17 +133,11 @@ class AppointmentViewModel extends GetxController implements GetxService {
       status: "pending",
     );
     apptRef = await AppointmentService.onSubmitAppointmentDetails(appointment);
-
-    NotificationAPI.showScheduledNotification(
+    NotificationAPI.showNotification(
       id: apptRef.hashCode,
-      title: "Appointment with ${chosenPhysiotherapist!.name!}",
-      body: "Meet you on ${DateFormat('dd-MM-yyyy').format(date)}, ${time}",
+      title: "Appointment with Dr ${chosenPhysiotherapist!.name!}",
+      body: "Please kindly wait for the approval of your appointment.",
       payload: "This is the payload of the notification",
-      scheduledDate:
-          createDateWithTimeSlot(date: DateTime.now(), timeSlot: "6:43 PM"),
-      // scheduledDate: createDateWithTimeSlot(
-      //     date: date.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
-      // need to have more reminders: 30 mins, 1 hour, 1 day before
     );
     isAppointmentSet = true;
     update();
@@ -129,16 +162,16 @@ class AppointmentViewModel extends GetxController implements GetxService {
     AppUser physio = physiotherapistList
         .firstWhere((physio) => physio.uid == appointment.physiotherapistID);
     DateTime newDate = DateFormat('yyyy-MM-dd').parse(date);
-    NotificationAPI.showScheduledNotification(
-      id: appointment.appointmentID.hashCode,
-      title: "Appointment with ${physio.name}",
-      body: "Meet you on ${formatDateTime(newDate)}, ${time}",
-      payload: "This is the payload of the notification",
-      // scheduledDate:
-      //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
-      scheduledDate: createDateWithTimeSlot(
-          date: newDate.subtract(const Duration(days: 1)), timeSlot: "9:00 AM"),
-    );
+    if (newDate.isAfter(DateTime.now())) {
+      NotificationAPI.showNotification(
+        id: appointment.appointmentID.hashCode,
+        title: "Appointment with Dr ${physio.name}",
+        body: "Please kindly wait for the approval of your appointment.",
+        payload: "This is the payload of the notification",
+        // scheduledDate:
+        //     createDateWithTimeSlot(date: DateTime.now(), timeSlot: "9:30 PM"),
+      );
+    }
   }
 
   Future<void> cancelAppointment({required Appointment appointment}) async {
@@ -167,5 +200,11 @@ class AppointmentViewModel extends GetxController implements GetxService {
   String formatDateTime(DateTime dateTime) {
     final formatter = DateFormat('dd-MM-yyyy');
     return formatter.format(dateTime);
+  }
+
+  void updateIsRead(List<Appointment> readAppointments) async {
+    readAppointments.forEach((element) async {
+      await AppointmentService.updateIsRead(element);
+    });
   }
 }

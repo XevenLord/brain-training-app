@@ -55,33 +55,24 @@ class _PatientMentalResultState extends State<PatientMentalResult> {
         body: mentalHealthResult.entries.isEmpty
             ? Center(
                 child: isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : displayEmptyDataLoaded("No data found",
                         showBackArrow: false))
             : SafeArea(
+                child: SingleChildScrollView(
                 child: Column(
-                children: mentalHealthResult.entries
-                    .map((entry) => Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(entry.key, style: AppTextStyle.h1),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.edit,
-                                          color: AppColors.brandBlue),
-                                    ),
-                                  )
-                                ],
+                  children: mentalHealthResult.entries
+                      .map((entry) => Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ExpansionTile(
+                              title: Expanded(
+                                child: Text(entry.key,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyle.h2),
                               ),
-                              SizedBox(height: 10.w),
-                              ...entry.value.entries.map((innerEntry) {
-                                return Padding(
+                              children: (entry.value.entries
+                                  .map<Widget>((innerEntry) {
+                                return Container(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
                                   child: Container(
@@ -99,8 +90,7 @@ class _PatientMentalResultState extends State<PatientMentalResult> {
                                             color: Colors.grey.withOpacity(0.5),
                                             spreadRadius: 1,
                                             blurRadius: 2,
-                                            offset: Offset(0,
-                                                3), // changes position of shadow
+                                            offset: const Offset(0, 3),
                                           ),
                                         ]),
                                     child: Column(
@@ -117,11 +107,11 @@ class _PatientMentalResultState extends State<PatientMentalResult> {
                                     ),
                                   ),
                                 );
-                              }).toList(),
-                            ],
-                          ),
-                        ))
-                    .toList(),
+                              })).toList(),
+                            ),
+                          ))
+                      .toList(),
+                ),
               )));
   }
 }

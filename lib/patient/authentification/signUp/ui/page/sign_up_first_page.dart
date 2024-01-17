@@ -75,7 +75,7 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                   SizedBox(height: 30.h),
                   InputTextFormField(
                     name: "name",
-                    promptText: "Full Name",
+                    promptText: "Full Name (Eng)",
                     textEditingController: _nameInput,
                     label: "Enter Your Full Name",
                     keyboardType: TextInputType.name,
@@ -83,6 +83,10 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                       FormBuilderValidators.required(
                         errorText: "Please enter your name",
                       ),
+                      // English only
+                      FormBuilderValidators.match(r"^[a-zA-Z\s]+$",
+                          errorText:
+                              "Your name can only contain alphabets and spaces!"),
                       FormBuilderValidators.minLength(2,
                           errorText: "Your name is too short!"),
                     ]),
@@ -98,7 +102,8 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                         errorText: "Please enter your IC number",
                       ),
                       FormBuilderValidators.equalLength(12,
-                          errorText: "Your IC number is not valid!")
+                          errorText: "Your IC number is not valid!"),
+                      FormBuilderValidators.numeric(),
                     ]),
                   ),
                   InputTextFormField(
@@ -134,13 +139,14 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                     textEditingController: _dOBInput,
                     label: "DD/MM/YYYY",
                     keyboardType: TextInputType.datetime,
+                    readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
-                          //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2100));
+                          initialDate:
+                              DateTime.now().subtract(Duration(days: 3650)),
+                          firstDate: DateTime(1920),
+                          lastDate: DateTime(2019));
 
                       if (pickedDate != null) {
                         print(

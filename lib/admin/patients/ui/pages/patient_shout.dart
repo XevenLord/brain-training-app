@@ -59,6 +59,8 @@ class _PatientShoutPageState extends State<PatientShoutPage> {
       bool res = await managePatientVM.onPushInspirationalMessage();
       if (res) {
         Get.back();
+        nameController.clear();
+        shoutController.clear();
         useInfoDialog(
           title: "Uploaded Successfully",
           content: Image.asset(AppConstant.DONE_CHECK, height: 100.w),
@@ -260,9 +262,8 @@ class _PatientShoutPageState extends State<PatientShoutPage> {
                                             child: ClipRRect(
                                               child: Image.file(
                                                 snapshot.data!,
-                                                width: 100,
-                                                height: 100,
-                                                fit: BoxFit.fill,
+                                                width: 150,
+                                                fit: BoxFit.contain,
                                               ),
                                             ),
                                           );

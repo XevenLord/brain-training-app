@@ -171,7 +171,7 @@ class _GameState extends State<Game> {
                                             FittedBox(
                                               child: Text(
                                                 mode == GameMode.ai
-                                                    ? 'AI'
+                                                    ? 'Robot'
                                                     : 'Friend',
                                                 style: const TextStyle(
                                                   color: Colors.blueGrey,

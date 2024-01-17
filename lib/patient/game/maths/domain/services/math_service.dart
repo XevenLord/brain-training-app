@@ -1,3 +1,4 @@
+import 'package:brain_training_app/admin/games/maths/domain/entity/math_set.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -8,11 +9,13 @@ class MathGameService {
       Map<String, dynamic> answers) async {
     print("Math Game Service: Submitting math quest ans");
     final appUser = Get.find<AppUser>();
-    final mathDoc = FirebaseFirestore.instance
+    final collectionRef = FirebaseFirestore.instance
         .collection("games")
         .doc("MathGame")
-        .collection("users")
-        .doc(appUser.uid)
+        .collection("users");
+
+    collectionRef.doc(appUser.uid).set({'uid': appUser.uid});
+    final mathDoc = collectionRef.doc(appUser.uid)
         .collection("answers");
 
     try {
@@ -52,6 +55,53 @@ class MathGameService {
     } on FirebaseException catch (e) {
       print("Math Game Service: Updating math quest ans error: $e");
       return false; // Return null in case of an error
+    }
+  }
+  
+  Future<List<MathSet>> getMathAnswersByUserId(String userId) async {
+    try {
+      List<MathSet> mathAnswers = [];
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc("MathGame")
+          .collection("users")
+          .doc(userId)
+          .collection("answers")
+          .get();
+
+      mathAnswers = querySnapshot.docs
+          .map((doc) => MathSet.fromJson(doc.data(), doc.id))
+          .toList();
+
+      print(mathAnswers.toString());
+      return mathAnswers;
+    } catch (e) {
+      print("Error Math Service: " + e.toString());
+      return [];
+    }
+  }
+
+  static Future<List<MathSet>> getMathAnswers() async {
+    try {
+      final appUser = Get.find<AppUser>();
+      List<MathSet> mathAnswers = [];
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc("MathGame")
+          .collection("users")
+          .doc(appUser.uid)
+          .collection("answers")
+          .get();
+
+      mathAnswers = querySnapshot.docs
+          .map((doc) => MathSet.fromJson(doc.data(), doc.id))
+          .toList();
+
+      print(mathAnswers.toString());
+      return mathAnswers;
+    } catch (e) {
+      print("Error Math Service: " + e.toString());
+      return [];
     }
   }
 }

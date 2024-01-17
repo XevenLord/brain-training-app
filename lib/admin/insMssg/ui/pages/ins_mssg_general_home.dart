@@ -38,10 +38,20 @@ class _InspirationalMssgGeneralHomeState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Colors.white,
-          foregroundColor: AppColors.brandBlue,
-          elevation: 0,
-          title: Text("Inspirational Messages")),
+        backgroundColor: Colors.white,
+        foregroundColor: AppColors.brandBlue,
+        elevation: 0,
+        title: Text(
+          "Inspirational Messages",
+          style: AppTextStyle.h2,
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Get.back();
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(

@@ -71,7 +71,8 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
                       color: AppColors.lightBlue.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(10.r)),
                   child: Text('Edit to add self-description',
-                      style: AppTextStyle.h3)),
+                      style: AppTextStyle.h3.merge(
+                          const TextStyle(fontStyle: FontStyle.italic)))),
           SizedBox(height: 20.h),
           InfoTile(title: "Name", label: appUser.name!),
           InfoTile(title: "IC Number", label: appUser.icNumber!),

@@ -1,5 +1,6 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/admin/appointments/ui/view_model/appointment_vmodel.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
@@ -29,8 +30,11 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   DateTime intialDate = DateTime.now().add(Duration(days: 1));
   String? time;
   late AppUser patient;
+  AppUser? admin;
+  List<AdminAppointment> appts = [];
 
-  List<String> timeSlots = [
+  List timeSlots = [];
+  List<String> timeSlotsTemplate = [
     "09:00 AM",
     "10:00 AM",
     "11:00 AM",
@@ -45,14 +49,24 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   TextEditingController dateController = TextEditingController();
   TextEditingController reasonController = TextEditingController();
   TextEditingController remarkController = TextEditingController();
+  TextEditingController adminController = TextEditingController();
 
   @override
   void initState() {
     appointmentVModel = Get.find<AdminAppointmentViewModel>();
     patient = widget.patient;
+    admin = UserRepository.admins.firstWhere(
+        (element) => element.uid == widget.appointment.physiotherapistID);
+
+    appts = appointmentVModel.appointments
+        .where((element) =>
+            element.physiotherapistID == widget.appointment.physiotherapistID)
+        .toList();
+    updateTimeSlots();
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason ?? "";
     remarkController.text = widget.appointment.remark ?? "";
+    adminController.text = admin?.name ?? "";
     time = widget.appointment.time!;
     super.initState();
   }
@@ -70,9 +84,44 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
     Get.back(result: true);
   }
 
+  void updateTimeSlots() {
+    timeSlots = List.from(timeSlotsTemplate);
+    for (int i = 0; i < appts.length; i++) {
+      if (appts[i].date != null && appts[i].date! == widget.appointment.date) {
+        if (appts[i].time != widget.appointment.time) {
+          timeSlots.remove(appts[i].time);
+        }
+      }
+    }
+    setState(() {});
+  }
+
   void deleteAppointment() async {
-    await appointmentVModel.cancelAppointment(appointment: widget.appointment);
-    Get.back(result: true);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete Appointment', style: AppTextStyle.h2),
+        content: Text('Are you sure you want to delete this appointment?',
+            style: AppTextStyle.h3),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              Get.back();
+              await appointmentVModel.cancelAppointment(
+                  appointment: widget.appointment);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
   }
 
   bool isAfterToday(DateTime date) {
@@ -124,6 +173,16 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                       ),
                       SizedBox(height: 16.h),
                       InputTextFormField(
+                        name: "admin",
+                        textEditingController: adminController,
+                        promptText: "Admin",
+                        label: "Select your admin",
+                        textAlign: TextAlign.center,
+                        initialValue: admin!.name,
+                        readOnly: true,
+                      ),
+                      SizedBox(height: 16.h),
+                      InputTextFormField(
                         name: "date",
                         promptText: "Appointment Date",
                         textEditingController: dateController,
@@ -162,7 +221,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                         name: "time",
                         promptText: "Appointment Time",
                         isDropdown: true,
-                        items: timeSlots,
+                        items: timeSlots.cast<String>(),
                         label: "Select your appointment time",
                         initialValue: widget.appointment.time,
                         readOnly: !isAfterToday(

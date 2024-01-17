@@ -1,6 +1,4 @@
-import 'package:brain_training_app/common/domain/service/notification_api.dart';
 import 'package:brain_training_app/common/ui/widget/empty_box.dart';
-import 'package:brain_training_app/common/ui/widget/pill_button.dart';
 import 'package:brain_training_app/patient/appointment/ui/page/appointment_main_page.dart';
 import 'package:brain_training_app/patient/appointment/ui/view_model/appointment_vmodel.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
@@ -16,11 +14,11 @@ import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   int? pageIndex;
@@ -75,9 +73,9 @@ class _HomePageState extends State<HomePage> {
       }
     },
     {
-      "name": "Mathematics",
+      "name": "Arithmetic Game",
       "description":
-          "A math game enhances math skills through fun challenges and problem-solving.",
+          "Arithmetic game enhances math skills through fun challenges and problem-solving.",
       "img": "assets/images/mathematics_game.png",
       "onTap": () {
         Get.toNamed(RouteHelper.getMathHome());
@@ -96,10 +94,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
+    initHomePage();
+  }
+
+  Future<void> initHomePage() async {
+    await retrieveSavedState();
     feedbackVModel = Get.find<FeedbackViewModel>();
     // chatVModel.initUsersListener();
     onTapNav(widget.pageIndex ?? 0);
     fetchInspirationalMessages();
+    appointmentVModel.getAppointmentList();
+    appointmentVModel.getPhysiotherapistList();
 
     if (Get.find<AppUser>().uid != null) {
       print("got user");
@@ -107,19 +113,39 @@ class _HomePageState extends State<HomePage> {
       lastMentalTest = Get.find<AppUser>().mentalQuiz;
       lastInspired = Get.find<AppUser>().lastInspired;
       updateLastOnline();
+      updateLastInspired();
 
       SchedulerBinding.instance.addPostFrameCallback((_) {
         if (!mentalTestShown) {
           showMentalStatusQuiz();
-          mentalTestShown = true;
         }
-        if (!dialogShown) {
+        if (!dialogShown && lastInspired != null) {
           showActiveGameDialog();
-          dialogShown = true;
         }
       });
     }
-    super.initState();
+  }
+
+  Future<void> retrieveSavedState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("before retrieve");
+    print(prefs.getBool('dialogShown'));
+    setState(() {
+      dialogShown = prefs.getBool('dialogShown') ?? false;
+      mentalTestShown = prefs.getBool('mentalTestShown') ?? false;
+    });
+    print("after retrieve");
+    print(dialogShown);
+    print(mentalTestShown);
+  }
+
+  Future<void> saveStateToSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("before save");
+    print("dialogShown: $dialogShown");
+    print("mentalTestShown: $mentalTestShown");
+    await prefs.setBool('dialogShown', dialogShown);
+    await prefs.setBool('mentalTestShown', mentalTestShown);
   }
 
   void fetchInspirationalMessages() async {
@@ -131,6 +157,11 @@ class _HomePageState extends State<HomePage> {
 
   void updateLastOnline() async {
     await FirebaseAuthRepository.updateLastOnline(Get.find<AppUser>().uid!);
+    setState(() {});
+  }
+
+  void updateLastInspired() async {
+    await homeVModel.updateLastInspired();
     setState(() {});
   }
 
@@ -150,6 +181,8 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                   onPressed: () {
+                    dialogShown = true;
+                    saveStateToSharedPreferences();
                     Get.back();
                   },
                   child: Text("I understand", style: AppTextStyle.h3),
@@ -161,10 +194,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void showMentalStatusQuiz() async {
-    if (lastMentalTest == null) return;
-    if (lastMentalTest != null &&
-        DateTime.now().difference(lastMentalTest!).inDays >= 7) {
-      print("lastMentalTest: ${lastMentalTest!.toIso8601String()}");
+    if ((lastMentalTest != null &&
+            DateTime.now().difference(lastMentalTest!).inDays <= 7) ||
+        lastMentalTest == null) {
       showDialog(
           context: context,
           builder: (context) {
@@ -177,6 +209,8 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                   onPressed: () {
+                    mentalTestShown = true;
+                    saveStateToSharedPreferences();
                     Get.back();
                     showDialog(
                         context: context,
@@ -282,6 +316,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void submitFeedback() async {
+    if (feedbackController.text.isEmpty) return;
     await feedbackVModel.submitFeedback(feedbackController.text);
     feedbackController.clear();
     setState(() {});
@@ -314,6 +349,7 @@ class _HomePageState extends State<HomePage> {
                 )
               ]
             : null,
+        automaticallyImplyLeading: false,
       ),
       noBackBtn: true,
       body: currentScreen(),

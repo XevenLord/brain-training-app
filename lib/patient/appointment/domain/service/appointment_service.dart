@@ -108,4 +108,12 @@ class AppointmentService {
       return false;
     }
   }
+
+  static updateIsRead(Appointment element) async {
+    element.isRead = true;
+    await FirebaseFirestore.instance
+        .collection("appointments")
+        .doc(element.appointmentID)
+        .set(element.toJson(), SetOptions(merge: true));
+  }
 }

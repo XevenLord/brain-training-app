@@ -1,3 +1,4 @@
+import 'package:brain_training_app/admin/games/flipcard/domain/entity/flipcard_set.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/game/flip_card_memory/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,6 +47,33 @@ class FlipCardService {
       }
     } on FirebaseException catch (e) {
       print("Flip Card Service: Updating flip card record error: $e");
+    }
+  }
+
+  static Future<List<FlipCardSet>> getFlipCardSet() async {
+    try {
+      final appUser = Get.find<AppUser>();
+      List<FlipCardSet> flipCardResults = [];
+      var querySnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc("FlipCard")
+          .collection("users")
+          .doc(appUser.uid)
+          .collection("results")
+          .get();
+
+      print("Enter here service");
+
+      flipCardResults = querySnapshot.docs.map((doc) {
+        print(doc.data().toString());
+        return FlipCardSet.fromJson(doc.data(), doc.id);
+      }).toList();
+
+      print(flipCardResults.toString());
+      return flipCardResults;
+    } catch (e) {
+      print("Error Flip Card Service: " + e.toString());
+      return [];
     }
   }
 }

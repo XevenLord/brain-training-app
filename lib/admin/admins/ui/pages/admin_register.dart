@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:brain_training_app/common/ui/widget/input_segmented_control.dart';
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/ui/view_model/sign_up_controller.dart';
+import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
@@ -47,7 +48,8 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
     signUpController = Get.find<SignUpController>();
   }
 
-  void checkPassword() {
+  bool checkPassword() {
+    bool isCorrect = true;
     showDialog(
         context: context,
         builder: (context) {
@@ -56,6 +58,7 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
           );
         });
     if (_passwordInput.text != _confirmPasswordInput.text) {
+      isCorrect = false;
       showDialog(
         context: context,
         builder: (context) {
@@ -71,28 +74,28 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
           );
         },
       );
-      return;
     }
+    return isCorrect;
   }
 
   void signUp() async {
     bool res = false;
+    if (checkPassword() == false) return;
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
-      checkPassword();
       Map<String, dynamic> data = new Map();
       data.addAll(_fbKey.currentState!.value);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          });
       res = await signUpController.adminSignUpWithData(data);
     }
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
+
     if (res) {
-      Get.back();
       showDialog(
           context: context,
           builder: (context) {
@@ -105,10 +108,16 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                       textAlign: TextAlign.center, style: AppTextStyle.h3),
                 ],
               ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.offNamed(RouteHelper.getAdminListPage());
+                  },
+                  child: Text('OK', style: AppTextStyle.h3),
+                ),
+              ],
             );
           });
-      Get.back();
-      Get.back();
     }
   }
 
@@ -210,15 +219,12 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                                     // If the image is available, display it
                                     return CircleAvatar(
                                       radius: 60,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Image.file(
-                                          snapshot.data!,
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
+                                      backgroundImage: Image.file(
+                                        snapshot.data!,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.fill,
+                                      ).image,
                                     );
                                   } else {
                                     // If no image is available, display a default image or icon
@@ -377,7 +383,6 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                     promptText: "Password",
                     textEditingController: _passwordInput,
                     label: "Enter Password",
-                    keyboardType: TextInputType.name,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(
                           errorText: "Password is required!"),
@@ -400,7 +405,6 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
                     promptText: "Confirm Password",
                     textEditingController: _confirmPasswordInput,
                     label: "Enter Password Again",
-                    keyboardType: TextInputType.number,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(
                           errorText: "Confirm password is required!"),

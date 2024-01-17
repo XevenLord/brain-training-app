@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
@@ -23,19 +24,13 @@ class SignUpController extends GetxController {
   }
 
   void signUpWithData(Map<String, dynamic> data) async {
-    UserCredential signUpRes =
+    UserCredential? signUpRes =
         await FirebaseAuthRepository.signUpWithEmailAndPassword(
       email: _userDetails['email'],
       password: data['password'],
     );
 
-    await _uploadFile();
-    if (_profilePicUrl != null) _userDetails['profilePic'] = _profilePicUrl;
-
-    User newUser = signUpRes.user!;
-    bool initRes = await Get.find<FirebaseAuthRepository>()
-        .initUserDataWithUID(newUser.uid, _userDetails);
-    if (!initRes) {
+    if (signUpRes == null) {
       killDialog();
       useErrorDialog(
           title: "Oops! Something went wrong",
@@ -43,33 +38,36 @@ class SignUpController extends GetxController {
           description:
               "An error occurred while creating your account. Please try again later.",
           descriptionStyle: AppTextStyle.c1);
-
       return;
     }
 
-    _userDetails.clear();
-    killDialog();
-    Get.toNamed(RouteHelper.getSignUpDonePage());
-  }
+    try {
+      await _uploadFile();
+      if (_profilePicUrl != null) _userDetails['profilePic'] = _profilePicUrl;
 
-  Future<bool> adminSignUpWithData(Map<String, dynamic> data) async {
-    print(data);
-    UserCredential signUpRes =
-        await FirebaseAuthRepository.registerAdmin(
-      email: data['email'],
-      password: data['password'],
-    );
+      User newUser = signUpRes.user!;
+      bool initRes = await Get.find<FirebaseAuthRepository>()
+          .initUserDataWithUID(newUser.uid, _userDetails);
 
-    await _uploadFile();
-    if (_profilePicUrl != null) data['profilePic'] = _profilePicUrl;
+      if (!initRes) {
+        // If initUserDataWithUID is unsuccessful, delete the user credentials
+        await newUser.delete();
+        killDialog();
+        useErrorDialog(
+            title: "Oops! Something went wrong",
+            titleStyle: AppTextStyle.h2,
+            description:
+                "An error occurred while creating your account. Please try again later.",
+            descriptionStyle: AppTextStyle.c1);
+        return;
+      }
 
-    data.addAll({"role": "admin"});
-    data.addAll({"position": "Assistant"});
-
-    User newUser = signUpRes.user!;
-    bool initRes = await Get.find<FirebaseAuthRepository>()
-        .initUserDataWithUID(newUser.uid, data, setUserDetails: false);
-    if (!initRes) {
+      _userDetails.clear();
+      killDialog();
+      Get.toNamed(RouteHelper.getSignUpDonePage());
+    } catch (e) {
+      // Handle any exceptions that may occur during registration, file upload, or initialization
+      print("Error during registration, file upload, or initialization: $e");
       killDialog();
       useErrorDialog(
           title: "Oops! Something went wrong",
@@ -77,11 +75,54 @@ class SignUpController extends GetxController {
           description:
               "An error occurred while creating your account. Please try again later.",
           descriptionStyle: AppTextStyle.c1);
+    }
+  }
 
+  Future<bool> adminSignUpWithData(Map<String, dynamic> data) async {
+    try {
+      UserCredential signUpRes = await FirebaseAuthRepository.registerAdmin(
+        email: data['email'],
+        password: data['password'],
+      );
+
+      await _uploadFile();
+      if (_profilePicUrl != null) data['profilePic'] = _profilePicUrl;
+
+      data.addAll({"role": "admin"});
+      data.addAll({"position": "Assistant"});
+
+      User newUser = signUpRes.user!;
+
+      bool initRes = await Get.find<FirebaseAuthRepository>()
+          .initUserDataWithUID(newUser.uid, data, setUserDetails: false);
+
+      if (!initRes) {
+        // If initUserDataWithUID is unsuccessful, delete the user credentials
+        await newUser.delete();
+        killDialog();
+        useErrorDialog(
+            title: "Oops! Something went wrong",
+            titleStyle: AppTextStyle.h2,
+            description:
+                "An error occurred while creating your account. Please try again later.",
+            descriptionStyle: AppTextStyle.c1);
+        return false;
+      }
+      await UserRepository.fetchSpecificAdmin(newUser.uid);
+      killDialog();
+      return initRes;
+    } catch (e) {
+      // Handle any exceptions that may occur during registration or initialization
+      print("Error during registration or initialization: $e");
+      killDialog();
+      useErrorDialog(
+          title: "Oops! Something went wrong",
+          titleStyle: AppTextStyle.h2,
+          description:
+              "An error occurred while creating your account. Please try again later.",
+          descriptionStyle: AppTextStyle.c1);
       return false;
     }
-    killDialog();
-    return initRes;
   }
 
   // Taking Image
@@ -106,7 +147,7 @@ class SignUpController extends GetxController {
   }
 
   Future<void> _uploadFile() async {
-    if (imagefile == null) return;
+    if (imagefile.value == null) return;
     final storageRef = FirebaseStorage.instance.ref();
     final profileImagesRef = storageRef
         .child('${FirebaseAuth.instance.currentUser?.uid}/photos/profile.jpg');

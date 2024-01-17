@@ -40,30 +40,61 @@ class _ChatState extends State<Chat> {
   }
 
   void checkUser() async {
-    await chats
+    QuerySnapshot querySnapshot = await chats
         .where('users', isEqualTo: {targetUid: null, currentUserId: null})
         .limit(1)
         .get()
-        .then((QuerySnapshot querySnapshot) async {
-          if (querySnapshot.docs.isNotEmpty) {
-            setState(() {
-              chatDocId = querySnapshot.docs.single.id;
-            });
-          } else {
-            await chats.add({
-              'users': {
-                currentUserId: null,
-                targetUid: null,
-              },
-              'names': {
-                currentUserId: Get.find<AppUser>().name,
-                targetUid: targetName
-              }
-            }).then((value) => chatDocId = value.id);
-          }
-        })
         .catchError((error) => print("Failed to get chats: $error"));
-    setState(() {});
+
+    if (querySnapshot.docs.isNotEmpty) {
+      bool existingTargetUid = false;
+
+      String docId = querySnapshot.docs.single.id;
+
+      if ((querySnapshot.docs.single.data() as Map?)?.containsKey('isRead') ??
+          false) {
+        existingTargetUid =
+            (querySnapshot.docs.single.data() as Map?)?['isRead'][targetUid] ??
+                false;
+        await chats.doc(docId).update({
+          'isRead': {
+            currentUserId: true,
+            targetUid: existingTargetUid,
+          }
+        });
+      } else {
+        await chats.doc(docId).set(
+          {
+            'isRead': {
+              currentUserId: true,
+              targetUid: existingTargetUid,
+            }
+          },
+          SetOptions(merge: true),
+        );
+      }
+
+      setState(() {
+        chatDocId = docId;
+      });
+    } else {
+      await chats.add({
+        'users': {
+          currentUserId: null,
+          targetUid: null,
+        },
+        'names': {
+          currentUserId: Get.find<AppUser>().name,
+          targetUid: targetName
+        },
+        'isRead': {
+          currentUserId: true,
+          targetUid: false,
+        }
+      }).then((value) => setState(() {
+            chatDocId = value.id;
+          }));
+    }
   }
 
   void sendTextMessage(String msg, String? uid) {
@@ -75,14 +106,14 @@ class _ChatState extends State<Chat> {
         type: TypeMessage.text);
 
     chatViewModel
-        .sendTextMessage(chat)
+        .sendTextMessage(chat, targetUid)
         .then((value) => _textController.clear());
   }
 
   void sendImageMessage(String? uid) {
     MessageChat chat = MessageChat(
         uid: chatDocId, createdOn: DateTime.now(), type: TypeMessage.image);
-    chatViewModel.sendImageMessage(chat);
+    chatViewModel.sendImageMessage(chat, targetUid);
   }
 
   bool isSender(String friend) {

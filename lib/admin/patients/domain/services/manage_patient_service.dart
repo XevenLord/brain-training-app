@@ -1,5 +1,7 @@
 import 'package:brain_training_app/admin/patients/domain/entity/inspirational_mssg.dart';
+import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class ManagePatientService {
   static Future<bool> onPushInspirationalMessage(
@@ -136,6 +138,36 @@ class ManagePatientService {
       return Future.value(true);
     } catch (e) {
       return Future.value(false);
+    }
+  }
+
+  static Future<bool> assignPatient(String patientId) async {
+    try {
+      final appUser = Get.find<AppUser>();
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(patientId)
+          .update({'assignedTo': appUser.uid});
+
+      return true;
+    } on FirebaseException catch (e) {
+      print("Service Assign To Error: $e");
+      return false;
+    }
+  }
+
+  static Future<bool> unassignPatient(String patientId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(patientId)
+          .update({'assignedTo': null});
+
+      return true;
+    } on FirebaseException catch (e) {
+      print("Service Unassign To Error: $e");
+      return false;
     }
   }
 }

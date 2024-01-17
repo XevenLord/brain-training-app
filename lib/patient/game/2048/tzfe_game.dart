@@ -25,7 +25,7 @@ class TZFEGame extends ConsumerStatefulWidget {
 
 class _TZFEGameState extends ConsumerState<TZFEGame>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  late void Function() startGameTimer;
+  late void Function() startGameTimer = () => {};
 
   //The contoller used to move the tiles
   late final AnimationController _moveController = AnimationController(
@@ -191,11 +191,13 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
                     gridSize: getBoardSize(widget.level!)
                   ),
                   TileBoardWidget(
-                    moveAnimation: _moveAnimation,
-                    scaleAnimation: _scaleAnimation,
-                    level: widget.level!,
-                    gridSize: getBoardSize(widget.level!),
-                  )
+                      moveAnimation: _moveAnimation,
+                      scaleAnimation: _scaleAnimation,
+                      level: widget.level!,
+                      gridSize: getBoardSize(widget.level!),
+                      startGameTimer: () {
+                        startGameTimer.call();
+                      })
                 ],
               )
             ],

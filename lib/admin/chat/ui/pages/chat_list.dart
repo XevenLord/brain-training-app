@@ -3,6 +3,7 @@ import 'package:brain_training_app/patient/authentification/signUp/domain/entity
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -87,6 +88,9 @@ class _AdminChatListState extends State<AdminChatList> {
                         ? SliverList(
                             delegate: SliverChildListDelegate(
                                 filteredUsers.map((user) {
+                              String position = user.position != null
+                                  ? "${user.position} "
+                                  : "";
                               return CupertinoListTile(
                                   padding: EdgeInsets.zero,
                                   leading: CircleAvatar(
@@ -98,7 +102,9 @@ class _AdminChatListState extends State<AdminChatList> {
                                           ) as ImageProvider
                                         : NetworkImage(user.profilePic ?? ""),
                                   ),
-                                  title: Text(user.name ?? ""),
+                                  title: Text('$position${user.name ?? ""}',
+                                      style: AppTextStyle.h3
+                                          .merge(TextStyle(fontSize: 18.sp))),
                                   onTap: () => {
                                         Get.to(Chat(
                                             targetName: user.name,
@@ -121,6 +127,16 @@ class _AdminChatListState extends State<AdminChatList> {
                                     .map((data) {
                                     var user = users.firstWhereOrNull(
                                         (e) => e.name == data['targetName']);
+                                    bool isRead = (data['isRead'] != null &&
+                                        data['isRead'] == true);
+
+                                    String position = user?.position != null
+                                        ? "${user?.position} "
+                                        : "";
+
+                                    bool isSender = data['targetUid'] ==
+                                        chatViewModel.currentUser!;
+
                                     return CupertinoListTile(
                                         padding: EdgeInsets.zero,
                                         leading: CircleAvatar(
@@ -133,13 +149,50 @@ class _AdminChatListState extends State<AdminChatList> {
                                                 ) as ImageProvider
                                               : NetworkImage(user.profilePic!),
                                         ),
-                                        title: Text(data['targetName'] ?? ""),
-                                        subtitle: Text(data['msg']
-                                                .toString()
-                                                .startsWith(
-                                                    "https://firebasestorage.googleapis.com")
-                                            ? "[Image]"
-                                            : data['msg'] ?? ""),
+                                        title: Text(
+                                          '$position${data['targetName'] ?? ""}',
+                                          style: isRead
+                                              ? AppTextStyle.h3.merge(
+                                                  TextStyle(fontSize: 18.sp))
+                                              : AppTextStyle.h3.merge(TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.sp)),
+                                        ),
+                                        subtitle: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                data['msg'].toString().startsWith(
+                                                        "https://firebasestorage.googleapis.com")
+                                                    ? "[Image]"
+                                                    : data['msg'] ?? "",
+                                                style: isRead
+                                                    ? AppTextStyle.c1.merge(
+                                                        const TextStyle(
+                                                            color: AppColors
+                                                                .black))
+                                                    : AppTextStyle.c1.merge(
+                                                        const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: AppColors
+                                                                .black)),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 30.w,
+                                              child: isRead
+                                                  ? isSender
+                                                      ? null
+                                                      : Icon(Icons.done_all,
+                                                          color: AppColors.blue,
+                                                          size: 14.sp)
+                                                  : Icon(Icons.circle,
+                                                      color: Colors.red,
+                                                      size: 12.sp),
+                                            )
+                                          ],
+                                        ),
                                         onTap: () => {
                                               Get.to(Chat(
                                                   key: UniqueKey(),

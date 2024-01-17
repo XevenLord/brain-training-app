@@ -29,8 +29,10 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
   DateTime intialDate = DateTime.now().add(Duration(days: 1));
   String? time;
   late AppUser physiotherapist;
+  List<Appointment> appts = [];
 
-  List<String> timeSlots = [
+  List<String> timeSlots = [];
+  List<String> timeSlotsTemplate = [
     "09:00 AM",
     "10:00 AM",
     "11:00 AM",
@@ -53,9 +55,26 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
     appointmentVModel = Get.find<AppointmentViewModel>();
     physiotherapist = appointmentVModel.physiotherapistList.firstWhere(
         (element) => element.uid == widget.appointment.physiotherapistID);
+    appts = appointmentVModel.appointments
+        .where((element) =>
+            element.physiotherapistID == widget.appointment.physiotherapistID)
+        .toList();
+    updateTimeSlots();
     dateController.text = widget.appointment.date!;
     reasonController.text = widget.appointment.reason!;
     time = widget.appointment.time!;
+  }
+
+  void updateTimeSlots() {
+    timeSlots = List.from(timeSlotsTemplate);
+    for (int i = 0; i < appts.length; i++) {
+      if (appts[i].date != null && appts[i].date! == widget.appointment.date) {
+        if (appts[i].time != widget.appointment.time) {
+          timeSlots.remove(appts[i].time);
+        }
+      }
+    }
+    setState(() {});
   }
 
   void updateAppointment() async {
@@ -71,8 +90,33 @@ class _AppointmentEditPageState extends State<AppointmentEditPage> {
   }
 
   void deleteAppointment() async {
-    await appointmentVModel.cancelAppointment(appointment: widget.appointment);
-    Get.toNamed(RouteHelper.getMyAppointmentPage());
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Appointment", style: AppTextStyle.h2),
+          content: Text("Are you sure you want to delete this appointment?",
+              style: AppTextStyle.h3),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await appointmentVModel.cancelAppointment(
+                    appointment: widget.appointment);
+                Get.toNamed(RouteHelper.getMyAppointmentPage());
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

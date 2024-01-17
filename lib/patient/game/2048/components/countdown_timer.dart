@@ -1,19 +1,23 @@
 import 'dart:async';
 
+import 'package:brain_training_app/patient/game/2048/managers/board.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CountdownTimer extends StatefulWidget {
+class CountdownTimer extends ConsumerStatefulWidget {
   final TimerBuilder builder;
   const CountdownTimer({super.key, required this.builder});
 
   @override
-  State<CountdownTimer> createState() => _CountdownTimerState();
+  ConsumerState<CountdownTimer> createState() => _CountdownTimerState();
 }
 
-class _CountdownTimerState extends State<CountdownTimer> {
+class _CountdownTimerState extends ConsumerState<CountdownTimer>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   static const countdownDuration = Duration(minutes: 10);
+
   Duration duration = Duration();
   Timer? timer;
 
@@ -70,8 +74,11 @@ class _CountdownTimerState extends State<CountdownTimer> {
     });
   }
 
+  Duration get getDuration => duration;
+
   @override
   Widget build(BuildContext context) {
+    final board = ref.watch(boardManager);
     widget.builder.call(context, startTimer);
     return buildTime();
   }

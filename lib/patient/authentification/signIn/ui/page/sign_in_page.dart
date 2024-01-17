@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
 class SignInPage extends StatefulWidget {
@@ -53,67 +54,86 @@ class _SignInPageState extends State<SignInPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(title: Text(errorMessage));
+        return AlertDialog(
+            title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(AppConstant.ERROR_IMG, width: 100.w),
+            Text(
+              errorMessage,
+              style: AppTextStyle.h3,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ));
       },
     );
   }
 
   void _signUserIn() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-    try {
-      await FirebaseAuthRepository.signInWithEmailAndPassword(context,
-          email: _emailInput.text, password: _passwordInput.text);
-      if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
-        Get.offAllNamed(RouteHelper.getAdminHome());
-      } else if (selectedRole == "patient" &&
-          Get.find<AppUser>().role == "patient") {
-        Get.offAllNamed(RouteHelper.getPatientHome());
-      } else {
+    _fbKey.currentState!.save();
+    if (_fbKey.currentState!.saveAndValidate()) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+      try {
+        await FirebaseAuthRepository.signInWithEmailAndPassword(context,
+            email: _emailInput.text, password: _passwordInput.text);
+        if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
+          Get.offAllNamed(RouteHelper.getAdminHome());
+        } else if (selectedRole == "patient" &&
+            Get.find<AppUser>().role == "patient") {
+          Get.offAllNamed(RouteHelper.getPatientHome());
+        } else {
+          Get.back(); // Close the loading dialog
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Column(
+                  children: [
+                    // Customize the content for the other role here
+                    Image.asset(AppConstant.WRONG_MARK, width: 100.w),
+                    SizedBox(height: 10.h),
+                    Text(
+                      "You don't have permission for this role!",
+                      textAlign: TextAlign.center,
+                      style: AppTextStyle.h3,
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      } on FirebaseAuthException catch (e) {
         Get.back(); // Close the loading dialog
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Column(
-                children: [
-                  // Customize the content for the other role here
-                  Image.asset(AppConstant.WRONG_MARK, width: 100.w),
-                  SizedBox(height: 10.h),
-                  Text(
-                    "You don't have permission for this role!",
-                    textAlign: TextAlign.center,
-                    style: AppTextStyle.h3,
-                  ),
-                ],
-              ),
-            );
-          },
-        );
+        print(e.code);
+        switch (e.code) {
+          case 'invalid-email':
+            showMessage("Invalid email. Please try again.");
+            break;
+          case 'wrong-password':
+            showMessage("Wrong password. Please try again.");
+            break;
+          case 'user-not-found':
+            showMessage("User not found. Please sign up first.");
+            break;
+          case 'user-disabled':
+            showMessage("User has been disabled.");
+            break;
+          case 'too-many-requests':
+            showMessage("Too many requests. Please try again later.");
+            break;
+        }
       }
-    } on FirebaseAuthException catch (e) {
-      Get.back(); // Close the loading dialog
-      print(e.code);
-      switch (e.code) {
-        case 'invalid-email':
-          showMessage("Invalid email. Please try again.");
-          break;
-        case 'wrong-password':
-          showMessage("Wrong password. Please try again.");
-          break;
-        case 'user-not-found':
-          showMessage("User not found. Please sign up first.");
-          break;
-        case 'user-disabled':
-          showMessage("User has been disabled.");
-          break;
-      }
+    } else {
+      print("validation failed");
     }
   }
 
@@ -171,6 +191,13 @@ class _SignInPageState extends State<SignInPage> {
                           textEditingController: _emailInput,
                           label: "Enter Your Email",
                           keyboardType: TextInputType.emailAddress,
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: "Please enter your email",
+                            ),
+                            FormBuilderValidators.email(
+                                errorText: "Your email is not valid!"),
+                          ]),
                         ),
                         InputTextFormField(
                           name: "password",
@@ -187,6 +214,10 @@ class _SignInPageState extends State<SignInPage> {
                             },
                             child: Icon(Icons.remove_red_eye),
                           ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: "Password is required!"),
+                          ]),
                         ),
                         Align(
                           alignment: Alignment.centerRight,

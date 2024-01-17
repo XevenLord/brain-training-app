@@ -1,5 +1,6 @@
 import 'package:brain_training_app/patient/game/common/ui/game_intro.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,12 +21,17 @@ class _TZFEHomeState extends State<TZFEHome> {
         child: GameIntro(
           title: '2048 Game',
           introduction:
-              'A 2048 game is a single-player sliding block puzzle game. The game\'s objective is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.',
+              ' Imagine it like a sliding puzzle where you combine matching numbered tiles to create bigger ones. The goal? Merge your way up to that elusive tile labeled 2048. It\'s like a digital strategy game that\'s easy to pick up but offers endless fun as you figure out the best moves to conquer the grid.',
           img: 'assets/images/2048_game.png',
           gradient: AppColors.transparentRed,
           buttonColor: AppColors.lightRed,
           btnTextColor: AppColors.brandRed,
-          onTap: () => Get.toNamed(RouteHelper.getTZFEDifficultyPage()),
+          actions: IconButton(
+            onPressed: () => Get.toNamed(RouteHelper.getTZFEScorePage()),
+            icon: Icon(Icons.leaderboard),
+          ),
+          onTap: () =>
+              Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Easy),
         ),
       ),
     );

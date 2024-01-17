@@ -1,4 +1,5 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
+import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
 import 'package:brain_training_app/common/ui/widget/icon_box.dart';
 import 'package:brain_training_app/common/ui/widget/information_row.dart';
@@ -25,6 +26,7 @@ class PatientOverview extends StatefulWidget {
 
 class _PatientOverviewState extends State<PatientOverview> {
   List historyCategories = [];
+  AppUser? admin;
 
   String calculateAge(DateTime? dateOfBirth) {
     if (dateOfBirth == null) {
@@ -102,10 +104,12 @@ class _PatientOverviewState extends State<PatientOverview> {
         "onTap": () {
           Get.toNamed(RouteHelper.getMmseSpecificPage(),
               arguments: widget.patient);
-          
         },
       },
     ];
+    if (widget.patient.assignedTo != null)
+      admin = UserRepository.admins
+          .firstWhere((element) => element.uid == widget.patient.assignedTo);
     super.initState();
   }
 
@@ -164,10 +168,11 @@ class _PatientOverviewState extends State<PatientOverview> {
                 title: "Email",
                 value: widget.patient.email!,
                 padding: EdgeInsets.only(top: 8.w)),
-            InformationRow(
-                title: "Stroke Level",
-                value: widget.patient.strokeType ?? "N/A",
-                padding: EdgeInsets.only(top: 8.w, bottom: 16.w)),
+            if (admin != null)
+              InformationRow(
+                  title: "Assigned to",
+                  value: admin!.name!,
+                  padding: EdgeInsets.only(top: 8.w)),
             SizedBox(height: 20.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,5 +1,6 @@
 import 'package:brain_training_app/admin/games/flipcard/ui/view_model/flipcard_vmodel.dart';
 import 'package:brain_training_app/admin/games/maths/ui/view_model/math_result_vmodel.dart';
+import 'package:brain_training_app/admin/games/tzfe/ui/view_model/tzfe_vmodel.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/route_helper.dart';
@@ -52,7 +53,17 @@ class _GamesResultCategoriesState extends State<GamesResultCategories> {
             Color(0xFFFFCF68),
           ],
         ),
-        "onTap": () {},
+        "onTap": () async {
+          if (widget.patient != null) {
+            dynamic tzfeScoreSet = await Get.find<AdminTZFEViewModel>()
+                .getTZFEScoreSetByUserId(widget.patient!.uid!);
+            setState(() {});
+            Get.toNamed(RouteHelper.getTZFEScoreOverview(),
+                arguments: [widget.patient, tzfeScoreSet]);
+          } else {
+            Get.toNamed(RouteHelper.getTZFEPatientList());
+          }
+        },
       },
       {
         "category": "Flip Card Memory",

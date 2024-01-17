@@ -7,41 +7,40 @@ import 'package:intl/intl.dart';
 
 class AdminAppointmentService {
   static Future<List<AdminAppointment>> getAppointmentList() async {
-  return FirebaseFirestore.instance
-      .collection("appointments")
-      .get()
-      .then((value) => value.docs
-          .map((e) => AdminAppointment.fromJson(e.data()))
-          .toList())
-      .then((appointments) async {
-    for (var appointment in appointments) {
-      DateTime appointmentDate =
-          DateFormat('yyyy-MM-dd').parse(appointment.date!);
+    return FirebaseFirestore.instance
+        .collection("appointments")
+        .get()
+        .then((value) =>
+            value.docs.map((e) => AdminAppointment.fromJson(e.data())).toList())
+        .then((appointments) async {
+      for (var appointment in appointments) {
+        DateTime appointmentDate =
+            DateFormat('yyyy-MM-dd').parse(appointment.date!);
 
-      if (appointmentDate.isBefore(DateTime.now()) &&
-          appointment.status == "approved") {
-        // Update status to "expired" in Firebase Firestore
-        await FirebaseFirestore.instance
-            .collection("appointments")
-            .doc(appointment.appointmentID) // Assuming you have an 'id' field in AdminAppointment
-            .update({'status': 'expired'});
+        if (appointmentDate.isBefore(DateTime.now()) &&
+            appointment.status == "approved") {
+          // Update status to "expired" in Firebase Firestore
+          await FirebaseFirestore.instance
+              .collection("appointments")
+              .doc(appointment
+                  .appointmentID) // Assuming you have an 'id' field in AdminAppointment
+              .update({'status': 'expired'});
 
-        // Update the local status as well
-        appointment.status = 'expired';
+          // Update the local status as well
+          appointment.status = 'expired';
+        }
       }
-    }
 
-    // Sort appointments by time
-    appointments.sort((a, b) {
-      DateTime timeA = DateFormat.jm().parse(a.time!);
-      DateTime timeB = DateFormat.jm().parse(b.time!);
-      return timeA.compareTo(timeB);
+      // Sort appointments by time
+      appointments.sort((a, b) {
+        DateTime timeA = DateFormat.jm().parse(a.time!);
+        DateTime timeB = DateFormat.jm().parse(b.time!);
+        return timeA.compareTo(timeB);
+      });
+
+      return appointments;
     });
-
-    return appointments;
-  });
-}
-
+  }
 
   static Future<List<AdminAppointment>> getAppointmentListByPhysiotherapist(
       String physiotherapistID) async {
@@ -127,5 +126,13 @@ class AdminAppointmentService {
     } on FirebaseException catch (e) {
       return false;
     }
+  }
+
+  static updateIsPhysioRead(AdminAppointment element) async {
+    element.isPhysioRead = true;
+    await FirebaseFirestore.instance
+        .collection("appointments")
+        .doc(element.appointmentID)
+        .set(element.toJson(), SetOptions(merge: true));
   }
 }

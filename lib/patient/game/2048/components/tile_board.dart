@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:brain_training_app/patient/game/2048/services/tzfe_service.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,18 +11,28 @@ import 'animated_tile.dart';
 import 'button.dart';
 
 class TileBoardWidget extends ConsumerWidget {
+  TileBoardWidget(
+      {super.key,
+      required this.moveAnimation,
+      required this.scaleAnimation,
+      this.level = Level.Easy,
+      this.startGameTimer,
+      this.gridSize = 4});
+
   final CurvedAnimation moveAnimation;
   final CurvedAnimation scaleAnimation;
-  final Level level;
-  final int gridSize; // Add this line
+  Level? level;
+  final int gridSize;
+  void Function()? startGameTimer;
 
-  TileBoardWidget({
-    super.key,
-    required this.moveAnimation,
-    required this.scaleAnimation,
-    this.level = Level.Easy,
-    this.gridSize = 4, // Default to 4x4
-  });
+  void submitScore(int score, bool status, Duration duration) async {
+    await TZFEService.submitScore(score, status ? 'win' : 'lose', duration);
+  }
+
+  Duration getDuration(DateTime startTime, DateTime endTime) {
+    Duration duration = endTime.difference(startTime);
+    return duration;
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,7 +98,10 @@ class TileBoardWidget extends ConsumerWidget {
                   ButtonWidget(
                     text: board.won ? 'New Game' : 'Try again',
                     onPressed: () {
+                      submitScore(board.score, board.won,
+                          getDuration(board.startTime!, board.endTime!));
                       ref.read(boardManager.notifier).newGame();
+                      startGameTimer!.call();
                     },
                   )
                 ],
