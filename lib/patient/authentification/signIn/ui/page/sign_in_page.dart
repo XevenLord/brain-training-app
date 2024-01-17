@@ -84,9 +84,7 @@ class _SignInPageState extends State<SignInPage> {
       );
       try {
         await FirebaseAuthRepository.signInWithEmailAndPassword(context,
-            email: _emailInput.text,
-            password: _passwordInput.text,
-            role: selectedRole);
+            email: _emailInput.text, password: _passwordInput.text);
         if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
           Get.offAllNamed(RouteHelper.getAdminHome());
         } else if (selectedRole == "patient" &&

@@ -19,7 +19,7 @@ class MathGame extends StatefulWidget {
 
 class _MathGameState extends State<MathGame> {
   late MathGameViewModel mathModel = Get.find<MathGameViewModel>();
-  int questionsAnswered = 0;
+  int questionsAnswered = 1;
   // number pad list
   List<String> numberPad = [
     '7',
