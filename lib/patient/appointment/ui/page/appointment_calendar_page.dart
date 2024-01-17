@@ -287,7 +287,7 @@ class _AppointmentCalendarPageState extends State<AppointmentCalendarPage> {
                       await _appointmentViewModel.setAppointment(
                         date: _selectedDay,
                         time: storedTimeSlot,
-                        reason: _commentController.text,
+                        reason: _commentController.text.trim(),
                         patient: Get.find<AppUser>().name,
                       );
                       setState(() {});

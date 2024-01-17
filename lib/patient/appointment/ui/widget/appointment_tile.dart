@@ -128,7 +128,7 @@ class _AppointmentTileState extends State<AppointmentTile> {
                         size: 20.sp,
                         color: AppColors.grey
                             .withOpacity(isApprovedOrPending() ? 1 : 0.2))),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 InkWell(
                     onTap: isApprovedOrPending() ? widget.onDelete : null,
                     child: Icon(Icons.delete,

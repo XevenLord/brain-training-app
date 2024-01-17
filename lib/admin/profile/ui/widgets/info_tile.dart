@@ -9,14 +9,12 @@ class InfoTile extends StatefulWidget {
   String label;
   bool hasDivider;
   EdgeInsetsGeometry? padding;
-  TextEditingController? controller;
   Function()? onPressed;
 
   InfoTile({
     super.key,
     required this.title,
     required this.label,
-    this.controller,
     this.hasDivider = false,
     this.onPressed,
     this.padding,

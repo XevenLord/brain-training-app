@@ -1,6 +1,7 @@
 import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/service/auth_repo.dart';
+import 'package:brain_training_app/patient/home/domain/service/home_service.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
@@ -83,13 +84,17 @@ class _SignInPageState extends State<SignInPage> {
       );
       try {
         await FirebaseAuthRepository.signInWithEmailAndPassword(context,
-            email: _emailInput.text, password: _passwordInput.text);
+            email: _emailInput.text,
+            password: _passwordInput.text,
+            role: selectedRole);
         if (selectedRole == "admin" && Get.find<AppUser>().role == "admin") {
           Get.offAllNamed(RouteHelper.getAdminHome());
         } else if (selectedRole == "patient" &&
             Get.find<AppUser>().role == "patient") {
           Get.offAllNamed(RouteHelper.getPatientHome());
         } else {
+          // signout
+          await HomeService.signOut();
           Get.back(); // Close the loading dialog
           showDialog(
             context: context,

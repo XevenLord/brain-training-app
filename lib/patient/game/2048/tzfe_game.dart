@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:brain_training_app/patient/game/2048/components/countdown_timer.dart';
+import 'package:brain_training_app/patient/game/2048/services/tzfe_service.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,118 +68,139 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
   @override
   void initState() {
     //Add an Observer for the Lifecycles of the App
+
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
+  void submitScore(int score, bool status, Duration duration) async {
+    await TZFEService.submitScore(score, status ? 'win' : 'lose', duration);
+  }
+
+  Future<bool> onWillPop() async {
+    // Call your method here before leaving the page
+    final board = ref.watch(boardManager);
+    if (board.over && board.duration != null) {
+      submitScore(board.score, board.won, board.duration);
+    }
+    // ref.read(boardManager.notifier).newGame();
+    return true; // Return true to allow popping the page, false to prevent it.
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RawKeyboardListener(
-      autofocus: true,
-      focusNode: FocusNode(),
-      onKey: (RawKeyEvent event) {
-        //Move the tile with the arrows on the keyboard on Desktop
-        if (ref.read(boardManager.notifier).onKey(event)) {
-          _moveController.forward(from: 0.0);
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        return await onWillPop();
       },
-      child: SwipeDetector(
-        onSwipe: (direction, offset) {
-          if (ref.read(boardManager.notifier).move(direction)) {
+      child: RawKeyboardListener(
+        autofocus: true,
+        focusNode: FocusNode(),
+        onKey: (RawKeyEvent event) {
+          //Move the tile with the arrows on the keyboard on Desktop
+          if (ref.read(boardManager.notifier).onKey(event)) {
             _moveController.forward(from: 0.0);
           }
         },
-        child: Scaffold(
-          backgroundColor: backgroundColor,
-          appBar: AppBar(
+        child: SwipeDetector(
+          onSwipe: (direction, offset) {
+            if (ref.read(boardManager.notifier).move(direction)) {
+              _moveController.forward(from: 0.0);
+            }
+          },
+          child: Scaffold(
             backgroundColor: backgroundColor,
-            elevation: 0.0,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: textColor,
+            appBar: AppBar(
+              backgroundColor: backgroundColor,
+              elevation: 0.0,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: textColor,
+                ),
+                onPressed: () {
+                  Get.back();
+                  // ref.read(boardManager.notifier).newGame();
+                },
               ),
-              onPressed: () {
-                Get.back();
-                ref.read(boardManager.notifier).newGame();
-              },
             ),
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 32.w),
-                child: CountdownTimer(
-                  builder: (BuildContext context, void Function() startTimer) {
-                    startGameTimer = startTimer;
-                  },
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 32.w),
+                  child: CountdownTimer(
+                    builder:
+                        (BuildContext context, void Function() startTimer) {
+                      startGameTimer = startTimer;
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        '2048',
+                        style: TextStyle(
+                            color: textColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 52.0),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const ScoreBoard(),
+                          const SizedBox(
+                            height: 32.0,
+                          ),
+                          Row(
+                            children: [
+                              // ButtonWidget(
+                              //   icon: Icons.undo,
+                              //   onPressed: () {
+                              //     //Undo the round.
+                              //     ref.read(boardManager.notifier).undo();
+                              //   },
+                              // ),
+                              // const SizedBox(
+                              //   width: 16.0,
+                              // ),
+                              ButtonWidget(
+                                icon: Icons.refresh,
+                                onPressed: () {
+                                  //Restart the game
+                                  ref.read(boardManager.notifier).newGame();
+                                  startGameTimer.call();
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 32.0,
+                ),
+                Stack(
                   children: [
-                    const Text(
-                      '2048',
-                      style: TextStyle(
-                          color: textColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 52.0),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const ScoreBoard(),
-                        const SizedBox(
-                          height: 32.0,
-                        ),
-                        Row(
-                          children: [
-                            // ButtonWidget(
-                            //   icon: Icons.undo,
-                            //   onPressed: () {
-                            //     //Undo the round.
-                            //     ref.read(boardManager.notifier).undo();
-                            //   },
-                            // ),
-                            // const SizedBox(
-                            //   width: 16.0,
-                            // ),
-                            ButtonWidget(
-                              icon: Icons.refresh,
-                              onPressed: () {
-                                //Restart the game
-                                ref.read(boardManager.notifier).newGame();
-                                startGameTimer.call();
-                              },
-                            )
-                          ],
-                        )
-                      ],
-                    )
+                    const EmptyBoardWidget(),
+                    TileBoardWidget(
+                        moveAnimation: _moveAnimation,
+                        scaleAnimation: _scaleAnimation,
+                        level: widget.level!,
+                        startGameTimer: () {
+                          startGameTimer.call();
+                        })
                   ],
-                ),
-              ),
-              const SizedBox(
-                height: 32.0,
-              ),
-              Stack(
-                children: [
-                  const EmptyBoardWidget(),
-                  TileBoardWidget(
-                      moveAnimation: _moveAnimation,
-                      scaleAnimation: _scaleAnimation,
-                      level: widget.level!,
-                      startGameTimer: () {
-                        startGameTimer.call();
-                      })
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -196,9 +218,6 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
 
   @override
   void dispose() {
-    //Remove the Observer for the Lifecycles of the App
-    WidgetsBinding.instance.removeObserver(this);
-
     _moveAnimation.dispose();
     _scaleAnimation.dispose();
     _moveController.dispose();

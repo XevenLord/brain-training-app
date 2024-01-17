@@ -19,7 +19,6 @@ class BoardManager extends StateNotifier<Board> {
   final verticalOrder = [12, 8, 4, 0, 13, 9, 5, 1, 14, 10, 6, 2, 15, 11, 7, 3];
   List<int> valueList = [2];
   int benchmark = 200;
-  DateTime? endTime = DateTime.now();
 
   final StateNotifierProviderRef ref;
   BoardManager(this.ref) : super(Board.newGame(0, [])) {
@@ -268,14 +267,12 @@ class BoardManager extends StateNotifier<Board> {
       }
     }
 
-    if (gameOver) {
-      endTime = DateTime.now();
-      // submitScore(
-      //     state.score, gameWon, getDuration(state.startTime!, endTime!));
-    }
-
     state = state.copyWith(
-        tiles: tiles, won: gameWon, over: gameOver, endTime: endTime);
+        tiles: tiles, won: gameWon, over: gameOver, endTime: DateTime.now());
+  }
+
+  void setDuration(Duration duration) {
+    state = state.copyWith(duration: duration);
   }
 
   // void submitScore(int score, bool status, Duration duration) async {

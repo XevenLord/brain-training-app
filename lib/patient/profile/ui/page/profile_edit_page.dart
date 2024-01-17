@@ -51,8 +51,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   void updateProfile() async {
-    if (introController.text == null)
+    String aboutMe = introController.text.trim(); 
+    if (aboutMe == "") {
       _fbKey.currentState!.fields["aboutMe"]!.didChange(null);
+    }
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
       await profileVModel.updateProfile(_fbKey.currentState!.value);

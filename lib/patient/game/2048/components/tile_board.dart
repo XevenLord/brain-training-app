@@ -96,6 +96,11 @@ class TileBoardWidget extends ConsumerWidget {
                   ButtonWidget(
                     text: board.won ? 'New Game' : 'Try again',
                     onPressed: () {
+                      print("Tryy submitt");
+                      print(board.score);
+                      print(board.won);
+                      print(board.startTime!);
+                      print(board.endTime!);
                       submitScore(board.score, board.won,
                           getDuration(board.startTime!, board.endTime!));
                       ref.read(boardManager.notifier).newGame();

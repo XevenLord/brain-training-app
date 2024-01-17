@@ -23,12 +23,15 @@ class Board {
 
   DateTime? endTime;
 
+  Duration? duration;
+
   Board(this.score, this.best, this.tiles,
       {this.over = false,
       this.won = false,
       this.undo,
       this.startTime,
-      this.endTime});
+      this.endTime,
+      this.duration});
 
   //Create a model for a new game.
   Board.newGame(this.best, this.tiles)
@@ -37,7 +40,8 @@ class Board {
         won = false,
         undo = null,
         startTime = DateTime.now(),
-        endTime = null;
+        endTime = null,
+        duration = null;
 
   //Create an immutable copy of the board
   Board copyWith(
@@ -48,13 +52,15 @@ class Board {
           bool? won,
           Board? undo,
           DateTime? startTime,
-          DateTime? endTime}) =>
+          DateTime? endTime,
+          Duration? duration}) =>
       Board(score ?? this.score, best ?? this.best, tiles ?? this.tiles,
           over: over ?? this.over,
           won: won ?? this.won,
           undo: undo ?? this.undo,
           startTime: startTime ?? this.startTime,
-          endTime: endTime ?? this.endTime);
+          endTime: endTime ?? this.endTime,
+          duration: duration ?? this.duration);
 
   //Create a Board from json data
   factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);

@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CountdownTimer extends ConsumerStatefulWidget {
   final TimerBuilder builder;
-  const CountdownTimer({super.key, required this.builder});
+  CountdownTimer({super.key, required this.builder});
 
   @override
   ConsumerState<CountdownTimer> createState() => _CountdownTimerState();
@@ -25,9 +25,33 @@ class _CountdownTimerState extends ConsumerState<CountdownTimer>
 
   @override
   void initState() {
-    startTimer();
-    reset();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final board = ref.watch(boardManager);
+      if (!board.over && timer == null) {
+        print("board.over" + board.over.toString());
+        if (board.duration != null) {
+          duration = board.duration;
+        }
+        startTimer(resets: board.duration != null ? false : true);
+        if (board.duration == null) {
+          reset();
+        }
+      } else {
+        print("HEllOOO");
+        startTimer();
+      }
+    });
+
+    // startTimer();
+    // reset();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   void reset() {
@@ -52,6 +76,8 @@ class _CountdownTimerState extends ConsumerState<CountdownTimer>
         timer?.cancel();
       } else
         duration = Duration(seconds: seconds);
+
+      ref.read(boardManager.notifier).setDuration(duration);
     });
   }
 
@@ -74,11 +100,19 @@ class _CountdownTimerState extends ConsumerState<CountdownTimer>
     });
   }
 
+  @override
+  void didUpdateWidget(covariant CountdownTimer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
   Duration get getDuration => duration;
 
   @override
   Widget build(BuildContext context) {
     final board = ref.watch(boardManager);
+    if (board.over) {
+      stopTimer(resets: false);
+    }
     widget.builder.call(context, startTimer);
     return buildTime();
   }

@@ -97,17 +97,18 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  void sendTextMessage(String msg, String? uid) {
+  void sendTextMessage(String? uid) {
+    String msg = _textController.text.trim();
+
     if (msg.isEmpty) return;
+
     MessageChat chat = MessageChat(
         uid: chatDocId,
         createdOn: DateTime.now(),
         msg: msg,
         type: TypeMessage.text);
-
-    chatViewModel
-        .sendTextMessage(chat, targetUid)
-        .then((value) => _textController.clear());
+    _textController.clear();
+    chatViewModel.sendTextMessage(chat, targetUid);
   }
 
   void sendImageMessage(String? uid) {
@@ -351,7 +352,8 @@ class _ChatState extends State<Chat> {
                                     child: Padding(
                                   padding: const EdgeInsets.only(left: 18.0),
                                   child: CupertinoTextField(
-                                      controller: _textController),
+                                    controller: _textController,
+                                  ),
                                 )),
                                 CupertinoButton(
                                     child: Icon(Icons.image),
@@ -403,7 +405,6 @@ class _ChatState extends State<Chat> {
                                 CupertinoButton(
                                     child: Icon(Icons.send_sharp),
                                     onPressed: () => sendTextMessage(
-                                        _textController.text,
                                         data?['uid']?.toString()))
                               ],
                             )

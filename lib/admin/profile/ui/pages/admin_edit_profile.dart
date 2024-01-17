@@ -34,7 +34,6 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController dobController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
   TextEditingController introController = TextEditingController();
 
   @override

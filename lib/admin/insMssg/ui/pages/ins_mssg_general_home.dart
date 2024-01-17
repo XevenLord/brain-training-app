@@ -83,7 +83,7 @@ class _InspirationalMssgGeneralHomeState
   }
 
   void addMssg() async {
-    if (_textFieldController.text == '') return;
+    if (_textFieldController.text.trim().isEmpty) return;
     InspirationalMessage inspirationalMessage = InspirationalMessage(
         message: _textFieldController.text, createdAt: DateTime.now());
     _textFieldController.clear();

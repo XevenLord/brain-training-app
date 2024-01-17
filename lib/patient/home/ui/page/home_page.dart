@@ -317,7 +317,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void submitFeedback() async {
-    if (feedbackController.text.isEmpty) return;
+    if (feedbackController.text.trim().isEmpty) return;
     await feedbackVModel.submitFeedback(feedbackController.text);
     feedbackController.clear();
     setState(() {});
@@ -370,32 +370,34 @@ class _HomePageState extends State<HomePage> {
                         title: Text('Feedback',
                             style: AppTextStyle.h2
                                 .merge(AppTextStyle.brandBlueTextStyle)),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Center(
-                              child: Image.asset(
-                                AppConstant.FEEDBACK_IMG,
-                                height: 200.h,
-                                width: 200.w,
+                        content: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  AppConstant.FEEDBACK_IMG,
+                                  height: 200.h,
+                                  width: 200.w,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 10.w),
-                            Text(
-                                'Your feedback to our application is highly appreciated!:',
-                                style: AppTextStyle.c1),
-                            SizedBox(height: 10),
-                            TextFormField(
-                              controller: feedbackController,
-                              style: AppTextStyle.h4,
-                              maxLines: 5,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter your feedback here...',
-                                  hintStyle: AppTextStyle.h4),
-                            ),
-                          ],
+                              SizedBox(height: 10.w),
+                              Text(
+                                  'Your feedback to our application is highly appreciated!:',
+                                  style: AppTextStyle.c1),
+                              SizedBox(height: 10),
+                              TextFormField(
+                                controller: feedbackController,
+                                style: AppTextStyle.h4,
+                                maxLines: 5,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Enter your feedback here...',
+                                    hintStyle: AppTextStyle.h4),
+                              ),
+                            ],
+                          ),
                         ),
                         actions: [
                           ElevatedButton(

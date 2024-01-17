@@ -72,6 +72,9 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
   }
 
   void updateAppointment() async {
+    reasonController.text = reasonController.text.trim();
+    remarkController.text = remarkController.text.trim();
+    _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
       await appointmentVModel.updateAppointment(
         appointment: widget.appointment,

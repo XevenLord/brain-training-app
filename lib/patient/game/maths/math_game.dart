@@ -170,17 +170,19 @@ class _MathGameState extends State<MathGame> {
         },
       );
     } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          submitWrongAnswer(questionText, result.toString(), userAnswer);
-          return ResultMessage(
-            message: 'Sorry, It Is Wrong!',
-            onTap: goToNextQuestion,
-            icon: Icons.arrow_forward,
-          );
-        },
-      );
+      if (userAnswer.isNotEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            submitWrongAnswer(questionText, result.toString(), userAnswer);
+            return ResultMessage(
+              message: 'Sorry, It Is Wrong!',
+              onTap: goToNextQuestion,
+              icon: Icons.arrow_forward,
+            );
+          },
+        );
+      }
     }
   }
 

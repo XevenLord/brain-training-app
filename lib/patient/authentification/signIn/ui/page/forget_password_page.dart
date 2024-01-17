@@ -106,7 +106,9 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       ),
                     ),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
+                      FormBuilderValidators.required(
+                        errorText: "Please enter your email",
+                      ),
                       FormBuilderValidators.email(),
                     ]),
                   ),
