@@ -67,6 +67,7 @@ class FirebaseAuthRepository extends GetxController {
       builder: (context) {
         return AlertDialog(
           title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(AppConstant.ERROR_IMG, width: 100.w),
               SizedBox(height: 10.h),

@@ -9,11 +9,13 @@ class MathGameService {
       Map<String, dynamic> answers) async {
     print("Math Game Service: Submitting math quest ans");
     final appUser = Get.find<AppUser>();
-    final mathDoc = FirebaseFirestore.instance
+    final collectionRef = FirebaseFirestore.instance
         .collection("games")
         .doc("MathGame")
-        .collection("users")
-        .doc(appUser.uid)
+        .collection("users");
+
+    collectionRef.doc(appUser.uid).set({'uid': appUser.uid});
+    final mathDoc = collectionRef.doc(appUser.uid)
         .collection("answers");
 
     try {

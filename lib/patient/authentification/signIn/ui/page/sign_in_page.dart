@@ -54,7 +54,18 @@ class _SignInPageState extends State<SignInPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(title: Text(errorMessage));
+        return AlertDialog(
+            title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(AppConstant.ERROR_IMG, width: 100.w),
+            Text(
+              errorMessage,
+              style: AppTextStyle.h3,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ));
       },
     );
   }
