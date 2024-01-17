@@ -1,3 +1,4 @@
+import 'package:brain_training_app/patient/game/2048/tzfe_vmodel.dart';
 import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
@@ -13,6 +14,14 @@ class TZFEDifficultyPage extends StatefulWidget {
 }
 
 class _TZFEDifficultyPageState extends State<TZFEDifficultyPage> {
+  late TZFEViewModel _tzfeViewModel;
+
+  @override
+  void initState() {
+    _tzfeViewModel = Get.find<TZFEViewModel>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,6 +150,7 @@ List<Details> _list = [
     noOfstar: 1,
     goto: () {
       Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Easy);
+      Get.find<TZFEViewModel>().setGridSize(Level.Easy);
     },
   ),
   // 512
@@ -151,6 +161,7 @@ List<Details> _list = [
     noOfstar: 2,
     goto: () {
       Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Medium);
+      Get.find<TZFEViewModel>().setGridSize(Level.Medium);
     },
   ),
   // 1024
@@ -161,6 +172,7 @@ List<Details> _list = [
     noOfstar: 3,
     goto: () {
       Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Hard);
+      Get.find<TZFEViewModel>().setGridSize(Level.Hard);
     },
   )
 ];

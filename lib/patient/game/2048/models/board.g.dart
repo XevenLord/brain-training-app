@@ -17,12 +17,7 @@ Board _$BoardFromJson(Map json) => Board(
       undo: json['undo'] == null
           ? null
           : Board.fromJson(Map<String, dynamic>.from(json['undo'] as Map)),
-      level: json['level'] == null
-          ? null
-          : Level.values.firstWhere(
-              (element) => element.toString() == ('Level.' + json['level']),
-              orElse: () => Level.Easy,
-            ),
+      gridSize: json['gridSize'] as int? ?? 4,
     );
 
 Map<String, dynamic> _$BoardToJson(Board instance) => <String, dynamic>{
@@ -32,5 +27,5 @@ Map<String, dynamic> _$BoardToJson(Board instance) => <String, dynamic>{
       'over': instance.over,
       'won': instance.won,
       'undo': instance.undo?.toJson(),
-      'level': instance.level?.toString().split('.')[1],
+      'gridSize': instance.gridSize,
     };

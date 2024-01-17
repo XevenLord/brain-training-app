@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:brain_training_app/patient/game/2048/services/tzfe_service.dart';
+import 'package:brain_training_app/patient/game/2048/tzfe_vmodel.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -27,9 +29,9 @@ class BoardManager extends StateNotifier<Board> {
       : verticalOrder = List.generate(gridSize * gridSize, (index) {
           int row = index % gridSize;
           int col = index ~/ gridSize;
-          return gridSize * col + row;
+          return gridSize * (gridSize - 1 - row) + col;
         }),
-        super(Board.newGame(0, [])) {
+        super(Board.newGame(0, [], gridSize)) {
     load();
   }
 
@@ -46,7 +48,7 @@ class BoardManager extends StateNotifier<Board> {
 
   // Create New Game state.
   Board _newGame() {
-    return Board.newGame(state.best + state.score, [random([])]);
+    return Board.newGame(state.best + state.score, [random([])], gridSize);
   }
 
   // Start New Game
@@ -85,7 +87,8 @@ class BoardManager extends StateNotifier<Board> {
     // If it's descending: 2 * 4 – 1 = 7, which is the last index from the left side and first index from the right side in the second row
     // If user swipes vertically use the verticalOrder list to retrieve the up/down index else use the existing index
     int index = vert ? verticalOrder[tile.index] : tile.index;
-    int nextIndex = ((index + 1) / 4).ceil() * 4 - (asc ? 4 : 1);
+    int nextIndex =
+        ((index + 1) / gridSize).ceil() * gridSize - (asc ? gridSize : 1);
 
     // If the list of the new tiles to be rendered is not empty get the last tile
     // and if that tile is in the same row as the curren tile set the next index for the current tile to be after the last tile
@@ -212,7 +215,7 @@ class BoardManager extends StateNotifier<Board> {
     List<Tile> tiles = [];
 
     //If there is no more empty place on the board
-    if (state.tiles.length == 16) {
+    if (state.tiles.length == gridSize * gridSize) {
       state.tiles.sort(((a, b) => a.index.compareTo(b.index)));
 
       for (int i = 0, l = state.tiles.length; i < l; i++) {
@@ -227,7 +230,7 @@ class BoardManager extends StateNotifier<Board> {
           //     getDuration(state.startTime!, DateTime.now()));
         }
 
-        var x = (i - (((i + 1) / 4).ceil() * 4 - 4));
+        var x = (i - (((i + 1) / gridSize).ceil() * gridSize - gridSize));
 
         if (x > 0 && i - 1 >= 0) {
           //If tile can be merged with left tile then game is not lost.
@@ -237,7 +240,7 @@ class BoardManager extends StateNotifier<Board> {
           }
         }
 
-        if (x < 3 && i + 1 < l) {
+        if (x < gridSize - 1 && i + 1 < l) {
           //If tile can be merged with right tile then game is not lost.
           var right = state.tiles[i + 1];
           if (tile.value == right.value) {
@@ -245,17 +248,17 @@ class BoardManager extends StateNotifier<Board> {
           }
         }
 
-        if (i - 4 >= 0) {
+        if (i - gridSize >= 0) {
           //If tile can be merged with above tile then game is not lost.
-          var top = state.tiles[i - 4];
+          var top = state.tiles[i - gridSize];
           if (tile.value == top.value) {
             gameOver = false;
           }
         }
 
-        if (i + 4 < l) {
+        if (i + gridSize < l) {
           //If tile can be merged with the bellow tile then game is not lost.
-          var bottom = state.tiles[i + 4];
+          var bottom = state.tiles[i + gridSize];
           if (tile.value == bottom.value) {
             gameOver = false;
           }
@@ -355,5 +358,6 @@ class BoardManager extends StateNotifier<Board> {
 }
 
 dynamic boardManager = StateNotifierProvider<BoardManager, Board>((ref) {
-  return BoardManager(ref, 6); // For a 3x3 board
+  return BoardManager(
+      ref, Get.find<TZFEViewModel>().gridSize); // For a 3x3 board
 });

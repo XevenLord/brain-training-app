@@ -62,6 +62,7 @@ class TileBoardWidget extends ConsumerWidget {
               moveAnimation: moveAnimation,
               scaleAnimation: scaleAnimation,
               size: tileSize,
+              gridSize: gridSize,
               //In order to optimize performances and prevent unneeded re-rendering the actual tile is passed as child to the AnimatedTile
               //as the tile won't change for the duration of the movement (apart from it's position)
               child: Container(

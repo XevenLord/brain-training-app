@@ -343,7 +343,12 @@ class RouteHelper {
     GetPage(
       name: tZFEGame,
       transition: Transition.fadeIn,
-      page: () => TZFEGame(),
+      page: () {
+        Level level = Get.arguments;
+        return TZFEGame(
+          level: level,
+        );
+      },
     ),
     GetPage(
       name: memoryGame,

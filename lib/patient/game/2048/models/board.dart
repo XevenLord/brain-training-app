@@ -24,7 +24,7 @@ class Board {
 
   DateTime? endTime;
 
-  Level? level;
+  int? gridSize;
 
   Board(this.score, this.best, this.tiles,
       {this.over = false,
@@ -32,17 +32,16 @@ class Board {
       this.undo,
       this.startTime,
       this.endTime,
-      this.level = Level.Easy});
+      this.gridSize});
 
   //Create a model for a new game.
-  Board.newGame(this.best, this.tiles)
+  Board.newGame(this.best, this.tiles, this.gridSize)
       : score = 0,
         over = false,
         won = false,
         undo = null,
         startTime = DateTime.now(),
-        endTime = null,
-        level = Level.Easy;
+        endTime = null;
 
   //Create an immutable copy of the board
   Board copyWith(
@@ -54,14 +53,14 @@ class Board {
           Board? undo,
           DateTime? startTime,
           DateTime? endTime,
-          Level? level}) =>
+          int? gridSize}) =>
       Board(score ?? this.score, best ?? this.best, tiles ?? this.tiles,
           over: over ?? this.over,
           won: won ?? this.won,
           undo: undo ?? this.undo,
           startTime: startTime ?? this.startTime,
           endTime: endTime ?? this.endTime,
-          level: level ?? this.level);
+          gridSize: gridSize ?? this.gridSize);
 
   //Create a Board from json data
   factory Board.fromJson(Map<String, dynamic> json) => _$BoardFromJson(json);
