@@ -182,6 +182,10 @@ class _PatientListState extends State<PatientList> {
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
+                                      Text(
+                                          "You can toggle the star to do assignation",
+                                          style: AppTextStyle.h3),
+                                      SizedBox(height: 10.w),
                                       Row(
                                         children: [
                                           Icon(Icons.star,
@@ -271,6 +275,11 @@ class _PatientListState extends State<PatientList> {
                               appt = AdminAppointment();
                             }
                             return InfoCardTile().buildInfoCard(
+                              foregroundColor: isAssigned &&
+                                      assignedTo == Get.find<AppUser>().uid
+                                  ? AppColors.brandYellow
+                                  : AppColors.brandBlue,
+                              isView: true,
                               hasAssignStarIcon: true,
                               shout: true,
                               name: e.name!,
@@ -292,46 +301,51 @@ class _PatientListState extends State<PatientList> {
                                   : isAssigned
                                       ? AppColors.lightBlue.withOpacity(0.8)
                                       : Colors.white,
-                              topRightTrailing: Container(
-                                height: 50.w,
-                                width: 50.w,
-                                child: IconButton(
-                                  icon: Icon(
-                                      isAssigned
-                                          ? Icons.star
-                                          : Icons.star_outline,
-                                      color: isAssigned &&
-                                              assignedTo ==
+                              topRightTrailing: Column(
+                                children: [
+                                  Container(
+                                    height: 50.w,
+                                    width: 50.w,
+                                    child: IconButton(
+                                      icon: Icon(
+                                          isAssigned
+                                              ? Icons.star
+                                              : Icons.star_outline,
+                                          color: isAssigned &&
+                                                  assignedTo ==
+                                                      Get.find<AppUser>().uid
+                                              ? AppColors.brandYellow
+                                              : AppColors.brandBlue),
+                                      onPressed: e.assignedTo != null &&
+                                              e.assignedTo !=
                                                   Get.find<AppUser>().uid
-                                          ? AppColors.brandYellow
-                                          : AppColors.brandBlue),
-                                  onPressed: e.assignedTo != null &&
-                                          e.assignedTo !=
-                                              Get.find<AppUser>().uid
-                                      ? null
-                                      : () async {
-                                          if (isAssigned) {
-                                            bool isUnassigned =
-                                                await managePatientViewModel
-                                                    .unassignPatient(e);
-                                            if (isUnassigned) {
-                                              setState(() {
-                                                e.assignedTo = null;
-                                              });
-                                            }
-                                          } else {
-                                            bool isAssigned =
-                                                await managePatientViewModel
-                                                    .assignPatient(e);
-                                            if (isAssigned) {
-                                              setState(() {
-                                                e.assignedTo =
-                                                    Get.find<AppUser>().uid;
-                                              });
-                                            }
-                                          }
-                                        },
-                                ),
+                                          ? null
+                                          : () async {
+                                              if (isAssigned) {
+                                                bool isUnassigned =
+                                                    await managePatientViewModel
+                                                        .unassignPatient(e);
+                                                if (isUnassigned) {
+                                                  setState(() {
+                                                    e.assignedTo = null;
+                                                  });
+                                                }
+                                              } else {
+                                                bool isAssigned =
+                                                    await managePatientViewModel
+                                                        .assignPatient(e);
+                                                if (isAssigned) {
+                                                  setState(() {
+                                                    e.assignedTo =
+                                                        Get.find<AppUser>().uid;
+                                                  });
+                                                }
+                                              }
+                                            },
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.w),
+                                ],
                               ),
                             );
                           }),

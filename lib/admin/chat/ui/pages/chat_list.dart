@@ -67,6 +67,14 @@ class _AdminChatListState extends State<AdminChatList> {
                         child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: CupertinoSearchTextField(
+                        placeholder: showSearchUsers
+                            ? "Toggle to Back to Chat"
+                            : "Toggle to Search Users",
+                        placeholderStyle: AppTextStyle.c1.merge(
+                          TextStyle(
+                            color: AppColors.grey.withOpacity(0.5),
+                          ),
+                        ),
                         controller: _searchController,
                         onTap: () {
                           setState(() {

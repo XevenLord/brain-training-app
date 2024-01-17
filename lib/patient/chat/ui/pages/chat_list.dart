@@ -65,6 +65,14 @@ class _ChatListState extends State<ChatList> {
                     child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: CupertinoSearchTextField(
+                    placeholder: showSearchUsers
+                        ? "Toggle to Back to Chat"
+                        : "Toggle to Search Users",
+                    placeholderStyle: AppTextStyle.c1.merge(
+                      TextStyle(
+                        color: AppColors.grey.withOpacity(0.5),
+                      ),
+                    ),
                     // autofocus: true,
                     controller: _searchController,
                     onTap: () {
@@ -147,7 +155,7 @@ class _ChatListState extends State<ChatList> {
                                                           physio.profilePic!),
                                             ),
                                             title: Text(
-                                              data['targetName'] ?? "",
+                                              "Dr ${data['targetName']}" ?? "",
                                               style: isRead
                                                   ? AppTextStyle.h3.merge(
                                                       TextStyle(

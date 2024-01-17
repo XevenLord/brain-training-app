@@ -23,6 +23,7 @@ class InfoCardTile implements InfoCardInterface {
       bool hasAssignStarIcon = false,
       Widget? topRightTrailing,
       Color? backgroundColor,
+      Color? foregroundColor,
       String? assignedTo,
       Function()? onChoose,
       Function()? onEdit,
@@ -150,38 +151,23 @@ class InfoCardTile implements InfoCardInterface {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    hasEditIcon
-                        ? InkWell(
-                            onTap: () => {if (onEdit != null) onEdit()},
-                            child: Container(
-                                width: 50.w,
-                                height: 50.w,
-                                decoration: isView
-                                    ? null
-                                    : BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.w)),
-                                child: isView
-                                    ? Text("View",
-                                        style: AppTextStyle.h3.merge(
-                                            AppTextStyle.brandBlueTextStyle))
-                                    : const Icon(Icons.edit,
-                                        color: AppColors.brandBlue)),
-                          )
-                        : Container(),
                     shout
                         ? Column(
                             children: [
-                              SizedBox(height: 8.w),
-                              TextButton(
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: AppColors.brandBlue,
+                              // SizedBox(height: 8.w),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: InkWell(
+                                  onTap: () => {if (onShout != null) onShout()},
+                                  child: Text(
+                                    "Inspire",
+                                    style: AppTextStyle.h3.merge(TextStyle(
+                                        color: foregroundColor ??
+                                            AppColors.brandBlue)),
                                   ),
-                                  onPressed: () =>
-                                      {if (onShout != null) onShout()},
-                                  child: Text("Inspire",
-                                      style: AppTextStyle.h3
-                                          .merge(AppTextStyle.whiteTextStyle))),
+                                ),
+                              ),
                               // InkWell(
                               //   onTap: () => {if (onShout != null) onShout()},
                               //   child: Container(
@@ -190,7 +176,32 @@ class InfoCardTile implements InfoCardInterface {
                               //       child: const Icon(Icons.contactless,
                               //           color: AppColors.brandBlue)),
                               // ),
+                              SizedBox(height: 16.w),
                             ],
+                          )
+                        : Container(),
+                    hasEditIcon
+                        ? TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor:
+                                  foregroundColor ?? AppColors.brandBlue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.w),
+                              ),
+                            ),
+                            onPressed: () => {if (onEdit != null) onEdit()},
+                            child: Container(
+                                decoration: isView
+                                    ? null
+                                    : BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.w)),
+                                child: isView
+                                    ? Text("View",
+                                        style: AppTextStyle.h3
+                                            .merge(AppTextStyle.whiteTextStyle))
+                                    : const Icon(Icons.edit,
+                                        color: AppColors.brandBlue)),
                           )
                         : Container(),
                     hasCheckIcon
@@ -337,7 +348,7 @@ class InfoCardTile implements InfoCardInterface {
                           borderRadius: BorderRadius.circular(10.w)),
                       child: const Icon(Icons.check, color: Colors.blue)),
                 ),
-                SizedBox(height: 8.w),
+                SizedBox(height: 24.w),
                 InkWell(
                   onTap: () => {if (onDecline != null) onDecline()},
                   child: Container(

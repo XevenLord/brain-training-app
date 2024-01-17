@@ -195,10 +195,11 @@ class _HomePageState extends State<HomePage> {
 
   void showMentalStatusQuiz() async {
     if ((lastMentalTest != null &&
-            DateTime.now().difference(lastMentalTest!).inDays <= 7) ||
+            DateTime.now().difference(lastMentalTest!).inDays >= 7) ||
         lastMentalTest == null) {
       showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) {
             return AlertDialog(
               title: Image.asset(AppConstant.NEUROFIT_LOGO_ONLY, height: 100.h),

@@ -92,7 +92,23 @@ class HomeViewModel extends GetxController implements GetxService {
         context: Get.context!,
         builder: (context) => AlertDialog(
           backgroundColor: AppColors.lightYellow,
-          title: Text('From $sender : ', style: AppTextStyle.h2),
+          title: RichText(
+            text: TextSpan(
+              style:
+                  AppTextStyle.h2.merge(const TextStyle(color: Colors.black)),
+              children: [
+                const TextSpan(
+                  text: "From ",
+                ),
+                TextSpan(
+                  text: "$sender : ",
+                  style: AppTextStyle.h2.merge(const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic)),
+                ),
+              ],
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -104,12 +120,16 @@ class HomeViewModel extends GetxController implements GetxService {
                       backgroundColor: AppColors.lightYellow,
                       backgroundImage: NetworkImage(insMssg.imgUrl!),
                     )
-                  : Image(
-                      image: const AssetImage(AppConstant.HUG_IMG),
-                      height: 150.w,
+                  : const Image(
+                      image: AssetImage(AppConstant.HUG_IMG),
                     ),
               SizedBox(height: 10.w),
-              Text(insMssg.message!, style: AppTextStyle.h3),
+              Text(
+                '"${insMssg.message!}"',
+                style: AppTextStyle.h3.merge(const TextStyle(
+                    fontWeight: FontWeight.w800, fontStyle: FontStyle.italic)),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           actions: <Widget>[
@@ -134,14 +154,35 @@ class HomeViewModel extends GetxController implements GetxService {
         context: Get.context!,
         builder: (context) => AlertDialog(
           backgroundColor: AppColors.lightYellow,
-          title: Text('From NeuroFit : ', style: AppTextStyle.h2),
+          title: RichText(
+            text: TextSpan(
+              style:
+                  AppTextStyle.h2.merge(const TextStyle(color: Colors.black)),
+              children: [
+                const TextSpan(
+                  text: "From ",
+                ),
+                TextSpan(
+                  text: "NeuroFit : ",
+                  style: AppTextStyle.h2.merge(const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic)),
+                ),
+              ],
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Image(
                 image: AssetImage(AppConstant.HUG_IMG),
               ),
-              Text(insMssg.message!, style: AppTextStyle.h3),
+              Text(
+                '"${insMssg.message!}"',
+                style: AppTextStyle.h3.merge(const TextStyle(
+                    fontWeight: FontWeight.w800, fontStyle: FontStyle.italic)),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           actions: <Widget>[

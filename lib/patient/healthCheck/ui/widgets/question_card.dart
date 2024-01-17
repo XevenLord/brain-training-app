@@ -166,7 +166,7 @@ class _QuestionCardState extends State<QuestionCard> {
                                       Text(
                                           "Your answer has been submitted successfully, wish you have a good day!",
                                           textAlign: TextAlign.center,
-                                          style: AppTextStyle.h4),
+                                          style: AppTextStyle.h3),
                                     ],
                                   ),
                                   actions: [

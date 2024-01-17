@@ -36,7 +36,7 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
   List<AppUser>? admins;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.week;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   bool showAll = false;
   bool showMyAll = false;

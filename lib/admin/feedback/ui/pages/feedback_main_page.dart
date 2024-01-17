@@ -30,11 +30,46 @@ class _FeedbackMainPageState extends State<FeedbackMainPage> {
       final feedbackData = await FeedbackService.fetchFeedbackData();
       setState(() {
         feedbackList = feedbackData;
+        isLoading = false;
       });
       isLoading = false;
     } catch (e) {
       print(e);
     }
+  }
+
+  void promptToDelete(String feedbackId) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: Text("Delete Feedback", style: AppTextStyle.h2),
+            content: Text(
+                "Are you sure you want to delete the feedback? Once deleted, you cannot undo this action.",
+                style: AppTextStyle.h3),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: Text(
+                  "Cancel",
+                  style: AppTextStyle.h3.merge(AppTextStyle.brandBlueTextStyle),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await _deleteFeedback(feedbackId);
+                  Get.back();
+                },
+                child: Text(
+                  "Delete",
+                  style: AppTextStyle.h3.merge(AppTextStyle.brandBlueTextStyle),
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   Future<void> _deleteFeedback(String feedbackId) async {
@@ -68,8 +103,10 @@ class _FeedbackMainPageState extends State<FeedbackMainPage> {
         ),
       ),
       body: feedbackList.isEmpty
-          ? displayEmptyDataLoaded("No feedback received yet.",
-              showBackArrow: false)
+          ? isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : displayEmptyDataLoaded("No feedback received yet.",
+                  showBackArrow: false)
           : ListView.builder(
               itemCount: feedbackList.length,
               itemBuilder: (context, index) {
@@ -89,7 +126,7 @@ class _FeedbackMainPageState extends State<FeedbackMainPage> {
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () =>
-                        _deleteFeedback(feedback.id), // Call delete function
+                        promptToDelete(feedback.id), // Call delete function
                   ),
                 );
               },

@@ -41,7 +41,39 @@ class _MMSEQuestionnaireScreenState extends State<MMSEQuestionnaireScreen> {
     setState(() {});
   }
 
+  void promptToSubmit() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            title: Text("MMSE Questionnaire", style: AppTextStyle.h2),
+            content: Text(
+                "Are you sure you want to submit the answers? Once submitted, you cannot change the answers.",
+                style: AppTextStyle.h3),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: Text(
+                  "Cancel",
+                  style: AppTextStyle.h3.merge(AppTextStyle.brandBlueTextStyle),
+                ),
+              ),
+              TextButton(
+                onPressed: _submitAnswers,
+                child: Text(
+                  "Submit",
+                  style: AppTextStyle.h3.merge(AppTextStyle.brandBlueTextStyle),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
   void _submitAnswers() async {
+    Get.back();
     await _mmseViewModel.submitAnswers(questions, widget.patient);
     await _mmseViewModel.loadPatientResponses();
     await showDialog(
@@ -172,7 +204,7 @@ class _MMSEQuestionnaireScreenState extends State<MMSEQuestionnaireScreen> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
-            onPressed: _submitAnswers,
+            onPressed: promptToSubmit,
             child: Text('Submit Answers', style: AppTextStyle.h3),
           ),
         ],
