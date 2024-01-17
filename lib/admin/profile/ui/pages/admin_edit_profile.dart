@@ -261,10 +261,10 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1950),
+                          initialDate: DateTime.now().subtract(Duration(days: 3650)),
+                          firstDate: DateTime(1920),
                           //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2100));
+                          lastDate: DateTime(2019));
 
                       if (pickedDate != null) {
                         print(
