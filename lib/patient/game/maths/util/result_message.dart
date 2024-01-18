@@ -1,3 +1,4 @@
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:flutter/material.dart';
 import '../const.dart';
 
@@ -25,7 +26,7 @@ class ResultMessage extends StatelessWidget {
             // the result
             Text(
               message,
-              style: whiteTextStyle,
+              style: whiteTextStyle.merge(AppTextStyle.h2),
             ),
 
             // button to go to next question

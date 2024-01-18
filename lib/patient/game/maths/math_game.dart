@@ -176,7 +176,7 @@ class _MathGameState extends State<MathGame> {
           builder: (context) {
             submitWrongAnswer(questionText, result.toString(), userAnswer);
             return ResultMessage(
-              message: 'Sorry, It Is Wrong!',
+              message: 'Sorry, It Is Wrong! Correct Answer Is $result',
               onTap: goToNextQuestion,
               icon: Icons.arrow_forward,
             );

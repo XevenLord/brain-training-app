@@ -43,14 +43,14 @@ class _PatientShoutPageState extends State<PatientShoutPage> {
   }
 
   void sendMessage() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Image.asset(AppConstant.LOADING_GIF, height: 100.w);
-      },
-    );
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Image.asset(AppConstant.LOADING_GIF, height: 100.w);
+        },
+      );
       Map<String, dynamic> data = new Map<String, dynamic>.from(
           _fbKey.currentState!.value as Map<String, dynamic>);
       data.addEntries(

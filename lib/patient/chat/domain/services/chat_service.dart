@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 class ChatService extends GetxService {
   Future<bool> sendChatMessage(MessageChat chat, String targetUid) async {
-    print("got enter chat service");
     final appUser = Get.find<AppUser>();
     try {
       bool res = await FirebaseFirestore.instance
@@ -25,8 +24,6 @@ class ChatService extends GetxService {
             .update({
           'isRead': {
             appUser.uid: true, // Assuming the current user just sent a message
-            // Update the targetUid based on your logic
-            // e.g., Get the targetUid from the chat document or use a default value
             targetUid: false,
           }
         });
