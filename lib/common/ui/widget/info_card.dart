@@ -201,7 +201,7 @@ class InfoCardTile implements InfoCardInterface {
                                         style: AppTextStyle.h3
                                             .merge(AppTextStyle.whiteTextStyle))
                                     : const Icon(Icons.edit,
-                                        color: AppColors.brandBlue)),
+                                        color: AppColors.white)),
                           )
                         : Container(),
                     hasCheckIcon

@@ -257,13 +257,14 @@ class _AdminProfileEditState extends State<AdminProfileEdit> {
                     textEditingController: dobController,
                     label: "DD/MM/YYYY",
                     keyboardType: TextInputType.datetime,
+                    readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now().subtract(Duration(days: 3650)),
+                          initialDate: DateTime.now().subtract(const Duration(days: 6570)),
                           firstDate: DateTime(1920),
                           //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2019));
+                          lastDate: DateTime(2006));
 
                       if (pickedDate != null) {
                         print(

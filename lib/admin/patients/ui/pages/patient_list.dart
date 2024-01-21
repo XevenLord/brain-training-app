@@ -41,6 +41,7 @@ class _PatientListState extends State<PatientList> {
     managePatientViewModel = Get.find<ManagePatientViewModel>();
     appointments = adminAppointmentViewModel.appointments;
     patients = allPatients = UserRepository.patients;
+    sortPatients();
     admins = UserRepository.admins;
     isLoading = false;
     super.initState();
@@ -60,6 +61,25 @@ class _PatientListState extends State<PatientList> {
         isLoading = false; // Set loading to false even on error
       });
     }
+  }
+
+  // sort as the assignedTo is this user id at first
+  void sortPatients() {
+    List<AppUser> assignedToMe = [];
+    List<AppUser> assignedToOthers = [];
+    List<AppUser> notAssigned = [];
+
+    for (var patient in patients) {
+      if (patient.assignedTo == Get.find<AppUser>().uid) {
+        assignedToMe.add(patient);
+      } else if (patient.assignedTo != null) {
+        assignedToOthers.add(patient);
+      } else {
+        notAssigned.add(patient);
+      }
+    }
+
+    patients = [...assignedToMe, ...assignedToOthers, ...notAssigned];
   }
 
   String calculateAge(DateTime? dateOfBirth) {

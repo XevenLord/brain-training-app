@@ -116,7 +116,7 @@ class _FeedbackMainPageState extends State<FeedbackMainPage> {
 
                 return ListTile(
                   title: Text(
-                    'Message: ${feedback.message}',
+                    feedback.message,
                     style: AppTextStyle.h3,
                   ),
                   subtitle: Text(

@@ -101,27 +101,30 @@ class _FlipCardPatientListState extends State<FlipCardPatientList> {
                       showBackArrow: false,
                     ),
                   )
-                : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...patients.map(
-                          (e) => InfoCardTile().buildInfoCard(
-                            name: e.name!,
-                            age: calculateAge(e.dateOfBirth),
-                            gender: e.gender!,
-                            isView: true,
-                            onEdit: () async {
-                              dynamic cardSets = await adminFlipCardViewModel
-                                  .getFlipCardSetByUserId(e.uid!);
-                              setState(() {});
-                              Get.toNamed(RouteHelper.getFlipCardResOverview(),
-                                  arguments: [e, cardSets]);
-                            },
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...patients.map(
+                            (e) => InfoCardTile().buildInfoCard(
+                              name: e.name!,
+                              age: calculateAge(e.dateOfBirth),
+                              gender: e.gender!,
+                              isView: true,
+                              onEdit: () async {
+                                dynamic cardSets = await adminFlipCardViewModel
+                                    .getFlipCardSetByUserId(e.uid!);
+                                setState(() {});
+                                Get.toNamed(
+                                    RouteHelper.getFlipCardResOverview(),
+                                    arguments: [e, cardSets]);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
       ),

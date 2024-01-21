@@ -90,6 +90,7 @@ class _AdminListState extends State<AdminList> {
                     children: [
                       ...UserRepository.admins.map(
                         (admin) => InfoCardTile().buildInfoCard(
+                          isView: true,
                           name: admin.name!,
                           age: calculateAge(admin.dateOfBirth),
                           gender: admin.gender!,

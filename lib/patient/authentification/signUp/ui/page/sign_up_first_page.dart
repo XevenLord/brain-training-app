@@ -143,10 +143,10 @@ class _SignUpFirstPageState extends State<SignUpFirstPage> {
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate:
-                              DateTime.now().subtract(Duration(days: 3650)),
+                          initialDate: DateTime.now()
+                              .subtract(const Duration(days: 6570)),
                           firstDate: DateTime(1920),
-                          lastDate: DateTime(2019));
+                          lastDate: DateTime(2006));
 
                       if (pickedDate != null) {
                         print(

@@ -2,6 +2,7 @@ import 'package:brain_training_app/common/domain/entity/message_chat.dart';
 import 'package:brain_training_app/common/domain/entity/type_mesage.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/view_model/chat_vmodel.dart';
+import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -114,7 +115,40 @@ class _ChatState extends State<Chat> {
   void sendImageMessage(String? uid) {
     MessageChat chat = MessageChat(
         uid: chatDocId, createdOn: DateTime.now(), type: TypeMessage.image);
-    chatViewModel.sendImageMessage(chat, targetUid);
+    // prompt confirmation to send image
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text("Send Image", style: AppTextStyle.h2),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image(
+                  image: FileImage(chatViewModel.imagefile!),
+                ),
+                SizedBox(height: 20.w),
+                Text("Are you sure you want to send this image?",
+                    style: AppTextStyle.h3),
+              ],
+            ),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("Cancel", style: AppTextStyle.h3),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text("Send", style: AppTextStyle.h3),
+                onPressed: () {
+                  Navigator.pop(context);
+                  chatViewModel.sendImageMessage(chat, targetUid);
+                },
+              ),
+            ],
+          );
+        });
   }
 
   bool isSender(String friend) {
@@ -362,7 +396,7 @@ class _ChatState extends State<Chat> {
                                           context: context,
                                           builder: (BuildContext context) {
                                             return Container(
-                                              height: 150.h,
+                                              height: 150.w,
                                               child: Column(
                                                 children: [
                                                   ListTile(
@@ -392,6 +426,7 @@ class _ChatState extends State<Chat> {
                                                       Navigator.pop(context);
                                                       await chatViewModel
                                                           .takeImageFromGallery();
+
                                                       sendImageMessage(
                                                           data?['uid']
                                                               ?.toString());

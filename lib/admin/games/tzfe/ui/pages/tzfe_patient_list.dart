@@ -101,27 +101,29 @@ class _TZFEPatientListState extends State<TZFEPatientList> {
                       showBackArrow: false,
                     ),
                   )
-                : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...patients.map(
-                          (e) => InfoCardTile().buildInfoCard(
-                            name: e.name!,
-                            age: calculateAge(e.dateOfBirth),
-                            gender: e.gender!,
-                            isView: true,
-                            onEdit: () async {
-                              dynamic tzfeSets = await adminTZFEViewModel
-                                  .getTZFEScoreSetByUserId(e.uid!);
-                              setState(() {});
-                              Get.toNamed(RouteHelper.getTZFEScoreOverview(),
-                                  arguments: [e, tzfeSets]);
-                            },
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...patients.map(
+                            (e) => InfoCardTile().buildInfoCard(
+                              name: e.name!,
+                              age: calculateAge(e.dateOfBirth),
+                              gender: e.gender!,
+                              isView: true,
+                              onEdit: () async {
+                                dynamic tzfeSets = await adminTZFEViewModel
+                                    .getTZFEScoreSetByUserId(e.uid!);
+                                setState(() {});
+                                Get.toNamed(RouteHelper.getTZFEScoreOverview(),
+                                    arguments: [e, tzfeSets]);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
       ),

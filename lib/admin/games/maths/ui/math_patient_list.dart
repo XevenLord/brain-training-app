@@ -93,27 +93,29 @@ class _MathPatientListState extends State<MathPatientList> {
       body: SafeArea(
         child: isLoading
             ? Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...patients.map(
-                      (e) => InfoCardTile().buildInfoCard(
-                        name: e.name!,
-                        age: calculateAge(e.dateOfBirth),
-                        gender: e.gender!,
-                        isView: true,
-                        onEdit: () async {
-                          dynamic mathAns = await mathResultViewModel
-                              .getMathAnswersByUserId(e.uid!);
-                          setState(() {});
-                          Get.toNamed(RouteHelper.getMathScoreOverview(),
-                              arguments: [e, mathAns]);
-                        },
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...patients.map(
+                        (e) => InfoCardTile().buildInfoCard(
+                          name: e.name!,
+                          age: calculateAge(e.dateOfBirth),
+                          gender: e.gender!,
+                          isView: true,
+                          onEdit: () async {
+                            dynamic mathAns = await mathResultViewModel
+                                .getMathAnswersByUserId(e.uid!);
+                            setState(() {});
+                            Get.toNamed(RouteHelper.getMathScoreOverview(),
+                                arguments: [e, mathAns]);
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
       ),

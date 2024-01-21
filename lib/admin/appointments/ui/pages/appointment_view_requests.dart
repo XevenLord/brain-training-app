@@ -81,23 +81,23 @@ class _AppointmentViewRequestsState extends State<AppointmentViewRequests> {
         title: Text('Appointment Requests', style: AppTextStyle.h2),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: appointments == null || appointments!.isEmpty
-              ? displayEmptyDataLoaded("There is no pending appointment.",
-                  showBackArrow: false)
-              : ListView.builder(
-                  itemCount: appointments!.length,
-                  itemBuilder: (context, index) {
-                    AdminAppointment appointment = appointments![index];
-                    AppUser patient = patients!.where((element) {
-                      return element.uid == appointment.patientID;
-                    }).first;
-                    return InfoCardTile().buildRequestCard(
+        child: appointments == null || appointments!.isEmpty
+            ? displayEmptyDataLoaded("There is no pending appointment.",
+                showBackArrow: false)
+            : ListView.builder(
+                itemCount: appointments!.length,
+                itemBuilder: (context, index) {
+                  AdminAppointment appointment = appointments![index];
+                  AppUser patient = patients!.where((element) {
+                    return element.uid == appointment.patientID;
+                  }).first;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: InfoCardTile().buildRequestCard(
                       name: patient.name!,
                       gender: patient.gender!,
                       age: calculateAge(patient.dateOfBirth),
-                      imgUrl: patient.profilePic!,
+                      imgUrl: patient.profilePic ?? "",
                       date: appointment.date!,
                       time: appointment.time!,
                       reason: appointment.reason!,
@@ -151,10 +151,10 @@ class _AppointmentViewRequestsState extends State<AppointmentViewRequests> {
                           ),
                         );
                       },
-                    );
-                  },
-                ),
-        ),
+                    ),
+                  );
+                },
+              ),
       ),
     );
   }
