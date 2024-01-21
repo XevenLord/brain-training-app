@@ -241,7 +241,7 @@ class _AdminAppointmentEditPageState extends State<AdminAppointmentEditPage> {
                       InputTextFormField(
                         name: "reason",
                         promptText: "Appointment Reason",
-                        label: "Tell us about your reason for appointment",
+                        label: "Tell the reason of the patient for appointment",
                         textEditingController: reasonController,
                         maxLines: null,
                       ),

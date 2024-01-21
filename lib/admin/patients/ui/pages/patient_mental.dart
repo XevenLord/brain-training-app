@@ -65,11 +65,9 @@ class _PatientMentalResultState extends State<PatientMentalResult> {
                       .map((entry) => Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: ExpansionTile(
-                              title: Expanded(
-                                child: Text(entry.key,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppTextStyle.h2),
-                              ),
+                              title: Text(entry.key,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyle.h2),
                               children: (entry.value.entries
                                   .map<Widget>((innerEntry) {
                                 return Container(
