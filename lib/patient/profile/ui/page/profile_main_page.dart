@@ -44,17 +44,48 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
             height: 12.h,
           ),
           Center(
-            child: CircleAvatar(
-              radius: 70.r,
-              backgroundColor: AppColors.lightBlue,
-              backgroundImage:
-                  appUser.profilePic != null && appUser.profilePic!.isNotEmpty
-                      ? NetworkImage(
-                          appUser.profilePic!,
-                        )
-                      : const AssetImage(
-                          AppConstant.NO_PROFILE_PIC,
-                        ) as ImageProvider,
+            child: InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      insetPadding: EdgeInsets.zero,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: appUser.profilePic != null &&
+                                    appUser.profilePic!.isNotEmpty
+                                ? Image.network(
+                                    appUser.profilePic!,
+                                    fit: BoxFit.contain,
+                                  )
+                                : const Image(
+                                    image:
+                                        AssetImage(AppConstant.NO_PROFILE_PIC),
+                                    fit: BoxFit.contain,
+                                  )),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: CircleAvatar(
+                radius: 70.r,
+                backgroundColor: AppColors.lightBlue,
+                backgroundImage:
+                    appUser.profilePic != null && appUser.profilePic!.isNotEmpty
+                        ? NetworkImage(
+                            appUser.profilePic!,
+                          )
+                        : const AssetImage(
+                            AppConstant.NO_PROFILE_PIC,
+                          ) as ImageProvider,
+              ),
             ),
           ),
           SizedBox(

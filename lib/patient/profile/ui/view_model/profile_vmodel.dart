@@ -21,9 +21,11 @@ class ProfileViewModel extends GetxController implements GetxService {
         await ProfileService.updateNameInChats(value);
       }
     });
+    await _uploadFile();
     if (_profilePicUrl != null) newData['profilePic'] = _profilePicUrl;
     isUpdated = await ProfileService.onUpdateProfileDetails(newData);
     update();
+    imagefile.value = null;
     return isUpdated;
   }
 
@@ -31,7 +33,6 @@ class ProfileViewModel extends GetxController implements GetxService {
     XFile? image =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (image != null) {
-      
       imagefile.value = File(image.path);
       _uploadFile();
     } else {
@@ -44,38 +45,26 @@ class ProfileViewModel extends GetxController implements GetxService {
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (image != null) {
       imagefile.value = File(image.path);
-      _uploadFile();
     } else {
       print('Image capture failed.');
     }
   }
 
-  void _uploadFile() {
-    if (imagefile == null) return;
+  Future<void> _uploadFile() async {
+    if (imagefile.value == null) return;
     final storageRef = FirebaseStorage.instance.ref();
     final profileImagesRef = storageRef
         .child('${FirebaseAuth.instance.currentUser?.uid}/photos/profile.jpg');
 
-    profileImagesRef
-        .putFile(imagefile.value!)
-        .snapshotEvents
-        .listen((taskSnapshot) {
-      switch (taskSnapshot.state) {
-        case TaskState.running:
-          break;
-        case TaskState.paused:
-          break;
-        case TaskState.success:
-          profileImagesRef.getDownloadURL().then((value) {
-            _profilePicUrl = value;
-            update();
-            print(_profilePicUrl + ": updated profile pic url");
-          });
-          break;
-        case TaskState.error:
-          break;
-        case TaskState.canceled:
-          break;
+    final uploadTask = profileImagesRef.putFile(imagefile.value!);
+
+    await uploadTask.whenComplete(() async {
+      try {
+        _profilePicUrl = await profileImagesRef.getDownloadURL();
+        update();
+        print(_profilePicUrl + ": updated profile pic url");
+      } catch (onError) {
+        print("Error");
       }
     });
   }

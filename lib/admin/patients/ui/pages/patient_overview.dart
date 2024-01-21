@@ -1,7 +1,6 @@
 import 'package:brain_training_app/admin/appointments/domain/entity/appointment.dart';
 import 'package:brain_training_app/common/domain/service/user_repo.dart';
 import 'package:brain_training_app/common/ui/widget/category_card_interface.dart';
-import 'package:brain_training_app/common/ui/widget/icon_box.dart';
 import 'package:brain_training_app/common/ui/widget/information_row.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/chat/ui/pages/chat.dart';
@@ -140,15 +139,47 @@ class _PatientOverviewState extends State<PatientOverview> {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: SingleChildScrollView(
           child: Column(children: [
-            CircleAvatar(
-              radius: 60.r,
-              backgroundColor: AppColors.lightBlue,
-              backgroundImage: (widget.patient.profilePic == null ||
-                      widget.patient.profilePic!.isEmpty)
-                  ? const AssetImage(
-                      AppConstant.NO_PROFILE_PIC,
-                    ) as ImageProvider
-                  : NetworkImage(widget.patient.profilePic!),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      insetPadding: EdgeInsets.zero,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: (widget.patient.profilePic == null ||
+                                    widget.patient.profilePic!.isEmpty)
+                                ? const Image(
+                                    image: AssetImage(
+                                      AppConstant.NO_PROFILE_PIC,
+                                    ),
+                                    fit: BoxFit.contain,
+                                  )
+                                : Image.network(
+                                    widget.patient.profilePic!,
+                                    fit: BoxFit.contain,
+                                  )),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: CircleAvatar(
+                radius: 60.r,
+                backgroundColor: AppColors.lightBlue,
+                backgroundImage: (widget.patient.profilePic == null ||
+                        widget.patient.profilePic!.isEmpty)
+                    ? const AssetImage(
+                        AppConstant.NO_PROFILE_PIC,
+                      ) as ImageProvider
+                    : NetworkImage(widget.patient.profilePic!),
+              ),
             ),
             SizedBox(height: 10.w),
             Text(widget.patient.name!, style: AppTextStyle.h2),

@@ -260,7 +260,61 @@ class _ChatState extends State<Chat> {
                                                 data['uid'].toString()),
                                             height: 200.h,
                                             width: 200.w,
-                                            child: Image.network(url),
+                                            child: Image.network(
+                                              url,
+                                              loadingBuilder: (context, child,
+                                                      loadingProgress) =>
+                                                  loadingProgress == null
+                                                      ? child
+                                                      : Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.25),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .grey),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  8),
+                                                            ),
+                                                          ),
+                                                          width: 200,
+                                                          height: 200,
+                                                          child: Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              color:
+                                                                  Colors.blue,
+                                                              value: loadingProgress
+                                                                          .expectedTotalBytes !=
+                                                                      null
+                                                                  ? loadingProgress
+                                                                          .cumulativeBytesLoaded /
+                                                                      loadingProgress
+                                                                          .expectedTotalBytes!
+                                                                  : null,
+                                                            ),
+                                                          ),
+                                                        ),
+                                              errorBuilder: (context, object,
+                                                  stackTrace) {
+                                                return Material(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(8),
+                                                    ),
+                                                    clipBehavior: Clip.hardEdge,
+                                                    child: Icon(
+                                                        Icons.no_photography));
+                                              },
+                                              width: 200,
+                                              height: 200,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         );
                                       } else {

@@ -18,20 +18,22 @@ class _TZFEHomeState extends State<TZFEHome> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: GameIntro(
-          title: '2048 Game',
-          introduction:
-              ' Imagine it like a sliding puzzle where you combine matching numbered tiles to create bigger ones. The goal? Merge your way up to that elusive tile labeled 2048. It\'s like a digital strategy game that\'s easy to pick up but offers endless fun as you figure out the best moves to conquer the grid.',
-          img: 'assets/images/2048_game.png',
-          gradient: AppColors.transparentRed,
-          buttonColor: AppColors.lightRed,
-          btnTextColor: AppColors.brandRed,
-          actions: IconButton(
-            onPressed: () => Get.toNamed(RouteHelper.getTZFEScorePage()),
-            icon: Icon(Icons.leaderboard),
+        child: SingleChildScrollView(
+          child: GameIntro(
+            title: '2048 Game',
+            introduction:
+                ' Imagine it like a sliding puzzle where you combine matching numbered tiles to create bigger ones. The goal? Merge your way up to that elusive tile labeled 2048. It\'s like a digital strategy game that\'s easy to pick up but offers endless fun as you figure out the best moves to conquer the grid.',
+            img: 'assets/images/2048_game.png',
+            gradient: AppColors.transparentRed,
+            buttonColor: AppColors.lightRed,
+            btnTextColor: AppColors.brandRed,
+            actions: IconButton(
+              onPressed: () => Get.toNamed(RouteHelper.getTZFEScorePage()),
+              icon: Icon(Icons.leaderboard),
+            ),
+            onTap: () =>
+                Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Easy),
           ),
-          onTap: () =>
-              Get.toNamed(RouteHelper.getTZFEGame(), arguments: Level.Easy),
         ),
       ),
     );

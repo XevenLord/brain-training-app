@@ -5,6 +5,7 @@ import 'package:brain_training_app/common/ui/widget/input_text_field.dart';
 import 'package:brain_training_app/patient/authentification/signUp/domain/entity/user.dart';
 import 'package:brain_training_app/patient/profile/ui/view_model/profile_vmodel.dart';
 import 'package:brain_training_app/route_helper.dart';
+import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,13 +52,15 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   void updateProfile() async {
-    String aboutMe = introController.text.trim(); 
+    String aboutMe = introController.text.trim();
     if (aboutMe == "") {
       _fbKey.currentState!.fields["aboutMe"]!.didChange(null);
     }
     _fbKey.currentState!.save();
     if (_fbKey.currentState!.saveAndValidate()) {
+      
       await profileVModel.updateProfile(_fbKey.currentState!.value);
+      Get.back();
       Get.offNamed(RouteHelper.getPatientHome(), arguments: 3);
     }
   }

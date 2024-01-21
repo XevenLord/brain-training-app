@@ -17,16 +17,18 @@ class _MathHomeState extends State<MathHome> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: GameIntro(
-          title: 'Arithmetic Game',
-          introduction:
-              'Arithmetic Game presents you with a series of arithmetic operations, ranging from easy to hard difficulty levels. You\'ll encounter addition, subtraction, multiplication, and division problems involving two numbers. Use the provided math calculator keypad to input your answers quickly and accurately.',
-          img: 'assets/images/mathematics_game.png',
-          actions: IconButton(
-            onPressed: () => Get.toNamed(RouteHelper.getMathScorePage()),
-            icon: Icon(Icons.leaderboard),
+        child: SingleChildScrollView(
+          child: GameIntro(
+            title: 'Arithmetic Game',
+            introduction:
+                'Arithmetic Game presents you with a series of arithmetic operations, ranging from easy to hard difficulty levels. You\'ll encounter addition, subtraction, multiplication, and division problems involving two numbers. Use the provided math calculator keypad to input your answers quickly and accurately.',
+            img: 'assets/images/mathematics_game.png',
+            actions: IconButton(
+              onPressed: () => Get.toNamed(RouteHelper.getMathScorePage()),
+              icon: Icon(Icons.leaderboard),
+            ),
+            onTap: () => Get.toNamed(RouteHelper.getMathDifficultyPage()),
           ),
-          onTap: () => Get.toNamed(RouteHelper.getMathDifficultyPage()),
         ),
       ),
     );

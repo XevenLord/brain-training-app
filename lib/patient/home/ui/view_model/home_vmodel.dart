@@ -7,6 +7,7 @@ import 'package:brain_training_app/route_helper.dart';
 import 'package:brain_training_app/utils/app_constant.dart';
 import 'package:brain_training_app/utils/app_text_style.dart';
 import 'package:brain_training_app/utils/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -115,10 +116,17 @@ class HomeViewModel extends GetxController implements GetxService {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               insMssg.imgUrl != null && insMssg.imgUrl!.isNotEmpty
-                  ? CircleAvatar(
-                      radius: 120.r,
-                      backgroundColor: AppColors.lightYellow,
-                      backgroundImage: NetworkImage(insMssg.imgUrl!),
+                  ? CachedNetworkImage(
+                      imageUrl: insMssg.imgUrl!,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(), // Loading indicator
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.error), // Error widget
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        radius: 120.r,
+                        backgroundColor: AppColors.lightYellow,
+                        backgroundImage: imageProvider,
+                      ),
                     )
                   : const Image(
                       image: AssetImage(AppConstant.HUG_IMG),

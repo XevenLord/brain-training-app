@@ -134,7 +134,7 @@ class _AppointmentMainPageState extends State<AppointmentMainPage> {
                         (index) => DoctorCard(
                           doctorName: physiotherapists[index].name!,
                           position: physiotherapists[index].position!,
-                          imgUrl: physiotherapists[index].profilePic!,
+                          imgUrl: physiotherapists[index].profilePic ?? "",
                           email: physiotherapists[index].email!,
                           isAssignedPhysio: Get.find<AppUser>().assignedTo ==
                                   physiotherapists[index].uid

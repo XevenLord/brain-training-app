@@ -358,7 +358,6 @@ class _MathGameState extends State<MathGame> {
                 padding: const EdgeInsets.all(4.0),
                 child: GridView.builder(
                   itemCount: numberPad.length,
-                  physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),

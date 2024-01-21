@@ -31,9 +31,7 @@ class GameIntro extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          height: MediaQuery.of(context).size.height -
-              MediaQuery.of(context).viewInsets.bottom -
-              AppBar().preferredSize.height,
+          height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             color: AppColors.white,
             boxShadow: const [

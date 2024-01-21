@@ -124,82 +124,86 @@ class _TZFEGameState extends ConsumerState<TZFEGame>
                 },
               ),
             ),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(bottom: 32.w),
-                  child: CountdownTimer(
-                    builder:
-                        (BuildContext context, void Function() startTimer) {
-                      startGameTimer = startTimer;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '2048',
-                        style: TextStyle(
-                            color: textColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 52.0),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 32.w),
+                      child: CountdownTimer(
+                        builder:
+                            (BuildContext context, void Function() startTimer) {
+                          startGameTimer = startTimer;
+                        },
                       ),
-                      Column(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const ScoreBoard(),
-                          const SizedBox(
-                            height: 32.0,
+                          const Text(
+                            '2048',
+                            style: TextStyle(
+                                color: textColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 52.0),
                           ),
-                          Row(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              // ButtonWidget(
-                              //   icon: Icons.undo,
-                              //   onPressed: () {
-                              //     //Undo the round.
-                              //     ref.read(boardManager.notifier).undo();
-                              //   },
-                              // ),
-                              // const SizedBox(
-                              //   width: 16.0,
-                              // ),
-                              ButtonWidget(
-                                icon: Icons.refresh,
-                                onPressed: () {
-                                  //Restart the game
-                                  ref.read(boardManager.notifier).newGame();
-                                  startGameTimer.call();
-                                },
+                              const ScoreBoard(),
+                              const SizedBox(
+                                height: 32.0,
+                              ),
+                              Row(
+                                children: [
+                                  // ButtonWidget(
+                                  //   icon: Icons.undo,
+                                  //   onPressed: () {
+                                  //     //Undo the round.
+                                  //     ref.read(boardManager.notifier).undo();
+                                  //   },
+                                  // ),
+                                  // const SizedBox(
+                                  //   width: 16.0,
+                                  // ),
+                                  ButtonWidget(
+                                    icon: Icons.refresh,
+                                    onPressed: () {
+                                      //Restart the game
+                                      ref.read(boardManager.notifier).newGame();
+                                      startGameTimer.call();
+                                    },
+                                  )
+                                ],
                               )
                             ],
                           )
                         ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 32.0,
-                ),
-                Stack(
-                  children: [
-                    const EmptyBoardWidget(),
-                    TileBoardWidget(
-                        moveAnimation: _moveAnimation,
-                        scaleAnimation: _scaleAnimation,
-                        level: widget.level!,
-                        startGameTimer: () {
-                          startGameTimer.call();
-                        })
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 32.0,
+                    ),
+                    Stack(
+                      children: [
+                        const EmptyBoardWidget(),
+                        TileBoardWidget(
+                            moveAnimation: _moveAnimation,
+                            scaleAnimation: _scaleAnimation,
+                            level: widget.level!,
+                            startGameTimer: () {
+                              startGameTimer.call();
+                            })
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
         ),
