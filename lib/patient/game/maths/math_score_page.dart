@@ -63,7 +63,7 @@ class _MathScorePageState extends State<MathScorePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: AppColors.brandBlue,
-        title: Text('Maths Score Overview', style: AppTextStyle.h2),
+        title: Text('Arithmetic Score Overview', style: AppTextStyle.h2),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -77,23 +77,9 @@ class _MathScorePageState extends State<MathScorePage> {
             ? Center(
                 child: isLoading
                     ? const CircularProgressIndicator()
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                            Image.asset(
-                              AppConstant.EMPTY_DATA,
-                              width: 200,
-                              height: 200,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                  "There is no data of Maths Score yet.",
-                                  style: AppTextStyle.h2
-                                      .merge(AppTextStyle.brandBlueTextStyle)),
-                            )
-                          ]),
-              )
+                    : displayEmptyDataLoaded(
+                        "There is no data of Arithmetic Score yet.",
+                        showBackArrow: false))
             : SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),

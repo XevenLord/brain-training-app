@@ -47,7 +47,7 @@ class _AdminAppointmentMainPageState extends State<AdminAppointmentMainPage> {
     getAppointmentList();
     patients = UserRepository.patients;
     admins = UserRepository.admins;
-    // fetchAllPatients();
+    fetchAllPatients();
     super.initState();
   }
 

@@ -81,7 +81,7 @@ class _MathPatientListState extends State<MathPatientList> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: AppColors.brandBlue,
-        title: Text('Mathematics Game', style: AppTextStyle.h2),
+        title: Text('Arithmetic Game', style: AppTextStyle.h2),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),

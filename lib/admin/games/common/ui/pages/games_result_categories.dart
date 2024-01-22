@@ -24,7 +24,7 @@ class _GamesResultCategoriesState extends State<GamesResultCategories> {
   void initState() {
     gameCats = [
       {
-        "category": "Mathematics Game",
+        "category": "Arithmetic Game",
         "icon": Icons.gamepad,
         "gradient": const LinearGradient(
           colors: <Color>[

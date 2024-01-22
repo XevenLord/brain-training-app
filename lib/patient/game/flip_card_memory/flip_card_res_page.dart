@@ -76,18 +76,9 @@ class _FlipCardResultPageState extends State<FlipCardResultPage> {
               ? Center(
                   child: isLoading
                       ? const CircularProgressIndicator()
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                              Image.asset(
-                                AppConstant.EMPTY_DATA,
-                                width: 200,
-                                height: 200,
-                              ),
-                              Text("There is no data of Flip Card result yet.",
-                                  style: AppTextStyle.h2
-                                      .merge(AppTextStyle.brandBlueTextStyle))
-                            ]),
+                      : displayEmptyDataLoaded(
+                          "There is no flip card score yet!",
+                          showBackArrow: false),
                 )
               : SingleChildScrollView(
                   child: Padding(
