@@ -24,9 +24,9 @@ class _ProfileMainPageState extends State<ProfileMainPage> {
 
   @override
   void initState() {
-    super.initState();
     profileVModel = Get.find<ProfileViewModel>();
     appUser = Get.find<AppUser>();
+    super.initState();
   }
 
   @override
